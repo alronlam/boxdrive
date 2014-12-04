@@ -6,13 +6,13 @@ import java.util.Collections;
 
 import org.vertx.java.core.json.JsonObject;
 
-public class MessageHandler {
+public class JobManager {
 
 	/* Singleton Related Variables and Methods */
 
-	private static MessageHandler instance = new MessageHandler();
+	private static JobManager instance = new JobManager();
 
-	public static MessageHandler getInstance() {
+	public static JobManager getInstance() {
 		return instance;
 	}
 
@@ -20,7 +20,7 @@ public class MessageHandler {
 
 	private ArrayList<Job> jobQueue;
 
-	private MessageHandler() {
+	private JobManager() {
 		this.jobQueue = new ArrayList<Job>();
 	}
 
