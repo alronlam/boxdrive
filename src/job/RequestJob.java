@@ -1,6 +1,8 @@
 package job;
 
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
@@ -20,7 +22,14 @@ public class RequestJob extends BasicJob {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-
+		Path localFile = file.getLocalizedFile();
+		
+		if (!Files.exists(localFile)) {
+			return;
+		}
+		
+		Job forSending = new FileJob(localFile, this.getSocket());
+		JobManager.getInstance().handleNewJob(forSending);
+		
 	}
 }

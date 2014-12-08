@@ -20,6 +20,7 @@ public class Constants {
 		public final static String LAST_MODIFIED = "last modified";
 		public final static String CHECKSUM = "checksum";
 		public final static String IS_DIRECTORY = "is directory";
+		public final static String FILEBYTES = "file bytes";
 	}
 	
 	/**
