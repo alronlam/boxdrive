@@ -24,6 +24,7 @@ public class Client {
 		FOLDER = path;
 
 		// ServerJobManager.getInstance().setFolder(FOLDER);
+		connectionManager = new ConnectionManager();
 
 		attemptConnection(serverAddr);
 	}
@@ -37,10 +38,21 @@ public class Client {
 				e.printStackTrace();
 			}
 			if (socket != null) {
-				connectionManager.getInstance().createNewConnection(socket);
+				connectionManager.createNewConnection(socket);
 				System.out.println(socket.getRemoteSocketAddress() + " has connected.");
 			}
 		} while (socket == null);
-
 	}
+
+	public Socket getSocket(int index) {
+		return connectionManager.getSocket(index);
+	}
+
+	public Socket getFirstSocket() {
+		return getSocket(0);
+	}
+	
+//	public void readFromServer(){
+//		connectionManager
+//	}
 }

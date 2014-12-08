@@ -13,12 +13,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 public class Connection {
-	Socket socket;
-	InputStream inStream;
-	OutputStream outStream;
-	Semaphore awaitMessage;
-	Semaphore messageMutex;
-	ArrayList<String> msgQueue;
+	public Socket socket;
+	
+	private InputStream inStream;
+	private OutputStream outStream;
+	
+	private ArrayList<String> msgQueue;
+	
+	private Semaphore awaitMessage;
+	private Semaphore messageMutex;
 
 	public Connection(Socket socket) {
 		this.socket = socket;
