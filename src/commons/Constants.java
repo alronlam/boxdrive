@@ -3,6 +3,8 @@ package commons;
 public class Constants {
 	// Temporary constant until client handles folder name
 	public final static String FOLDER = "client1";
+	public static byte[] EOF = "\r\n\r\n".getBytes();
+	public static int PORT = 8080;
 	
 	/**
 	 * JSON Fields.
