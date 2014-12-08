@@ -9,12 +9,14 @@ import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.AbstractClient;
+
 import commons.Constants;
 
 public class DeleteJob extends BasicJob {
 
-	DeleteJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	DeleteJob(JsonObject json, AbstractClient client) {
+		super(json, client);
 	}
 
 	/**
@@ -24,8 +26,8 @@ public class DeleteJob extends BasicJob {
 	 *            The time of deletion.
 	 * @param socket
 	 */
-	public DeleteJob(Path path, long lastModified, Socket socket) {
-		super(path, socket);
+	public DeleteJob(Path path, long lastModified, AbstractClient client) {
+		super(path, client);
 		file.setLastModified(lastModified);
 	}
 
@@ -48,8 +50,8 @@ public class DeleteJob extends BasicJob {
 
 			// If local file is newer, send a Create Job to remote.
 		} else {
-			Job forSending = new CreateJob(localFile, this.getSocket());
-			JobManager.getInstance().handleNewJob(forSending);
+			Job forSending = new CreateJob(localFile, this.getClient());
+			this.getClient().getJobManager().handleNewJob(forSending);
 		}
 	}
 

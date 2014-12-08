@@ -1,10 +1,11 @@
 package job;
 
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
+
+import client.AbstractClient;
 
 import commons.Constants;
 
@@ -18,8 +19,8 @@ public class RequestJob extends BasicJob {
 		super(job);
 	}
 	
-	RequestJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	RequestJob(JsonObject json, AbstractClient client) {
+		super(json, client);
 	}
 
 	@Override
@@ -30,8 +31,8 @@ public class RequestJob extends BasicJob {
 			return;
 		}
 		
-		Job forSending = new FileJob(localFile, this.getSocket());
-		JobManager.getInstance().handleNewJob(forSending);
+		Job forSending = new FileJob(localFile, this.getClient());
+		this.getClient().getJobManager().handleNewJob(forSending);
 		
 	}
 

@@ -2,13 +2,15 @@ package job;
 
 import java.net.Socket;
 
+import client.AbstractClient;
+
 public abstract class Job implements Comparable<Job> {
-	private Socket socket;
+	private AbstractClient client;
 	private final long createTime = System.currentTimeMillis();
 	private boolean toSend = true;
 	
-	Job(Socket socket) {
-		this.socket = socket;
+	Job(AbstractClient client) {
+		this.client= client;
 	}
 	
 	public abstract void execute();
@@ -26,8 +28,8 @@ public abstract class Job implements Comparable<Job> {
 		return toSend;
 	}
 	
-	protected Socket getSocket() {
-		return socket;
+	AbstractClient getClient() {
+		return client;
 	}
 	
 	public int compareTo(Job other) {

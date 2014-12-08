@@ -68,6 +68,7 @@ public class DirectoryListener {
 	private final Map<WatchKey, Path> keys;
 	private final boolean recursive = true;
 	private boolean trace = false;
+	private AbstractClient client = null;
 	private Socket serverSocket = null;
 
 	@SuppressWarnings("unchecked")
@@ -79,6 +80,7 @@ public class DirectoryListener {
 		this.serverSocket = serverSocket;
 	}
 
+	
 	/**
 	 * Register the given directory with the WatchService
 	 */
@@ -115,8 +117,8 @@ public class DirectoryListener {
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	DirectoryListener(String path) throws IOException {
-		Path dir = Paths.get(path);
+	DirectoryListener(Client client) throws IOException {
+		Path dir = client.getFolder();
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
 
@@ -134,22 +136,22 @@ public class DirectoryListener {
 
 	private void create(Path path) {
 		if (serverSocket != null) {
-			Job createJob = new CreateJob(path, serverSocket);
-			JobManager.getInstance().handleNewJob(createJob);
+			Job createJob = new CreateJob(path, client);
+			client.getJobManager().handleNewJob(createJob);
 		}
 	}
 
 	private void modify(Path path) {
 		if (serverSocket != null) {
-			Job createJob = new CreateJob(path, serverSocket);
-			JobManager.getInstance().handleNewJob(createJob);
+			Job createJob = new CreateJob(path, client);
+			client.getJobManager().handleNewJob(createJob);
 		}
 	}
 
 	private void delete(Path path) {
 		if (serverSocket != null) {
-			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), serverSocket);
-			JobManager.getInstance().handleNewJob(deleteJob);
+			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), client);
+			client.getJobManager().handleNewJob(deleteJob);
 		}
 	}
 

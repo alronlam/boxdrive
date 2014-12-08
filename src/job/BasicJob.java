@@ -5,6 +5,7 @@ import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.AbstractClient;
 import commons.Constants;
 
 public abstract class BasicJob extends Job {
@@ -16,18 +17,18 @@ public abstract class BasicJob extends Job {
 	 * @param job
 	 */
 	BasicJob(BasicJob job) {
-		super(job.getSocket());
+		super(job.getClient());
 		this.file = new FileBean(file);
 	}
 	
-	BasicJob(Path path, Socket socket) {
-		super(socket);
+	BasicJob(Path path, AbstractClient client) {
+		super(client);
 		file = new FileBean(path);
 	}
 	
 
-	BasicJob(JsonObject json, Socket socket) {
-		super(socket);
+	BasicJob(JsonObject json, AbstractClient client) {
+		super(client);
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		file = new FileBean(body);
 	}
