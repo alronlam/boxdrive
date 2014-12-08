@@ -10,40 +10,40 @@ import commons.Constants;
 
 import conn.ConnectionManager;
 
-
 public class Server {
 	static Path FOLDER;
 	private ServerSocket serverSocket;
 	private ConnectionManager connectionManager;
-	
-	public static void main(String args[])	{
+
+	public static void main(String args[]) {
 		new Server(Paths.get("server"));
-	}	
-	
-	
+	}
+
 	public Server(Path path) {
 		FOLDER = path;
-		
-		//ServerJobManager.getInstance().setFolder(FOLDER);
-		
-				try {
+
+		// ServerJobManager.getInstance().setFolder(FOLDER);
+
+		connectionManager = new ConnectionManager();
+
+		try {
 			serverSocket = new ServerSocket(Constants.PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		acceptConnections();
 	}
 
-	private void acceptConnections(){
+	private void acceptConnections() {
 		while (true) {
 			Socket newSocket = acceptNewConnection();
-			if(newSocket != null)
-				connectionManager.getInstance().createNewConnection(newSocket);
+			if (newSocket != null)
+				connectionManager.createNewConnection(newSocket);
 			System.out.println(newSocket.getRemoteSocketAddress() + " has connected.");
 		}
 	}
-	
+
 	public Socket acceptNewConnection() {
 		try {
 			System.out.println("Waiting for connection.");
@@ -53,5 +53,13 @@ public class Server {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public Socket getSocket(int index) {
+		return connectionManager.getSocket(index);
+	}
+
+	public Socket getFirstSocket() {
+		return getSocket(0);
 	}
 }
