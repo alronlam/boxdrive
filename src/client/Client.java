@@ -52,6 +52,8 @@ public class Client {
 		return getSocket(0);
 	}
 	
+	
+	
 //	public void readFromServer(){
 //		connectionManager
 //	}

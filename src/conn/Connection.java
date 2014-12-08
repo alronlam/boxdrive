@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
+import job.JobManager;
+
 public class Connection {
 	// Socket-related variables
 	public Socket socket;
@@ -39,8 +41,11 @@ public class Connection {
 		new ReadThread().start();
 	}
 
-	/**	Sends string over to connected peer through the socket
-	 * @param msg String to be sent to peer
+	/**
+	 * Sends string over to connected peer through the socket
+	 * 
+	 * @param msg
+	 *            String to be sent to peer
 	 */
 	public void write(String msg) {
 		try {
@@ -52,9 +57,12 @@ public class Connection {
 			System.err.println("Failed to set up streams for writing String to socket's stream.");
 		}
 	}
-	
-	/**	Sends byte data over to peer through the socket
-	 * @param bytes Array of Bytes, each of which would be sent to the peer
+
+	/**
+	 * Sends byte data over to peer through the socket
+	 * 
+	 * @param bytes
+	 *            Array of Bytes, each of which would be sent to the peer
 	 */
 	public void write(byte bytes[]) {
 		try {
@@ -64,8 +72,9 @@ public class Connection {
 		}
 	}
 
-	
-	/** Retrieves the next message that was received by the host
+	/**
+	 * Retrieves the next message that was received by the host
+	 * 
 	 * @return returns the first message that is read from the message buffer
 	 */
 	public String read() {
@@ -82,8 +91,8 @@ public class Connection {
 		return str;
 	}
 
-	
-	/** Closes the socket and thus ends the connection to the peer
+	/**
+	 * Closes the socket and thus ends the connection to the peer
 	 */
 	public void cancel() {
 		try {
@@ -127,6 +136,18 @@ public class Connection {
 					messageMutex.release();
 					awaitMessage.release();
 				}
+			}
+		}
+	}
+
+	class JSONJobHandlingThread extends Thread {
+		@Override
+		public void run() {
+			String json;
+
+			while (true) {
+				json = read();
+				JobManager.getInstance().handleNewJsonMessage(json, socket);
 			}
 		}
 	}
