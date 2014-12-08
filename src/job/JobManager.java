@@ -38,14 +38,14 @@ public class JobManager {
 		handleNewJob(newJob);
 	}
 
-	synchronized void handleNewJob(Job newJob) {
+	public synchronized void handleNewJob(Job newJob) {
 		this.enqueue(newJob);
 
 		if (jobQueue.size() == 1)
 			this.processMessages();
 	}
 
-	public synchronized void enqueue(Job job) {
+	private synchronized void enqueue(Job job) {
 		this.jobQueue.add(job);
 		Collections.sort(jobQueue);
 	}

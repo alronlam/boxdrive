@@ -135,21 +135,21 @@ public class DirectoryListener {
 	private void create(Path path) {
 		if (serverSocket != null) {
 			Job createJob = new CreateJob(path, serverSocket);
-			JobManager.getInstance().enqueue(createJob);
+			JobManager.getInstance().handleNewJob(createJob);
 		}
 	}
 
 	private void modify(Path path) {
 		if (serverSocket != null) {
 			Job createJob = new CreateJob(path, serverSocket);
-			JobManager.getInstance().enqueue(createJob);
+			JobManager.getInstance().handleNewJob(createJob);
 		}
 	}
 
 	private void delete(Path path) {
 		if (serverSocket != null) {
 			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), serverSocket);
-			JobManager.getInstance().enqueue(deleteJob);
+			JobManager.getInstance().handleNewJob(deleteJob);
 		}
 	}
 
