@@ -38,6 +38,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -52,6 +53,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
+import job.CreateJob;
+import job.DeleteJob;
+import job.Job;
+import job.JobManager;
+
 /**
  * Class for watching a directory (or tree) for changes to files. Modified from
  * https://docs.oracle.com/javase/tutorial/essential/io/notification.html
@@ -62,10 +68,15 @@ public class DirectoryListener {
 	private final Map<WatchKey, Path> keys;
 	private final boolean recursive = true;
 	private boolean trace = false;
+	private Socket serverSocket = null;
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
 		return (WatchEvent<T>) event;
+	}
+
+	public void setServerSocket(Socket serverSocket) {
+		this.serverSocket = serverSocket;
 	}
 
 	/**
@@ -122,15 +133,24 @@ public class DirectoryListener {
 	}
 
 	private void create(Path path) {
-		// TODO: create job with job factory the enqueue using MessageHandler
+		if (serverSocket != null) {
+			Job createJob = new CreateJob(path, serverSocket);
+			JobManager.getInstance().handleNewJob(createJob);
+		}
 	}
 
 	private void modify(Path path) {
-		// TODO: create job with job factory the enqueue using MessageHandler
+		if (serverSocket != null) {
+			Job createJob = new CreateJob(path, serverSocket);
+			JobManager.getInstance().handleNewJob(createJob);
+		}
 	}
 
 	private void delete(Path path) {
-		// TODO: create job with job factory the enqueue using MessageHandler
+		if (serverSocket != null) {
+			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), serverSocket);
+			JobManager.getInstance().handleNewJob(deleteJob);
+		}
 	}
 
 	/**

@@ -33,18 +33,18 @@ public class JobManager {
 	 */
 	public synchronized void handleNewJsonMessage(String jsonString, Socket sendingSocket) {
 		JsonObject json = new JsonObject(jsonString);
-		
+
 		Job newJob = JobFactory.createJob(json, sendingSocket);
 		handleNewJob(newJob);
 	}
 
-	synchronized void handleNewJob(Job newJob) {
+	public synchronized void handleNewJob(Job newJob) {
 		this.enqueue(newJob);
 
 		if (jobQueue.size() == 1)
 			this.processMessages();
 	}
-	
+
 	private synchronized void enqueue(Job job) {
 		this.jobQueue.add(job);
 		Collections.sort(jobQueue);
