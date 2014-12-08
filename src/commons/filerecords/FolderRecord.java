@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
-import job.Job;
-
 public class FolderRecord {
 
 	private ArrayList<FileRecord> list = new ArrayList<FileRecord>();
@@ -46,39 +44,6 @@ public class FolderRecord {
 
 		return list.get(index);
 
-	}
-
-	/***
-	 * This object is considered as the latest record, while the otherFolder is
-	 * considered as the older record.
-	 * 
-	 * @param otherFolder
-	 * @return
-	 */
-	public ArrayList<Job> compareAndGenerateJobs(FolderRecord otherFolder) {
-		ArrayList<Job> jobs = new ArrayList<Job>();
-		jobs.addAll(this.generateCreateJobs(otherFolder));
-		jobs.addAll(this.generateModifyJobs(otherFolder));
-		jobs.addAll(this.generateDeleteJobs(otherFolder));
-		return jobs;
-	}
-
-	private ArrayList<Job> generateCreateJobs(FolderRecord otherFolder) {
-		ArrayList<Job> createJobs = new ArrayList<Job>();
-
-		return createJobs;
-	}
-
-	private ArrayList<Job> generateModifyJobs(FolderRecord otherFolder) {
-		ArrayList<Job> modifyJobs = new ArrayList<Job>();
-
-		return modifyJobs;
-	}
-
-	private ArrayList<Job> generateDeleteJobs(FolderRecord otherFolder) {
-		ArrayList<Job> deleteJobs = new ArrayList<Job>();
-
-		return deleteJobs;
 	}
 
 }
