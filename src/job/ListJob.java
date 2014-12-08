@@ -18,4 +18,10 @@ public class ListJob extends Job {
 		
 	}
 
+	@Override
+	public String getJson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

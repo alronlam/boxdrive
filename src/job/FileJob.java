@@ -1,22 +1,14 @@
 package job;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.Arrays;
-
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
-
-import com.hazelcast.nio.IOUtil;
 
 import commons.Constants;
 
@@ -63,5 +55,14 @@ public class FileJob extends BasicJob {
 			}
 		}
 	}
-	
+
+	@Override
+	public String getJson() {
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.FILE);
+		JsonObject body = file.getJsonObject();
+		body.putString(Constants.Body.FILEBYTES, fileByteString);
+		json.putObject(Constants.JSON.BODY, body);
+		return json.encode();
+	}
 }

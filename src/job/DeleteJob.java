@@ -9,6 +9,8 @@ import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
+import commons.Constants;
+
 public class DeleteJob extends BasicJob {
 
 	DeleteJob(JsonObject json, Socket socket) {
@@ -66,5 +68,14 @@ public class DeleteJob extends BasicJob {
             }
         }
         return ret && path.delete();
+	}
+
+	@Override
+	public String getJson() {
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.DELETE);
+		JsonObject body = file.getJsonObject();
+		json.putObject(Constants.JSON.BODY, body);
+		return json.encode();
 	}
 }
