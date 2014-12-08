@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
-public class FileRecordList {
+public class FolderRecord {
 
 	private ArrayList<FileRecord> list = new ArrayList<FileRecord>();
 
