@@ -7,22 +7,24 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
+import client.AbstractClient;
 import commons.Constants;
 
 public class FileJob extends BasicJob {
 	private final int BUFFER_SIZE = 8096;
 	private String fileByteString;
 
-	FileJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	FileJob(JsonObject json, AbstractClient client) {
+		super(json, client);
 		fileByteString = json.getString(Constants.Body.FILEBYTES);
 	}
 	
-	FileJob(Path path, Socket socket) {
-		super(path, socket);
+	FileJob(Path path, AbstractClient client) {
+		super(path, client);
 		try {
 			fileByteString = Base64.encodeBytes(Files.readAllBytes(path));
 		} catch (IOException ex) {

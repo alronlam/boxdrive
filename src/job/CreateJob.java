@@ -8,6 +8,8 @@ import java.nio.file.attribute.FileTime;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.AbstractClient;
+
 import commons.Constants;
 
 public class CreateJob extends BasicJob {
@@ -19,12 +21,12 @@ public class CreateJob extends BasicJob {
 	 *            A localized path.
 	 * @param socket
 	 */
-	public CreateJob(Path path, Socket socket) {
-		super(path, socket);
+	public CreateJob(Path path, AbstractClient client) {
+		super(path, client);
 	}
 
-	CreateJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	CreateJob(JsonObject json, AbstractClient client) {
+		super(json, client);
 	}
 
 	@Override
@@ -46,8 +48,8 @@ public class CreateJob extends BasicJob {
 
 			// Send a new Create Job if local file is newer.
 			if (comparison > 0) {
-				Job forSending = new CreateJob(localFile, this.getSocket());
-				JobManager.getInstance().handleNewJob(forSending);
+				Job forSending = new CreateJob(localFile, this.getClient());
+				this.getClient().getJobManager().handleNewJob(forSending);
 
 				// Update local file's last modified time if it is older and has
 				// same contents.
@@ -62,13 +64,13 @@ public class CreateJob extends BasicJob {
 				// contents.
 			} else {
 				Job forSending = new RequestJob(this);
-				JobManager.getInstance().handleNewJob(forSending);
+				this.getClient().getJobManager().handleNewJob(forSending);
 			}
 
 			// File doesn't exist yet
 		} else {
 			Job forSending = new RequestJob(this);
-			JobManager.getInstance().handleNewJob(forSending);
+			this.getClient().getJobManager().handleNewJob(forSending);
 		}
 	}
 
