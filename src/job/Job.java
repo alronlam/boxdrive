@@ -2,8 +2,6 @@ package job;
 
 import java.net.Socket;
 
-import org.vertx.java.core.json.JsonObject;
-
 public abstract class Job implements Comparable<Job> {
 	private Socket socket;
 	private final long createTime = System.currentTimeMillis();
@@ -25,6 +23,10 @@ public abstract class Job implements Comparable<Job> {
 	
 	public boolean isToSend() {
 		return toSend;
+	}
+	
+	protected Socket getSocket() {
+		return socket;
 	}
 	
 	public int compareTo(Job other) {

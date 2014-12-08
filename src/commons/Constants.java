@@ -1,6 +1,9 @@
-package util;
+package commons;
 
 public class Constants {
+	// Temporary constant until client handles folder name
+	public final static String FOLDER = "client1";
+	
 	/**
 	 * JSON Fields.
 	 */
