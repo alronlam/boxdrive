@@ -23,23 +23,16 @@ class FileBean {
 	 * @param path A localized Path.
 	 */
 	FileBean(Path path) {
-		this(path, 0);
-		try {
-			lastModified = Files.getLastModifiedTime(path).toMillis();
-		} catch (IOException e) {}
-	}
-	
-	/**
-	 * 
-	 * @param path A localized Path.
-	 * @param lastModified A custom value for lastModified. Used for Delete Jobs.
-	 */
-	FileBean(Path path, long lastModified) {
 		// Remove top level folder from filename
 		filename = path.subpath(1, path.getNameCount()).toString();
 		isDirectory = Files.isDirectory(path);
 		checksum = Util.getChecksum(path.toString());
-		this.lastModified = lastModified;		
+		
+		try {
+			lastModified = Files.getLastModifiedTime(path).toMillis();
+		} catch (IOException e) {
+			lastModified = 0;
+		}
 	}
 	
 	FileBean(JsonObject body) {
@@ -66,6 +59,10 @@ class FileBean {
 	
 	long getLastModified() {
 		return lastModified;
+	}
+	
+	void setLastModified(long lastModified) {
+		this.lastModified = lastModified;
 	}
 	
 	byte[] getChecksum() {

@@ -25,6 +25,7 @@ public abstract class BasicJob extends Job {
 		file = new FileBean(path);
 	}
 	
+
 	BasicJob(JsonObject json, Socket socket) {
 		super(socket);
 		JsonObject body = json.getObject(Constants.JSON.BODY);
