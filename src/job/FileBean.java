@@ -77,6 +77,16 @@ class FileBean {
 		return Paths.get(Constants.FOLDER, filename);
 	}
 	
+	JsonObject getJsonObject() {
+		JsonObject json = new JsonObject();
+		
+		json.putString(Constants.Body.FILENAME, filename);
+		json.putNumber(Constants.Body.LAST_MODIFIED, lastModified);
+		json.putBinary(Constants.Body.CHECKSUM, checksum);
+		json.putBoolean(Constants.Body.IS_DIRECTORY, isDirectory);
+		
+		return json;
+	}
 	
 	boolean hasSameContents(Path other) {
 		boolean hasSame = false;

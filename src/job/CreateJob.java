@@ -8,6 +8,8 @@ import java.nio.file.attribute.FileTime;
 
 import org.vertx.java.core.json.JsonObject;
 
+import commons.Constants;
+
 public class CreateJob extends BasicJob {
 
 	/**
@@ -69,4 +71,13 @@ public class CreateJob extends BasicJob {
 			JobManager.getInstance().handleNewJob(forSending);
 		}
 	}
+
+	@Override
+	public String getJson() {
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.CREATE);
+		JsonObject body = file.getJsonObject();
+		json.putObject(Constants.JSON.BODY, body);
+		return json.encode();
+	}	
 }

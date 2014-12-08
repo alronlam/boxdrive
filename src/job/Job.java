@@ -12,7 +12,8 @@ public abstract class Job implements Comparable<Job> {
 	}
 	
 	public abstract void execute();
-
+	public abstract String getJson();
+	
 	public long getCreateTime() {
 		return createTime;
 	}

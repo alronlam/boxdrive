@@ -6,6 +6,8 @@ import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
+import commons.Constants;
+
 public class RequestJob extends BasicJob {
 	
 	/**
@@ -31,5 +33,14 @@ public class RequestJob extends BasicJob {
 		Job forSending = new FileJob(localFile, this.getSocket());
 		JobManager.getInstance().handleNewJob(forSending);
 		
+	}
+
+	@Override
+	public String getJson() {
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.REQUEST);
+		JsonObject body = file.getJsonObject();
+		json.putObject(Constants.JSON.BODY, body);
+		return json.encode();
 	}
 }
