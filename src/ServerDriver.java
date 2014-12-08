@@ -10,7 +10,6 @@ public class ServerDriver {
 
 		String sharedFolder = "server-folder";
 		Path sharedFolderPath = Paths.get(sharedFolder);
-
 		// Start-up the server
 		server = new Server(sharedFolderPath);
 	}

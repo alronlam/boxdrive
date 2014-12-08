@@ -13,13 +13,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 public class Connection {
+	// Socket-related variables
 	public Socket socket;
-	
 	private InputStream inStream;
 	private OutputStream outStream;
-	
+
+	// Message-related variables
 	private ArrayList<String> msgQueue;
-	
 	private Semaphore awaitMessage;
 	private Semaphore messageMutex;
 
@@ -30,8 +30,7 @@ public class Connection {
 			inStream = socket.getInputStream();
 			outStream = socket.getOutputStream();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Failed to obtain Socket Streams.");
 		}
 
 		awaitMessage = new Semaphore(0);
@@ -40,52 +39,57 @@ public class Connection {
 		new ReadThread().start();
 	}
 
-	public void write(String str) {
+	/**	Sends string over to connected peer through the socket
+	 * @param msg String to be sent to peer
+	 */
+	public void write(String msg) {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ObjectOutputStream os = new ObjectOutputStream(out);
-
-			os.writeObject(str);
+			os.writeObject(msg);
 			this.write(out.toByteArray());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Failed to set up streams for writing String to socket's stream.");
 		}
 	}
-
+	
+	/**	Sends byte data over to peer through the socket
+	 * @param bytes Array of Bytes, each of which would be sent to the peer
+	 */
 	public void write(byte bytes[]) {
 		try {
 			outStream.write(bytes);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Failed to write byte array to stream.");
 		}
 	}
 
+	
+	/** Retrieves the next message that was received by the host
+	 * @return returns the first message that is read from the message buffer
+	 */
 	public String read() {
 		String str = null;
 		try {
 			awaitMessage.acquire();
 			messageMutex.acquire();
-
 			str = msgQueue.remove(0);
-
 			messageMutex.release();
-
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Failed to resolve concurrency for message queue.");
 		}
 
 		return str;
 	}
 
+	
+	/** Closes the socket and thus ends the connection to the peer
+	 */
 	public void cancel() {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Failed to close the socket.");
 		}
 	}
 
@@ -95,13 +99,10 @@ public class Connection {
 		public void run() {
 			ObjectInputStream is = null;
 
-			// TODO: reading
-
 			try {
 				is = new ObjectInputStream(inStream);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("Failed to get object stream from socket stream.");
 			}
 
 			while (true) {
@@ -111,29 +112,22 @@ public class Connection {
 				try {
 					str = (String) is.readObject();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.err.println("Failed to parse stream data as String.");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.err.println("Failed to read from socket stream.");
 				}
 
 				if (str != null) {
 					try {
 						messageMutex.acquire();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.err.println("Failed to resolve concurrency for message queue.");
 					}
-
 					msgQueue.add(str);
-
 					messageMutex.release();
-
 					awaitMessage.release();
 				}
 			}
 		}
-
 	}
 }
