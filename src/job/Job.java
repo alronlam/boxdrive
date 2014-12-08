@@ -2,6 +2,8 @@ package job;
 
 import java.net.Socket;
 
+import org.vertx.java.core.json.JsonObject;
+
 public abstract class Job implements Comparable<Job> {
 	private Socket socket;
 	private final long createTime = System.currentTimeMillis();

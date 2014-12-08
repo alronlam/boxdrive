@@ -2,10 +2,12 @@ package job;
 
 import java.net.Socket;
 
+import org.vertx.java.core.json.JsonObject;
+
 public class RequestJob extends BasicJob {
 
-	RequestJob(Socket socket) {
-		super(socket);
+	RequestJob(JsonObject json, Socket socket) {
+		super(json, socket);
 	}
 
 	@Override

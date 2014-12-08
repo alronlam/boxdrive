@@ -2,10 +2,12 @@ package job;
 
 import java.net.Socket;
 
+import org.vertx.java.core.json.JsonObject;
+
 public class DeleteJob extends BasicJob {
 
-	DeleteJob(Socket socket) {
-		super(socket);
+	DeleteJob(JsonObject json, Socket socket) {
+		super(json, socket);
 	}
 
 	@Override

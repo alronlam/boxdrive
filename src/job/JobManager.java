@@ -33,7 +33,7 @@ public class JobManager {
 	 */
 	public synchronized void handleNewJsonMessage(String jsonString, Socket sendingSocket) {
 		JsonObject json = new JsonObject(jsonString);
-
+		
 		// Temporary while there is still no JobFactory
 		Job newJob = null;
 		// newJob = JobFactory.createJob(json, sendingSocket);
@@ -49,7 +49,7 @@ public class JobManager {
 	}
 
 	private synchronized Job dequeue(int index) {
-		if (jobQueue.size() > 0)
+		if (jobQueue.size() == 0)
 			return null;
 		return jobQueue.remove(0);
 	}

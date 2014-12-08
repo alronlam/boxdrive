@@ -1,24 +1,38 @@
 package job;
 
+import org.vertx.java.core.json.JsonObject;
+
+import util.Constants;
+
 class FileBean {
 	private String filename;
 	private long lastModified;
 	private byte[] checksum;
 	private boolean isDirectory = false;
 	
-	protected String getFilename() {
+	/**
+	 * @param body
+	 */
+	FileBean(JsonObject body) {
+		filename = body.getString(Constants.Body.FILENAME);
+		lastModified = body.getLong(Constants.Body.LAST_MODIFIED);
+		checksum = body.getBinary(Constants.Body.CHECKSUM);
+		isDirectory = body.getBoolean(Constants.Body.IS_DIRECTORY);
+	}
+	
+	String getFilename() {
 		return filename;
 	}
 	
-	protected long getLastModified() {
+	long getLastModified() {
 		return lastModified;
 	}
 	
-	protected byte[] getChecksum() {
+	byte[] getChecksum() {
 		return checksum;
 	}
 	
-	protected boolean isDirectory() {
+	boolean isDirectory() {
 		return isDirectory;
 	}
 }

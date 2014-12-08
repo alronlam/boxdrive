@@ -3,9 +3,11 @@ package job;
 import java.net.Socket;
 import java.util.List;
 
+import org.vertx.java.core.json.JsonObject;
+
 public class ListJob extends Job {
 	
-	ListJob(Socket socket) {
+	ListJob(JsonObject json, Socket socket) {
 		super(socket);
 	}
 

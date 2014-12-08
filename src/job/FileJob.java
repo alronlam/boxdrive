@@ -2,10 +2,12 @@ package job;
 
 import java.net.Socket;
 
+import org.vertx.java.core.json.JsonObject;
+
 public class FileJob extends BasicJob {
 	
-	FileJob(Socket socket) {
-		super(socket);
+	FileJob(JsonObject json, Socket socket) {
+		super(json, socket);
 	}
 
 	private byte[] fileBytes;
