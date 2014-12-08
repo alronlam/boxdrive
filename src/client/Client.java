@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import job.JobManager;
+
 import commons.Constants;
 
 import conn.ConnectionManager;
@@ -25,6 +27,16 @@ public class Client {
 
 		// ServerJobManager.getInstance().setFolder(FOLDER);
 		connectionManager = new ConnectionManager();
+
+		attemptConnection(serverAddr);
+	}
+	
+	public Client(String serverAddr, Path path, JobManager jobManager) {
+		FOLDER = path;
+
+		// ServerJobManager.getInstance().setFolder(FOLDER);
+		connectionManager = new ConnectionManager();
+		connectionManager.jobManager = jobManager;
 
 		attemptConnection(serverAddr);
 	}
