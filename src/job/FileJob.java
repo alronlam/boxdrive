@@ -63,8 +63,7 @@ public class FileJob extends BasicJob {
 			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
 
 			// Update the FolderRecord
-			FolderRecord.getInstance().handleCreateOrModify(file.getFilename(),
-					FileTime.fromMillis(file.getLastModified()).toMillis());
+			FolderRecord.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
 
 		} catch (IOException ex) {
 			try {

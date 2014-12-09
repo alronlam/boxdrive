@@ -42,7 +42,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
@@ -52,11 +51,14 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
-import conn.Connection;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
 import job.JobManager;
+
+import commons.filerecords.FolderRecord;
+
+import conn.Connection;
 
 /**
  * Class for watching a directory (or tree) for changes to files. Modified from
@@ -75,7 +77,6 @@ public class DirectoryListener {
 		return (WatchEvent<T>) event;
 	}
 
-	
 	/**
 	 * Register the given directory with the WatchService
 	 */
@@ -134,6 +135,14 @@ public class DirectoryListener {
 		if (connection != null) {
 			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
+			try {
+				FolderRecord.getInstance().handleCreateOrModify(path.getFileName().toString(),
+						Files.getLastModifiedTime(path).toMillis());
+			} catch (IOException e) {
+				e.printStackTrace();
+				// should do something here in case recording the create wasn't
+				// successful
+			}
 		}
 	}
 
@@ -141,6 +150,14 @@ public class DirectoryListener {
 		if (connection != null) {
 			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
+			try {
+				FolderRecord.getInstance().handleCreateOrModify(path.getFileName().toString(),
+						Files.getLastModifiedTime(path).toMillis());
+			} catch (IOException e) {
+				e.printStackTrace();
+				// should do something here in case recording the create wasn't
+				// successful
+			}
 		}
 	}
 
@@ -148,6 +165,14 @@ public class DirectoryListener {
 		if (connection != null) {
 			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
 			JobManager.getInstance().handleNewJob(deleteJob);
+			try {
+				FolderRecord.getInstance().delete(path.getFileName().toString(),
+						Files.getLastModifiedTime(path).toMillis());
+			} catch (IOException e) {
+				e.printStackTrace();
+				// should do something here in case recording the create wasn't
+				// successful
+			}
 		}
 	}
 
@@ -169,7 +194,7 @@ public class DirectoryListener {
 				System.err.println("WatchKey not recognized!!");
 				continue;
 			}
-			
+
 			for (WatchEvent<?> event : key.pollEvents()) {
 				Kind<?> kind = event.kind();
 
@@ -177,12 +202,12 @@ public class DirectoryListener {
 				if (kind == OVERFLOW) {
 					continue;
 				}
-				
+
 				// Context for directory entry event is the file name of entry
 				WatchEvent<Path> ev = cast(event);
 				Path name = ev.context();
 				Path child = dir.resolve(name);
-				
+
 				// If directory is created, and watching recursively, then
 				// register it and its sub-directories
 				if (recursive && (kind == ENTRY_CREATE)) {
