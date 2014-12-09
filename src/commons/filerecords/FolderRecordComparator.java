@@ -1,24 +1,26 @@
 package commons.filerecords;
 
-import java.net.Socket;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
+import conn.Connection;
 
 public class FolderRecordComparator {
 
-	public ArrayList<Job> compareAndGenerateJobs(FolderRecord oldRecord, FolderRecord newRecord, Socket serverSocket) {
+	public ArrayList<Job> compareAndGenerateJobs(FolderRecord oldRecord, FolderRecord newRecord,
+			Connection serverConnection) {
 		ArrayList<Job> jobs = new ArrayList<Job>();
-		jobs.addAll(this.generateCreateJobs(oldRecord, newRecord, serverSocket));
-		jobs.addAll(this.generateModifyJobs(oldRecord, newRecord, serverSocket));
-		jobs.addAll(this.generateDeleteJobs(oldRecord, newRecord, serverSocket));
+		jobs.addAll(this.generateCreateJobs(oldRecord, newRecord, serverConnection));
+		jobs.addAll(this.generateModifyJobs(oldRecord, newRecord, serverConnection));
+		jobs.addAll(this.generateDeleteJobs(oldRecord, newRecord, serverConnection));
 		return jobs;
 	}
 
-	private ArrayList<Job> generateCreateJobs(FolderRecord oldRecord, FolderRecord newRecord, Socket serverSocket) {
+	private ArrayList<Job> generateCreateJobs(FolderRecord oldRecord, FolderRecord newRecord,
+			Connection serverConnection) {
 		ArrayList<Job> createJobs = new ArrayList<Job>();
 
 		ArrayList<FileRecord> newFileRecords = newRecord.getList();
@@ -28,14 +30,15 @@ public class FolderRecordComparator {
 			if (!oldFileRecords.contains(newFileRecord)) {
 				// placed dummy because i currently have no access to the
 				// calling app's shared folder
-				createJobs.add(new CreateJob(Paths.get("dummy/" + newFileRecord.getFileName()), serverSocket));
+				createJobs.add(new CreateJob(Paths.get("dummy/" + newFileRecord.getFileName()), serverConnection));
 			}
 		}
 
 		return createJobs;
 	}
 
-	private ArrayList<Job> generateModifyJobs(FolderRecord oldRecord, FolderRecord newRecord, Socket serverSocket) {
+	private ArrayList<Job> generateModifyJobs(FolderRecord oldRecord, FolderRecord newRecord,
+			Connection serverConnection) {
 		ArrayList<Job> modifyJobs = new ArrayList<Job>();
 
 		ArrayList<FileRecord> newFileRecords = newRecord.getList();
@@ -49,7 +52,7 @@ public class FolderRecordComparator {
 				if (newFileRecord.getDateTimeModified() > matchInOldRecords.getDateTimeModified()) {
 					// placed dummy because i currently have no access to the
 					// calling app's shared folder
-					modifyJobs.add(new CreateJob(Paths.get("dummy/" + newFileRecord.getFileName()), serverSocket));
+					modifyJobs.add(new CreateJob(Paths.get("dummy/" + newFileRecord.getFileName()), serverConnection));
 				}
 
 			}
@@ -58,7 +61,8 @@ public class FolderRecordComparator {
 		return modifyJobs;
 	}
 
-	private ArrayList<Job> generateDeleteJobs(FolderRecord oldRecord, FolderRecord newRecord, Socket serverSocket) {
+	private ArrayList<Job> generateDeleteJobs(FolderRecord oldRecord, FolderRecord newRecord,
+			Connection serverConnection) {
 		ArrayList<Job> deleteJobs = new ArrayList<Job>();
 
 		ArrayList<FileRecord> newFileRecords = newRecord.getList();
@@ -71,7 +75,7 @@ public class FolderRecordComparator {
 				// placed dummy because i currently have no access to the
 				// calling app's shared folder
 				deleteJobs.add(new DeleteJob(Paths.get("dummy/" + oldFileRecord.getFileName()), oldRecord
-						.getTimeLastModified(), serverSocket));
+						.getTimeLastModified(), serverConnection));
 			}
 		}
 
