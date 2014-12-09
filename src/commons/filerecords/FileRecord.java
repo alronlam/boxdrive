@@ -1,6 +1,5 @@
 package commons.filerecords;
 
-import java.util.Calendar;
 
 /***
  * Represents a record of one file in the shared folder. Do not give out a
@@ -14,18 +13,18 @@ import java.util.Calendar;
 public class FileRecord implements Comparable<FileRecord> {
 
 	private String fileName;
-	private Calendar dateTimeModified;
+	private long dateTimeModified;
 
-	public FileRecord(String fileName, Calendar dateTimeModified) {
+	public FileRecord(String fileName, long dateTimeModified) {
 		this.fileName = fileName;
 		this.dateTimeModified = dateTimeModified;
 	}
 
-	public Calendar getDateTimeModified() {
+	public long getDateTimeModified() {
 		return dateTimeModified;
 	}
 
-	public void setDateTimeModified(Calendar dateTimeModified) {
+	public void setDateTimeModified(long dateTimeModified) {
 		this.dateTimeModified = dateTimeModified;
 	}
 
