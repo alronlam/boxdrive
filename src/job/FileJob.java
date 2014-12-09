@@ -17,12 +17,22 @@ import conn.Connection;
 public class FileJob extends BasicJob {
 	private final int BUFFER_SIZE = 8096;
 	private String fileByteString;
-
+	
+	/**
+	 * Constructor for receiving.
+	 * @param json
+	 * @param connection
+	 */
 	FileJob(JsonObject json, Connection connection) {
 		super(json, connection);
 		fileByteString = json.getString(Constants.Body.FILEBYTES);
 	}
 	
+	/**
+	 * Constructor for sending.
+	 * @param path
+	 * @param connection
+	 */
 	FileJob(Path path, Connection connection) {
 		super(path, connection);
 		try {

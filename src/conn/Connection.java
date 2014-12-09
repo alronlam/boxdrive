@@ -15,9 +15,7 @@ import job.JobManager;
 public class Connection {
 	// Socket-related variables
 	public Socket socket;
-	private InputStream inStream;
-	private OutputStream outStream;
-
+	
 	// Message-related variables
 	private ArrayList<String> msgQueue;
 	private Semaphore awaitMessage;
@@ -25,13 +23,6 @@ public class Connection {
 	
 	public Connection(Socket socket) {
 		this.socket = socket;
-
-		try {
-			inStream = socket.getInputStream();
-			outStream = socket.getOutputStream();
-		} catch (IOException e) {
-			System.err.println("Failed to obtain Socket Streams.");
-		}
 
 		awaitMessage = new Semaphore(0);
 		messageMutex = new Semaphore(1);
@@ -68,6 +59,7 @@ public class Connection {
 	 */
 	public void write(byte bytes[]) {
 		try {
+			OutputStream outStream = socket.getOutputStream();
 			outStream.write(bytes);
 		} catch (IOException e) {
 			System.err.println("Failed to write byte array to stream.");
@@ -108,19 +100,13 @@ public class Connection {
 
 		@Override
 		public void run() {
-			ObjectInputStream is = null;
-
-			try {
-				is = new ObjectInputStream(inStream);
-			} catch (IOException e) {
-				System.err.println("Failed to get object stream from socket stream.");
-			}
-
 			while (true) {
 
 				String str = null;
 
 				try {
+					InputStream inStream = socket.getInputStream();
+					ObjectInputStream is = new ObjectInputStream(inStream);
 					str = (String) is.readObject();
 					System.out.println("Received: ");
 					System.out.println(str);

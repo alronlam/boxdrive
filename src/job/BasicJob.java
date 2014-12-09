@@ -17,7 +17,7 @@ public abstract class BasicJob extends Job {
 	 */
 	BasicJob(BasicJob job) {
 		super(job.getConnection());
-		this.file = new FileBean(file);
+		this.file = new FileBean(job.file);
 	}
 	
 	BasicJob(Path path, Connection connection) {
