@@ -28,8 +28,6 @@ public class ClientFileRecordComparator {
 
 		for (FileRecord newFileRecord : newFileRecords) {
 			if (!oldFileRecords.contains(newFileRecord)) {
-				// placed dummy because i currently have no access to the
-				// calling app's shared folder
 				createJobs.add(new CreateJob(Paths.get(sharedFolderName + "/" + newFileRecord.getFileName()),
 						serverConnection));
 			}
@@ -51,8 +49,6 @@ public class ClientFileRecordComparator {
 			if (matchIndex >= 0) {
 				FileRecord matchInOldRecords = oldFileRecords.get(matchIndex);
 				if (newFileRecord.getDateTimeModified() > matchInOldRecords.getDateTimeModified()) {
-					// placed dummy because i currently have no access to the
-					// calling app's shared folder
 					modifyJobs.add(new CreateJob(Paths.get(sharedFolderName + "/" + newFileRecord.getFileName()),
 							serverConnection));
 				}
@@ -74,8 +70,6 @@ public class ClientFileRecordComparator {
 			int matchIndex = newFileRecords.indexOf(oldFileRecord);
 
 			if (matchIndex < 0) {
-				// placed dummy because i currently have no access to the
-				// calling app's shared folder
 				deleteJobs.add(new DeleteJob(Paths.get(sharedFolderName + "/" + oldFileRecord.getFileName()), oldRecord
 						.getTimeLastModified(), serverConnection));
 			}
