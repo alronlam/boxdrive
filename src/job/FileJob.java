@@ -11,15 +11,17 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
 import commons.Constants;
+import commons.filerecords.FileRecordManager;
 
 import conn.Connection;
 
 public class FileJob extends BasicJob {
 	private final int BUFFER_SIZE = 8096;
 	private String fileByteString;
-	
+
 	/**
 	 * Constructor for receiving.
+	 * 
 	 * @param json
 	 * @param connection
 	 */
@@ -28,9 +30,10 @@ public class FileJob extends BasicJob {
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		fileByteString = body.getString(Constants.Body.FILEBYTES);
 	}
-	
+
 	/**
 	 * Constructor for sending.
+	 * 
 	 * @param path
 	 * @param connection
 	 */
@@ -42,24 +45,26 @@ public class FileJob extends BasicJob {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void executeLocal() {
-		// TODO handle newer existing file 
+		// TODO handle newer existing file
 		Path localFile = file.getLocalizedFile();
-		
+
 		byte[] fileBytes = Base64.decode(fileByteString);
 		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes);
-			 FileOutputStream outputStream = new FileOutputStream(localFile.toFile()))	
-		{
+				FileOutputStream outputStream = new FileOutputStream(localFile.toFile())) {
 			int read = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
-			while ((read = inputStream.read(buffer)) != -1) {			
+			while ((read = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, read);
 				System.out.println("wrting: " + buffer);
-			}			
-			Files.setLastModifiedTime( localFile, FileTime.fromMillis(file.getLastModified()) );	
-		
+			}
+			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
+
+			// Update the FolderRecord
+			FileRecordManager.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
+
 		} catch (IOException ex) {
 			try {
 				Files.delete(localFile);

@@ -1,27 +1,50 @@
 package commons.filerecords;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 
-public class FolderRecord {
+public class FileRecordManager {
+
+	// Singleton-related variables and methods
+
+	private static FileRecordManager instance = new FileRecordManager();
+
+	public static FileRecordManager getInstance() {
+		return instance;
+	}
+
+	private FileRecordManager() {
+
+	}
+
+	// The rest of the class
 
 	private ArrayList<FileRecord> list = new ArrayList<FileRecord>();
 	private long timeLastModified = 0; // time this folder record was last
-										// updated
+										// updated. this is just an internal
+										// time keeper used for when deletes
+										// happen while offline
 
-	public void create(String fileName, long dateTimeModified) {
-		timeLastModified = System.currentTimeMillis();
+	public void handleCreateOrModify(String fileName, long dateTimeModified) {
+		FileRecord targetRecord = this.retrieveFileRecord(fileName);
+
+		if (targetRecord == null)
+			this.create(fileName, dateTimeModified);
+		else
+			this.modify(targetRecord, dateTimeModified);
+	}
+
+	private void create(String fileName, long dateTimeModified) {
+		this.timeLastModified = System.currentTimeMillis();
+
 		FileRecord newRecord = new FileRecord(fileName, dateTimeModified);
 		list.add(newRecord);
 		Collections.sort(list);
 	}
 
-	public void modify(String fileName, long dateTimeModified) {
+	private void modify(FileRecord targetRecord, long dateTimeModified) {
 
-		timeLastModified = System.currentTimeMillis();
-
-		FileRecord targetRecord = this.retrieveFileRecord(fileName);
+		this.timeLastModified = System.currentTimeMillis();
 
 		if (targetRecord == null)
 			return;
@@ -29,9 +52,9 @@ public class FolderRecord {
 		targetRecord.setDateTimeModified(dateTimeModified);
 	}
 
-	public void delete(String fileName, Calendar dateTimeModified) {
+	public void delete(String fileName, long dateTimeModified) {
 
-		timeLastModified = System.currentTimeMillis();
+		this.timeLastModified = System.currentTimeMillis();
 
 		FileRecord targetRecord = this.retrieveFileRecord(fileName);
 
