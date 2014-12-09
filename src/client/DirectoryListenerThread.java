@@ -4,15 +4,15 @@ import java.io.IOException;
 
 public class DirectoryListenerThread implements Runnable {
 
-	private Client client;
+	private String directoryPath;
 
-	public DirectoryListenerThread(Client client) {
-		this.client = client;
+	public DirectoryListenerThread(String directoryPath) {
+		this.directoryPath = directoryPath;
 	}
 
 	public void run() {
 		try {
-			new DirectoryListener(client).processEvents();
+			new DirectoryListener(directoryPath).processEvents();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

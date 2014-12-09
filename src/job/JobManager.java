@@ -1,20 +1,26 @@
 package job;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import org.vertx.java.core.json.JsonObject;
 
-import client.AbstractClient;
-
 public class JobManager {
 
-		
+	/* Singleton Related Variables and Methods */
+
+	private static JobManager instance = new JobManager();
+
+	public static JobManager getInstance() {
+		return instance;
+	}
+
 	/* Actual Class Contents */
 
 	private ArrayList<Job> jobQueue;
 
-	public JobManager() {
+	private JobManager() {
 		this.jobQueue = new ArrayList<Job>();
 	}
 
@@ -23,12 +29,12 @@ public class JobManager {
 	 * socket.
 	 * 
 	 * @param jsonString
-	 * @param sendingClient
+	 * @param sendingSocket
 	 */
-	public synchronized void handleNewJsonMessage(String jsonString, AbstractClient sendingClient) {
+	public synchronized void handleNewJsonMessage(String jsonString, Socket sendingSocket) {
 		JsonObject json = new JsonObject(jsonString);
 
-		Job newJob = JobFactory.createJob(json, sendingClient);
+		Job newJob = JobFactory.createJob(json, sendingSocket);
 		handleNewJob(newJob);
 	}
 
