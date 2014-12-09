@@ -6,11 +6,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import commons.Constants;
+import conn.Connection;
 import conn.ConnectionManager;
 
 
 public class Client {
-	static Path FOLDER;
 	private Socket socket;
 	private ConnectionManager connectionManager;
 
@@ -19,16 +19,16 @@ public class Client {
 	}	
 	
 	public Client(String serverAddr, Path path) {
-		FOLDER = path;
-
+		Constants.FOLDER = path.toString(); // Makeshift global. Bad.
+		
 		// ServerJobManager.getInstance().setFolder(FOLDER);
 		connectionManager = new ConnectionManager();
 
-		attemptConnection(serverAddr);
-		new DirectoryListenerThread("shared-folder");
+		Connection conn = attemptConnection(serverAddr);
+		new Thread(new DirectoryListenerThread(path, conn)).start();;
 	}
 
-	private void attemptConnection(String serverAddr) {
+	private Connection attemptConnection(String serverAddr) {
 		do {
 
 			try {
@@ -37,10 +37,12 @@ public class Client {
 				e.printStackTrace();
 			}
 			if (socket != null) {
-				connectionManager.createNewConnection(socket);
+				Connection connection = connectionManager.createNewConnection(socket);
 				System.out.println(socket.getRemoteSocketAddress() + " has connected.");
+				return connection;
 			}
 		} while (socket == null);
+		return null;
 	}
 
 	public Socket getSocket(int index) {

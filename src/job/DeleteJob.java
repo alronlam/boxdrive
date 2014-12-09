@@ -33,7 +33,7 @@ public class DeleteJob extends BasicJob {
 	@Override
 	public void executeLocal() {
 		Path localFile = file.getLocalizedFile();
-		if (Files.exists(localFile)) {
+		if (!Files.exists(localFile)) {
 			return;
 		}
 

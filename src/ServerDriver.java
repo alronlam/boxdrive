@@ -6,7 +6,7 @@ import server.Server;
 public class ServerDriver {
 
 	public static void main(String[] args) {
-		String sharedFolder = "server-folder";
+		String sharedFolder = "server";
 		Path sharedFolderPath = Paths.get(sharedFolder);
 		// Start-up the server
 		new Server(sharedFolderPath);

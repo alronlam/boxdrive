@@ -12,10 +12,10 @@ public class ConnectionManager {
 		connections = new ArrayList<>();
 	}
 
-	public void createNewConnection(Socket socket) {
+	public Connection createNewConnection(Socket socket) {
 		Connection conn = new Connection(socket);
 		connections.add(conn);
-
+		return conn;
 		// System.out.println("New connection with: " + socket.getInetAddress());
 		// broadcast("Hello");
 		// System.out.println(this.connections.get(0).read());
