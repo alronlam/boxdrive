@@ -1,10 +1,11 @@
 package job;
 
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import org.vertx.java.core.json.JsonObject;
+
+import conn.Connection;
 
 public class JobManager {
 
@@ -29,12 +30,12 @@ public class JobManager {
 	 * socket.
 	 * 
 	 * @param jsonString
-	 * @param sendingSocket
+	 * @param jsonJobHandlingThread
 	 */
-	public synchronized void handleNewJsonMessage(String jsonString, Socket sendingSocket) {
+	public synchronized void handleNewJsonMessage(String jsonString, Connection connection) {
 		JsonObject json = new JsonObject(jsonString);
 
-		Job newJob = JobFactory.createJob(json, sendingSocket);
+		Job newJob = JobFactory.createJob(json, connection);
 		handleNewJob(newJob);
 	}
 

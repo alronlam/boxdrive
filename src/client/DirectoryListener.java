@@ -38,7 +38,6 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -53,6 +52,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
+import conn.Connection;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
@@ -68,17 +68,14 @@ public class DirectoryListener {
 	private final Map<WatchKey, Path> keys;
 	private final boolean recursive = true;
 	private boolean trace = false;
-	private Socket serverSocket = null;
+	private Connection connection = null;
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
 		return (WatchEvent<T>) event;
 	}
 
-	public void setServerSocket(Socket serverSocket) {
-		this.serverSocket = serverSocket;
-	}
-
+	
 	/**
 	 * Register the given directory with the WatchService
 	 */
@@ -115,8 +112,9 @@ public class DirectoryListener {
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	DirectoryListener(String path) throws IOException {
-		Path dir = Paths.get(path);
+	DirectoryListener(Path path, Connection connection) throws IOException {
+		Path dir = path;
+		this.connection = connection;
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
 
@@ -133,22 +131,22 @@ public class DirectoryListener {
 	}
 
 	private void create(Path path) {
-		if (serverSocket != null) {
-			Job createJob = new CreateJob(path, serverSocket);
+		if (connection != null) {
+			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
 		}
 	}
 
 	private void modify(Path path) {
-		if (serverSocket != null) {
-			Job createJob = new CreateJob(path, serverSocket);
+		if (connection != null) {
+			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
 		}
 	}
 
 	private void delete(Path path) {
-		if (serverSocket != null) {
-			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), serverSocket);
+		if (connection != null) {
+			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
 			JobManager.getInstance().handleNewJob(deleteJob);
 		}
 	}
@@ -171,7 +169,7 @@ public class DirectoryListener {
 				System.err.println("WatchKey not recognized!!");
 				continue;
 			}
-
+			
 			for (WatchEvent<?> event : key.pollEvents()) {
 				Kind<?> kind = event.kind();
 
@@ -179,12 +177,12 @@ public class DirectoryListener {
 				if (kind == OVERFLOW) {
 					continue;
 				}
-
+				
 				// Context for directory entry event is the file name of entry
 				WatchEvent<Path> ev = cast(event);
 				Path name = ev.context();
 				Path child = dir.resolve(name);
-
+				
 				// If directory is created, and watching recursively, then
 				// register it and its sub-directories
 				if (recursive && (kind == ENTRY_CREATE)) {
@@ -222,10 +220,5 @@ public class DirectoryListener {
 				}
 			}
 		}
-	}
-
-	static void usage() {
-		System.err.println("usage: java WatchDir [-r] dir");
-		System.exit(-1);
 	}
 }

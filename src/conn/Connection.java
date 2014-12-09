@@ -8,8 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 import job.JobManager;
@@ -17,9 +15,7 @@ import job.JobManager;
 public class Connection {
 	// Socket-related variables
 	public Socket socket;
-	private InputStream inStream;
-	private OutputStream outStream;
-
+	
 	// Message-related variables
 	private ArrayList<String> msgQueue;
 	private Semaphore awaitMessage;
@@ -27,13 +23,6 @@ public class Connection {
 	
 	public Connection(Socket socket) {
 		this.socket = socket;
-
-		try {
-			inStream = socket.getInputStream();
-			outStream = socket.getOutputStream();
-		} catch (IOException e) {
-			System.err.println("Failed to obtain Socket Streams.");
-		}
 
 		awaitMessage = new Semaphore(0);
 		messageMutex = new Semaphore(1);
@@ -50,6 +39,8 @@ public class Connection {
 	 *            String to be sent to peer
 	 */
 	public void write(String msg) {
+		System.out.println("Sending: ");
+		System.out.println(msg);
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ObjectOutputStream os = new ObjectOutputStream(out);
@@ -68,6 +59,7 @@ public class Connection {
 	 */
 	public void write(byte bytes[]) {
 		try {
+			OutputStream outStream = socket.getOutputStream();
 			outStream.write(bytes);
 		} catch (IOException e) {
 			System.err.println("Failed to write byte array to stream.");
@@ -108,20 +100,17 @@ public class Connection {
 
 		@Override
 		public void run() {
-			ObjectInputStream is = null;
-
-			try {
-				is = new ObjectInputStream(inStream);
-			} catch (IOException e) {
-				System.err.println("Failed to get object stream from socket stream.");
-			}
-
 			while (true) {
 
 				String str = null;
 
 				try {
+					InputStream inStream = socket.getInputStream();
+					ObjectInputStream is = new ObjectInputStream(inStream);
 					str = (String) is.readObject();
+					System.out.println("Received: ");
+					System.out.println(str);
+					
 				} catch (ClassNotFoundException e) {
 					System.err.println("Failed to parse stream data as String.");
 				} catch (IOException e) {
@@ -149,7 +138,7 @@ public class Connection {
 
 			while (true) {
 				json = read();
-				JobManager.getInstance().handleNewJsonMessage(json, socket);
+				JobManager.getInstance().handleNewJsonMessage(json, Connection.this);
 			}
 		}
 	}

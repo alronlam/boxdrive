@@ -1,7 +1,6 @@
 package job;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -9,6 +8,7 @@ import java.nio.file.attribute.FileTime;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
+import conn.Connection;
 
 public class CreateJob extends BasicJob {
 
@@ -19,16 +19,16 @@ public class CreateJob extends BasicJob {
 	 *            A localized path.
 	 * @param socket
 	 */
-	public CreateJob(Path path, Socket socket) {
-		super(path, socket);
+	public CreateJob(Path path, Connection connection) {
+		super(path, connection);
 	}
 
-	CreateJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	CreateJob(JsonObject json, Connection connection) {
+		super(json, connection);
 	}
 
 	@Override
-	public void execute() {
+	public void executeLocal() {
 		Path localFile = file.getLocalizedFile();
 
 		// Create folders immediately.
@@ -46,7 +46,7 @@ public class CreateJob extends BasicJob {
 
 			// Send a new Create Job if local file is newer.
 			if (comparison > 0) {
-				Job forSending = new CreateJob(localFile, this.getSocket());
+				Job forSending = new CreateJob(localFile, this.getConnection());
 				JobManager.getInstance().handleNewJob(forSending);
 
 				// Update local file's last modified time if it is older and has

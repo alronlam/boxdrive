@@ -1,11 +1,11 @@
 package job;
 
-import java.net.Socket;
 import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
+import conn.Connection;
 
 public abstract class BasicJob extends Job {
 	protected FileBean file;
@@ -16,18 +16,18 @@ public abstract class BasicJob extends Job {
 	 * @param job
 	 */
 	BasicJob(BasicJob job) {
-		super(job.getSocket());
-		this.file = new FileBean(file);
+		super(job.getConnection());
+		this.file = new FileBean(job.file);
 	}
 	
-	BasicJob(Path path, Socket socket) {
-		super(socket);
+	BasicJob(Path path, Connection connection) {
+		super(connection);
 		file = new FileBean(path);
 	}
 	
 
-	BasicJob(JsonObject json, Socket socket) {
-		super(socket);
+	BasicJob(JsonObject json, Connection connection) {
+		super(connection);
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		file = new FileBean(body);
 	}

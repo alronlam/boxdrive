@@ -1,17 +1,26 @@
 package job;
 
-import java.net.Socket;
+import conn.Connection;
 
 public abstract class Job implements Comparable<Job> {
-	private Socket socket;
+	private Connection connection;
 	private final long createTime = System.currentTimeMillis();
 	private boolean toSend = true;
 	
-	Job(Socket socket) {
-		this.socket = socket;
+	Job(Connection connection) {
+		this.connection = connection;
 	}
 	
-	public abstract void execute();
+	
+	public void execute() {
+		if (toSend) {
+			connection.write(getJson());
+		} else {
+			executeLocal();
+		}
+	}
+	
+	public abstract void executeLocal();
 	public abstract String getJson();
 	
 	public long getCreateTime() {
@@ -26,8 +35,8 @@ public abstract class Job implements Comparable<Job> {
 		return toSend;
 	}
 	
-	protected Socket getSocket() {
-		return socket;
+	protected Connection getConnection() {
+		return connection;
 	}
 	
 	public int compareTo(Job other) {
