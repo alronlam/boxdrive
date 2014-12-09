@@ -3,17 +3,17 @@ package commons.filerecords;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class FileRecordManager {
+public class ClientFileRecordManager {
 
 	// Singleton-related variables and methods
 
-	private static FileRecordManager instance = new FileRecordManager();
+	private static ClientFileRecordManager instance = new ClientFileRecordManager();
 
-	public static FileRecordManager getInstance() {
+	public static ClientFileRecordManager getInstance() {
 		return instance;
 	}
 
-	private FileRecordManager() {
+	private ClientFileRecordManager() {
 
 	}
 
