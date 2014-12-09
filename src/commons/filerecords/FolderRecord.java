@@ -46,4 +46,8 @@ public class FolderRecord {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public ArrayList<FileRecord> getList() {
+		return (ArrayList<FileRecord>) list.clone();
+	}
 }
