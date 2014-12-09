@@ -30,16 +30,6 @@ public class Client {
 
 		attemptConnection(serverAddr);
 	}
-	
-	public Client(String serverAddr, Path path, JobManager jobManager) {
-		FOLDER = path;
-
-		// ServerJobManager.getInstance().setFolder(FOLDER);
-		connectionManager = new ConnectionManager();
-		connectionManager.jobManager = jobManager;
-
-		attemptConnection(serverAddr);
-	}
 
 	private void attemptConnection(String serverAddr) {
 		do {

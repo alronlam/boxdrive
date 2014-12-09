@@ -36,23 +36,6 @@ public class Server {
 
 		acceptConnections();
 	}
-	
-	public Server(Path path, JobManager jobManager) {
-		FOLDER = path;
-
-		// ServerJobManager.getInstance().setFolder(FOLDER);
-
-		connectionManager = new ConnectionManager();
-		connectionManager.jobManager = jobManager;
-
-		try {
-			serverSocket = new ServerSocket(Constants.PORT);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		acceptConnections();
-	}
 
 	private void acceptConnections() {
 		while (true) {

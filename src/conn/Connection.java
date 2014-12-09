@@ -25,8 +25,6 @@ public class Connection {
 	private Semaphore awaitMessage;
 	private Semaphore messageMutex;
 	
-	JobManager jobManager;
-
 	public Connection(Socket socket) {
 		this.socket = socket;
 
@@ -41,26 +39,6 @@ public class Connection {
 		messageMutex = new Semaphore(1);
 		msgQueue = new ArrayList<>();
 
-		new ReadThread().start();
-		new JSONJobHandlingThread().start();
-	}
-	
-	public Connection(Socket socket, JobManager jobManager) {
-		this.socket = socket;
-
-		try {
-			inStream = socket.getInputStream();
-			outStream = socket.getOutputStream();
-		} catch (IOException e) {
-			System.err.println("Failed to obtain Socket Streams.");
-		}
-
-		awaitMessage = new Semaphore(0);
-		messageMutex = new Semaphore(1);
-		msgQueue = new ArrayList<>();
-		
-		this.jobManager = jobManager;
-		
 		new ReadThread().start();
 		new JSONJobHandlingThread().start();
 	}
@@ -171,10 +149,7 @@ public class Connection {
 
 			while (true) {
 				json = read();
-				if(jobManager != null)
-					jobManager.handleNewJsonMessage(json, socket);
-				else
-					JobManager.getInstance().handleNewJsonMessage(json, socket);
+				JobManager.getInstance().handleNewJsonMessage(json, socket);
 			}
 		}
 	}
