@@ -1,11 +1,7 @@
-import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import job.JobManager;
-
 import client.Client;
-import client.DirectoryListenerThread;
 
 public class ClientDriver {
 	private static Client client;
@@ -22,8 +18,5 @@ public class ClientDriver {
 		client = new Client(serverAddr, sharedFolderPath);
 		// call this to get socket to server, once it has connected
 		client.getFirstSocket();
-
-		// Start up the directory listener
-		new DirectoryListenerThread("shared-folder");
 	}
 }

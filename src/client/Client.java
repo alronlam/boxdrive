@@ -1,15 +1,11 @@
 package client;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import job.JobManager;
-
 import commons.Constants;
-
 import conn.ConnectionManager;
 
 
@@ -29,6 +25,7 @@ public class Client {
 		connectionManager = new ConnectionManager();
 
 		attemptConnection(serverAddr);
+		new DirectoryListenerThread("shared-folder");
 	}
 
 	private void attemptConnection(String serverAddr) {
@@ -53,10 +50,4 @@ public class Client {
 	public Socket getFirstSocket() {
 		return getSocket(0);
 	}
-	
-	
-	
-//	public void readFromServer(){
-//		connectionManager
-//	}
 }

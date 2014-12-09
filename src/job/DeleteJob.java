@@ -3,7 +3,6 @@ package job;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -11,10 +10,12 @@ import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
 
+import conn.Connection;
+
 public class DeleteJob extends BasicJob {
 
-	DeleteJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	DeleteJob(JsonObject json, Connection connection) {
+		super(json, connection);
 	}
 
 	/**
@@ -24,13 +25,13 @@ public class DeleteJob extends BasicJob {
 	 *            The time of deletion.
 	 * @param socket
 	 */
-	public DeleteJob(Path path, long lastModified, Socket socket) {
-		super(path, socket);
+	public DeleteJob(Path path, long lastModified, Connection connection) {
+		super(path, connection);
 		file.setLastModified(lastModified);
 	}
 
 	@Override
-	public void execute() {
+	public void executeLocal() {
 		Path localFile = file.getLocalizedFile();
 		if (Files.exists(localFile)) {
 			return;
@@ -48,7 +49,7 @@ public class DeleteJob extends BasicJob {
 
 			// If local file is newer, send a Create Job to remote.
 		} else {
-			Job forSending = new CreateJob(localFile, this.getSocket());
+			Job forSending = new CreateJob(localFile, this.getConnection());
 			JobManager.getInstance().handleNewJob(forSending);
 		}
 	}

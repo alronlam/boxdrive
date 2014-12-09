@@ -3,26 +3,28 @@ package job;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
 import commons.Constants;
 
+import conn.Connection;
+
 public class FileJob extends BasicJob {
 	private final int BUFFER_SIZE = 8096;
 	private String fileByteString;
 
-	FileJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	FileJob(JsonObject json, Connection connection) {
+		super(json, connection);
 		fileByteString = json.getString(Constants.Body.FILEBYTES);
 	}
 	
-	FileJob(Path path, Socket socket) {
-		super(path, socket);
+	FileJob(Path path, Connection connection) {
+		super(path, connection);
 		try {
 			fileByteString = Base64.encodeBytes(Files.readAllBytes(path));
 		} catch (IOException ex) {
@@ -31,7 +33,7 @@ public class FileJob extends BasicJob {
 	}
 	
 	@Override
-	public void execute() {
+	public void executeLocal() {
 		// TODO handle newer existing file 
 		Path localFile = file.getLocalizedFile();
 		

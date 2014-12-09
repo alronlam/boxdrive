@@ -8,8 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 import job.JobManager;
@@ -149,7 +147,7 @@ public class Connection {
 
 			while (true) {
 				json = read();
-				JobManager.getInstance().handleNewJsonMessage(json, socket);
+				JobManager.getInstance().handleNewJsonMessage(json, Connection.this);
 			}
 		}
 	}

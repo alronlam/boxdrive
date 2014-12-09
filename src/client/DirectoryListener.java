@@ -38,7 +38,6 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -53,6 +52,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
+import conn.Connection;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
@@ -68,15 +68,15 @@ public class DirectoryListener {
 	private final Map<WatchKey, Path> keys;
 	private final boolean recursive = true;
 	private boolean trace = false;
-	private Socket serverSocket = null;
+	private Connection connection = null;
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
 		return (WatchEvent<T>) event;
 	}
 
-	public void setServerSocket(Socket serverSocket) {
-		this.serverSocket = serverSocket;
+	public void setConnection(Connection connection) {
+		this.connection = connection;
 	}
 
 	/**
@@ -133,22 +133,22 @@ public class DirectoryListener {
 	}
 
 	private void create(Path path) {
-		if (serverSocket != null) {
-			Job createJob = new CreateJob(path, serverSocket);
+		if (connection != null) {
+			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
 		}
 	}
 
 	private void modify(Path path) {
-		if (serverSocket != null) {
-			Job createJob = new CreateJob(path, serverSocket);
+		if (connection != null) {
+			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
 		}
 	}
 
 	private void delete(Path path) {
-		if (serverSocket != null) {
-			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), serverSocket);
+		if (connection != null) {
+			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
 			JobManager.getInstance().handleNewJob(deleteJob);
 		}
 	}
@@ -222,10 +222,5 @@ public class DirectoryListener {
 				}
 			}
 		}
-	}
-
-	static void usage() {
-		System.err.println("usage: java WatchDir [-r] dir");
-		System.exit(-1);
 	}
 }

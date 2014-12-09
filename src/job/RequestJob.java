@@ -1,12 +1,13 @@
 package job;
 
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
+
+import conn.Connection;
 
 public class RequestJob extends BasicJob {
 	
@@ -18,19 +19,19 @@ public class RequestJob extends BasicJob {
 		super(job);
 	}
 	
-	RequestJob(JsonObject json, Socket socket) {
-		super(json, socket);
+	RequestJob(JsonObject json, Connection connection) {
+		super(json, connection);
 	}
 
 	@Override
-	public void execute() {
+	public void executeLocal() {
 		Path localFile = file.getLocalizedFile();
 		
 		if (!Files.exists(localFile)) {
 			return;
 		}
 		
-		Job forSending = new FileJob(localFile, this.getSocket());
+		Job forSending = new FileJob(localFile, this.getConnection());
 		JobManager.getInstance().handleNewJob(forSending);
 		
 	}
