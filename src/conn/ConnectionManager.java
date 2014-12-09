@@ -4,11 +4,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import client.AbstractClient;
+import job.JobManager;
 
 public class ConnectionManager {
 
 	private List<Connection> connections;
+	public JobManager jobManager;
 
 	public ConnectionManager() {
 		connections = new ArrayList<>();
