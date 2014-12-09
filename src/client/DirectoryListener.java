@@ -55,9 +55,7 @@ import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
 import job.JobManager;
-
-import commons.filerecords.ClientFileRecordManager;
-
+import client.filerecords.ClientFileRecordManager;
 import conn.Connection;
 
 /**
