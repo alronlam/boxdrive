@@ -11,7 +11,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
 import commons.Constants;
-import commons.filerecords.FileRecordManager;
+import commons.filerecords.ClientFileRecordManager;
 
 import conn.Connection;
 
@@ -63,7 +63,7 @@ public class FileJob extends BasicJob {
 			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
 
 			// Update the FolderRecord
-			FileRecordManager.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
+			ClientFileRecordManager.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
 
 		} catch (IOException ex) {
 			try {
