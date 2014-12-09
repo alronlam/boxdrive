@@ -115,7 +115,6 @@ public class Connection {
 					System.err.println("Failed to parse stream data as String.");
 				} catch (IOException e) {
 					System.err.println("Failed to read from socket stream.");
-					break;
 				}
 
 				if (str != null) {

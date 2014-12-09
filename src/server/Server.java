@@ -11,7 +11,6 @@ import commons.Constants;
 import conn.ConnectionManager;
 
 public class Server {
-	static Path FOLDER;
 	private ServerSocket serverSocket;
 	private ConnectionManager connectionManager;
 
@@ -20,7 +19,7 @@ public class Server {
 	}
 
 	public Server(Path path) {
-		FOLDER = path;
+		Constants.FOLDER = path.toString();
 
 		// ServerJobManager.getInstance().setFolder(FOLDER);
 

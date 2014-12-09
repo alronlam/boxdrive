@@ -25,7 +25,8 @@ public class FileJob extends BasicJob {
 	 */
 	FileJob(JsonObject json, Connection connection) {
 		super(json, connection);
-		fileByteString = json.getString(Constants.Body.FILEBYTES);
+		JsonObject body = json.getObject(Constants.JSON.BODY);
+		fileByteString = body.getString(Constants.Body.FILEBYTES);
 	}
 	
 	/**
@@ -54,13 +55,15 @@ public class FileJob extends BasicJob {
 			int read = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
 			while ((read = inputStream.read(buffer)) != -1) {			
-				outputStream.write(buffer, 0, read);  
+				outputStream.write(buffer, 0, read);
+				System.out.println("wrting: " + buffer);
 			}			
 			Files.setLastModifiedTime( localFile, FileTime.fromMillis(file.getLastModified()) );	
 		
 		} catch (IOException ex) {
 			try {
 				Files.delete(localFile);
+				System.err.println("Error. Deleting: " + localFile.toString());
 			} catch (IOException ex1) {
 				// something went terribly, horribly wrong
 				ex1.printStackTrace();
