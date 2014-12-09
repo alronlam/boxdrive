@@ -56,7 +56,7 @@ import job.DeleteJob;
 import job.Job;
 import job.JobManager;
 
-import commons.filerecords.FolderRecord;
+import commons.filerecords.FileRecordManager;
 
 import conn.Connection;
 
@@ -136,7 +136,7 @@ public class DirectoryListener {
 			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
 			try {
-				FolderRecord.getInstance().handleCreateOrModify(path.getFileName().toString(),
+				FileRecordManager.getInstance().handleCreateOrModify(path.getFileName().toString(),
 						Files.getLastModifiedTime(path).toMillis());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -151,7 +151,7 @@ public class DirectoryListener {
 			Job createJob = new CreateJob(path, connection);
 			JobManager.getInstance().handleNewJob(createJob);
 			try {
-				FolderRecord.getInstance().handleCreateOrModify(path.getFileName().toString(),
+				FileRecordManager.getInstance().handleCreateOrModify(path.getFileName().toString(),
 						Files.getLastModifiedTime(path).toMillis());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -166,7 +166,7 @@ public class DirectoryListener {
 			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
 			JobManager.getInstance().handleNewJob(deleteJob);
 			try {
-				FolderRecord.getInstance().delete(path.getFileName().toString(),
+				FileRecordManager.getInstance().delete(path.getFileName().toString(),
 						Files.getLastModifiedTime(path).toMillis());
 			} catch (IOException e) {
 				e.printStackTrace();

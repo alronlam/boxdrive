@@ -10,7 +10,7 @@ import conn.Connection;
 
 public class FolderRecordComparator {
 
-	public ArrayList<Job> compareAndGenerateJobs(FolderRecord oldRecord, FolderRecord newRecord,
+	public ArrayList<Job> compareAndGenerateJobs(FileRecordManager oldRecord, FileRecordManager newRecord,
 			Connection serverConnection) {
 		ArrayList<Job> jobs = new ArrayList<Job>();
 		jobs.addAll(this.generateCreateJobs(oldRecord, newRecord, serverConnection));
@@ -19,7 +19,7 @@ public class FolderRecordComparator {
 		return jobs;
 	}
 
-	private ArrayList<Job> generateCreateJobs(FolderRecord oldRecord, FolderRecord newRecord,
+	private ArrayList<Job> generateCreateJobs(FileRecordManager oldRecord, FileRecordManager newRecord,
 			Connection serverConnection) {
 		ArrayList<Job> createJobs = new ArrayList<Job>();
 
@@ -37,7 +37,7 @@ public class FolderRecordComparator {
 		return createJobs;
 	}
 
-	private ArrayList<Job> generateModifyJobs(FolderRecord oldRecord, FolderRecord newRecord,
+	private ArrayList<Job> generateModifyJobs(FileRecordManager oldRecord, FileRecordManager newRecord,
 			Connection serverConnection) {
 		ArrayList<Job> modifyJobs = new ArrayList<Job>();
 
@@ -61,7 +61,7 @@ public class FolderRecordComparator {
 		return modifyJobs;
 	}
 
-	private ArrayList<Job> generateDeleteJobs(FolderRecord oldRecord, FolderRecord newRecord,
+	private ArrayList<Job> generateDeleteJobs(FileRecordManager oldRecord, FileRecordManager newRecord,
 			Connection serverConnection) {
 		ArrayList<Job> deleteJobs = new ArrayList<Job>();
 

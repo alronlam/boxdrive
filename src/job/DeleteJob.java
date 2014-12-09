@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-import commons.filerecords.FolderRecord;
+import commons.filerecords.FileRecordManager;
 
 import conn.Connection;
 
@@ -46,7 +46,7 @@ public class DeleteJob extends BasicJob {
 				deleteRecursive(localFile.toFile());
 
 				// Update the FolderRecord
-				FolderRecord.getInstance().delete(file.getFilename(), file.getLastModified());
+				FileRecordManager.getInstance().delete(file.getFilename(), file.getLastModified());
 
 			} catch (IOException ex) {
 				System.err.println("Error deleting file.");
