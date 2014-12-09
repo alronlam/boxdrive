@@ -8,9 +8,8 @@ import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.filerecords.ClientFileRecordManager;
 import commons.Constants;
-import commons.filerecords.ClientFileRecordManager;
-
 import conn.Connection;
 
 public class DeleteJob extends BasicJob {

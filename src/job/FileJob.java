@@ -10,9 +10,8 @@ import java.nio.file.attribute.FileTime;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
+import client.filerecords.ClientFileRecordManager;
 import commons.Constants;
-import commons.filerecords.ClientFileRecordManager;
-
 import conn.Connection;
 
 public class FileJob extends BasicJob {
