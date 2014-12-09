@@ -9,7 +9,6 @@ import job.JobManager;
 public class ConnectionManager {
 
 	private List<Connection> connections;
-	public JobManager jobManager;
 
 	public ConnectionManager() {
 		connections = new ArrayList<>();
@@ -19,7 +18,9 @@ public class ConnectionManager {
 		Connection conn = new Connection(socket);
 		connections.add(conn);
 
-		System.out.println(this.connections.get(0).read());
+		// System.out.println("New connection with: " + socket.getInetAddress());
+		// broadcast("Hello");
+		// System.out.println(this.connections.get(0).read());
 	}
 
 	public Socket getSocket(int index) {
