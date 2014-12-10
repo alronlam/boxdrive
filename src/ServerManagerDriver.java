@@ -16,6 +16,6 @@ public class ServerManagerDriver {
 
 		// start servermanager
 		// start 3 servers
-		// connect to servermanager
+		// connect servers to servermanager
 	}
 }

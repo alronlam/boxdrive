@@ -31,7 +31,7 @@ public class Server {
 		acceptConnections();
 	}
 
-	private void acceptConnections() {
+	protected void acceptConnections() {
 		while (true) {
 			Socket newSocket = acceptNewConnection();
 			if (newSocket != null)
