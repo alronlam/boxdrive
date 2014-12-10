@@ -5,10 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectionManager {
+	private static ConnectionManager connectionManager;
 
 	private List<Connection> connections;
 
-	public ConnectionManager() {
+	public static ConnectionManager getInstance(){
+		if(connectionManager == null)
+			connectionManager = new ConnectionManager();
+		return connectionManager;
+	}
+	
+	private ConnectionManager() {
 		connections = new ArrayList<>();
 	}
 
