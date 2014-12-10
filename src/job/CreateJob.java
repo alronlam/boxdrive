@@ -51,22 +51,26 @@ public class CreateJob extends BasicJob {
 
 				// Update local file's last modified time if it is older and has
 				// same contents.
-			} else if (comparison < 0 && file.hasSameContents(localFile)) {
-				try {
-					Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			} else if (comparison < 0)
+				if (file.hasSameContents(localFile)) {
+					try {
+						Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 
-				// Request for file if local file is older and has different
-				// contents.
-			} else {
-				Job forSending = new RequestJob(this);
-				JobManager.getInstance().handleNewJob(forSending);
+					// Request for file if local file is older and has different
+					// contents.
+				} else {
+					Job forSending = new RequestJob(this);
+					JobManager.getInstance().handleNewJob(forSending);
+				}
+			else{
+				//if comparison == 0 then just ignore the job
 			}
+		} else {
 
 			// File doesn't exist yet
-		} else {
 			Job forSending = new RequestJob(this);
 			JobManager.getInstance().handleNewJob(forSending);
 		}
@@ -79,5 +83,5 @@ public class CreateJob extends BasicJob {
 		JsonObject body = file.getJsonObject();
 		json.putObject(Constants.JSON.BODY, body);
 		return json.encode();
-	}	
+	}
 }
