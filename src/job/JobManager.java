@@ -9,19 +9,9 @@ import conn.Connection;
 
 public class JobManager {
 
-	/* Singleton Related Variables and Methods */
-
-	private static JobManager instance = new JobManager();
-
-	public static JobManager getInstance() {
-		return instance;
-	}
-
-	/* Actual Class Contents */
-
 	private ArrayList<Job> jobQueue;
 
-	private JobManager() {
+	public JobManager() {
 		this.jobQueue = new ArrayList<Job>();
 	}
 
@@ -60,7 +50,7 @@ public class JobManager {
 	private synchronized void processMessages() {
 		while (jobQueue.size() > 0) {
 			Job currJob = this.dequeue(0);
-			currJob.execute();
+			currJob.execute(this);
 		}
 	}
 }

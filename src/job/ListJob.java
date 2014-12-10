@@ -15,7 +15,7 @@ public class ListJob extends Job {
 	private List<FileBean> files;
 	
 	@Override
-	public void executeLocal() {
+	public void executeLocal(JobManager jobManager) {
 		
 	}
 

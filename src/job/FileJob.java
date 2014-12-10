@@ -48,7 +48,7 @@ public class FileJob extends BasicJob {
 	}
 
 	@Override
-	public void executeLocal() {
+	public void executeLocal(JobManager jobManager) {
 		// TODO handle newer existing file
 		Path localFile = file.getLocalizedFile();
 

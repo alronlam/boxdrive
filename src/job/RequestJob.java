@@ -24,7 +24,7 @@ public class RequestJob extends BasicJob {
 	}
 
 	@Override
-	public void executeLocal() {
+	public void executeLocal(JobManager jobManager) {
 		Path localFile = file.getLocalizedFile();
 		
 		if (!Files.exists(localFile)) {
@@ -32,7 +32,7 @@ public class RequestJob extends BasicJob {
 		}
 		
 		Job forSending = new FileJob(localFile, this.getConnection());
-		JobManager.getInstance().handleNewJob(forSending);
+		jobManager.handleNewJob(forSending);
 		
 	}
 

@@ -33,7 +33,7 @@ public class DeleteJob extends BasicJob {
 	}
 
 	@Override
-	public void executeLocal() {
+	public void executeLocal(JobManager jobManager) {
 		Path localFile = file.getLocalizedFile();
 		if (!Files.exists(localFile)) {
 			return;
@@ -56,7 +56,7 @@ public class DeleteJob extends BasicJob {
 			// If local file is newer, send a Create Job to remote.
 		} else {
 			Job forSending = new CreateJob(localFile, this.getConnection());
-			JobManager.getInstance().handleNewJob(forSending);
+			jobManager.handleNewJob(forSending);
 		}
 	}
 

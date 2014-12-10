@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import job.JobManager;
+
 public class ConnectionManager {
 	private static ConnectionManager connectionManager;
 
@@ -19,15 +21,15 @@ public class ConnectionManager {
 		connections = new ArrayList<>();
 	}
 
-	public Connection createNewConnection(Socket socket) {
-		Connection conn = new Connection(socket);
+	public Connection createNewConnection(Socket socket, JobManager jobManager) {
+		Connection conn = new Connection(socket, jobManager);
 		connections.add(conn);
 		return conn;
 		// System.out.println("New connection with: " + socket.getInetAddress());
 		// broadcast("Hello");
 		// System.out.println(this.connections.get(0).read());
 	}
-
+	
 	public Socket getSocket(int index) {
 		if (connections.size() > index)
 			return connections.get(index).socket;

@@ -21,12 +21,16 @@ public class Connection {
 	private Semaphore awaitMessage;
 	private Semaphore messageMutex;
 	
-	public Connection(Socket socket) {
+	private JobManager jobManager;
+	
+	public Connection(Socket socket, JobManager jobManager) {
 		this.socket = socket;
 
 		awaitMessage = new Semaphore(0);
 		messageMutex = new Semaphore(1);
 		msgQueue = new ArrayList<>();
+		
+		this.jobManager = jobManager;
 
 		new ReadThread().start();
 		new JSONJobHandlingThread().start();
@@ -138,7 +142,7 @@ public class Connection {
 
 			while (true) {
 				json = read();
-				JobManager.getInstance().handleNewJsonMessage(json, Connection.this);
+				jobManager.handleNewJsonMessage(json, Connection.this);
 			}
 		}
 	}

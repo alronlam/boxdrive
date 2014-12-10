@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import job.JobManager;
+
 import commons.Constants;
 import conn.Connection;
 import conn.ConnectionManager;
@@ -12,6 +14,7 @@ import conn.ConnectionManager;
 
 public class Client {
 	private Socket socket;
+	private JobManager jobManager;
 
 	public static void main(String args[])	{
 		new Client("localhost",Paths.get("client1"));
@@ -21,9 +24,12 @@ public class Client {
 		Constants.FOLDER = path.toString(); // Makeshift global. Bad.
 		
 		// ServerJobManager.getInstance().setFolder(FOLDER);
+		
+		// TODO: Change to ServerJobManager
+		jobManager = new JobManager();
 
 		Connection conn = attemptConnection(serverAddr);
-		new Thread(new DirectoryListenerThread(path, conn)).start();;
+		new Thread(new DirectoryListenerThread(path, conn, jobManager)).start();;
 	}
 
 	private Connection attemptConnection(String serverAddr) {
@@ -35,7 +41,7 @@ public class Client {
 				e.printStackTrace();
 			}
 			if (socket != null) {
-				Connection connection = ConnectionManager.getInstance().createNewConnection(socket);
+				Connection connection = ConnectionManager.getInstance().createNewConnection(socket,jobManager);
 				System.out.println(socket.getRemoteSocketAddress() + " has connected.");
 				return connection;
 			}

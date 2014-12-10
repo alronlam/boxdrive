@@ -28,7 +28,7 @@ public class CreateJob extends BasicJob {
 	}
 
 	@Override
-	public void executeLocal() {
+	public void executeLocal(JobManager jobManager) {
 		Path localFile = file.getLocalizedFile();
 
 		// Create folders immediately.
@@ -47,7 +47,7 @@ public class CreateJob extends BasicJob {
 			// Send a new Create Job if local file is newer.
 			if (comparison > 0) {
 				Job forSending = new CreateJob(localFile, this.getConnection());
-				JobManager.getInstance().handleNewJob(forSending);
+				jobManager.handleNewJob(forSending);
 
 				// Update local file's last modified time if it is older and has
 				// same contents.
@@ -63,7 +63,7 @@ public class CreateJob extends BasicJob {
 					// contents.
 				} else {
 					Job forSending = new RequestJob(this);
-					JobManager.getInstance().handleNewJob(forSending);
+					jobManager.handleNewJob(forSending);
 				}
 			else{
 				//if comparison == 0 then just ignore the job
@@ -72,7 +72,7 @@ public class CreateJob extends BasicJob {
 
 			// File doesn't exist yet
 			Job forSending = new RequestJob(this);
-			JobManager.getInstance().handleNewJob(forSending);
+			jobManager.handleNewJob(forSending);
 		}
 	}
 
