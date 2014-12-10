@@ -12,15 +12,16 @@ public abstract class Job implements Comparable<Job> {
 	}
 	
 	
-	public void execute() {
+	public String execute(JobManager jobManager) {
 		if (toSend) {
 			connection.write(getJson());
+			return null;
 		} else {
-			executeLocal();
+			return executeLocal(jobManager);
 		}
 	}
 	
-	public abstract void executeLocal();
+	public abstract String executeLocal(JobManager jobManager);
 	public abstract String getJson();
 	
 	public long getCreateTime() {

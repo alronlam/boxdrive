@@ -36,9 +36,9 @@ public class ClientFileRecordManager {
 
 		// try to read from serialized list
 		// if not successful, then init the records based on directory
-		ArrayList<FileRecord> records = this.readFromSerializedList(recordFileName);
-		if (records == null)
-			records = this.initRecordsBasedOnDirectory(directory);
+//		ArrayList<FileRecord> records = this.readFromSerializedList(recordFileName);
+//		if (records == null)
+//			records = this.initRecordsBasedOnDirectory(directory);
 
 	}
 
@@ -143,7 +143,7 @@ public class ClientFileRecordManager {
 		// index of a file that has the specified fileName
 		int index = list.indexOf(tempRecord);
 
-		if (fileName == null)
+		if (index < 0)
 			return null;
 
 		return list.get(index);

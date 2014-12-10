@@ -69,12 +69,16 @@ public class DirectoryListener {
 	private final boolean recursive = true;
 	private boolean trace = false;
 	private Connection connection = null;
+	private JobManager jobManager = null;
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
 		return (WatchEvent<T>) event;
 	}
 
+	
+	
+	
 	/**
 	 * Register the given directory with the WatchService
 	 */
@@ -111,9 +115,10 @@ public class DirectoryListener {
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	DirectoryListener(Path path, Connection connection) throws IOException {
+	DirectoryListener(Path path, Connection connection, JobManager jobManager) throws IOException {
 		Path dir = path;
 		this.connection = connection;
+		this.jobManager = jobManager;
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
 
@@ -132,7 +137,7 @@ public class DirectoryListener {
 	private void create(Path path) {
 		if (connection != null) {
 			Job createJob = new CreateJob(path, connection);
-			JobManager.getInstance().handleNewJob(createJob);
+			jobManager.handleNewJob(createJob);
 			try {
 				ClientFileRecordManager.getInstance().handleCreateOrModify(path.getFileName().toString(),
 						Files.getLastModifiedTime(path).toMillis());
@@ -147,7 +152,7 @@ public class DirectoryListener {
 	private void modify(Path path) {
 		if (connection != null) {
 			Job createJob = new CreateJob(path, connection);
-			JobManager.getInstance().handleNewJob(createJob);
+			jobManager.handleNewJob(createJob);
 			try {
 				ClientFileRecordManager.getInstance().handleCreateOrModify(path.getFileName().toString(),
 						Files.getLastModifiedTime(path).toMillis());
@@ -162,7 +167,7 @@ public class DirectoryListener {
 	private void delete(Path path) {
 		if (connection != null) {
 			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
-			JobManager.getInstance().handleNewJob(deleteJob);
+			jobManager.handleNewJob(deleteJob);
 			try {
 				ClientFileRecordManager.getInstance().delete(path.getFileName().toString(),
 						Files.getLastModifiedTime(path).toMillis());

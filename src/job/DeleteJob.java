@@ -33,10 +33,10 @@ public class DeleteJob extends BasicJob {
 	}
 
 	@Override
-	public void executeLocal() {
+	public String executeLocal(JobManager jobManager) {
 		Path localFile = file.getLocalizedFile();
 		if (!Files.exists(localFile)) {
-			return;
+			return null;
 		}
 
 		int comparison = file.compareLastModifiedTime(localFile);
@@ -48,7 +48,7 @@ public class DeleteJob extends BasicJob {
 
 				// Update the FolderRecord
 				ClientFileRecordManager.getInstance().delete(file.getFilename(), file.getLastModified());
-
+				return this.getJson();
 			} catch (IOException ex) {
 				System.err.println("Error deleting file.");
 			}
@@ -56,8 +56,10 @@ public class DeleteJob extends BasicJob {
 			// If local file is newer, send a Create Job to remote.
 		} else {
 			Job forSending = new CreateJob(localFile, this.getConnection());
-			JobManager.getInstance().handleNewJob(forSending);
+			jobManager.handleNewJob(forSending);
 		}
+		
+		return null;
 	}
 
 	/**
