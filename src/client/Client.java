@@ -12,7 +12,6 @@ import conn.ConnectionManager;
 
 public class Client {
 	private Socket socket;
-	private ConnectionManager connectionManager;
 
 	public static void main(String args[])	{
 		new Client("localhost",Paths.get("client1"));
@@ -22,7 +21,6 @@ public class Client {
 		Constants.FOLDER = path.toString(); // Makeshift global. Bad.
 		
 		// ServerJobManager.getInstance().setFolder(FOLDER);
-		connectionManager = new ConnectionManager();
 
 		Connection conn = attemptConnection(serverAddr);
 		new Thread(new DirectoryListenerThread(path, conn)).start();;
@@ -37,7 +35,7 @@ public class Client {
 				e.printStackTrace();
 			}
 			if (socket != null) {
-				Connection connection = connectionManager.createNewConnection(socket);
+				Connection connection = ConnectionManager.getInstance().createNewConnection(socket);
 				System.out.println(socket.getRemoteSocketAddress() + " has connected.");
 				return connection;
 			}
@@ -46,7 +44,7 @@ public class Client {
 	}
 
 	public Socket getSocket(int index) {
-		return connectionManager.getSocket(index);
+		return ConnectionManager.getInstance().getSocket(index);
 	}
 
 	public Socket getFirstSocket() {
