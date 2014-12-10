@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import job.JobManager;
+import job.ServerJobManager;
 
 import commons.Constants;
 
@@ -26,7 +27,7 @@ public class Server {
 		// ServerJobManager.getInstance().setFolder(FOLDER);
 
 		// TODO: Change to ServerJobManager
-		jobManager = new JobManager();
+		jobManager = new ServerJobManager();
 		
 		try {
 			serverSocket = new ServerSocket(Constants.PORT);

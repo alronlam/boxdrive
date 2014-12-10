@@ -48,7 +48,7 @@ public class FileJob extends BasicJob {
 	}
 
 	@Override
-	public void executeLocal(JobManager jobManager) {
+	public String executeLocal(JobManager jobManager) {
 		// TODO handle newer existing file
 		Path localFile = file.getLocalizedFile();
 
@@ -66,6 +66,12 @@ public class FileJob extends BasicJob {
 			// Update the FolderRecord
 			ClientFileRecordManager.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
 
+			
+			//Connection is null because this job is just created to be able to construct its JSON. It won't reall be processed.
+			CreateJob createJobForBroadcasting = new CreateJob(localFile, null);
+			
+			return createJobForBroadcasting.getJson();
+			
 		} catch (IOException ex) {
 			try {
 				Files.delete(localFile);
@@ -75,6 +81,7 @@ public class FileJob extends BasicJob {
 				ex1.printStackTrace();
 			}
 		}
+		return null;
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import conn.Connection;
 
 public class JobManager {
 
-	private ArrayList<Job> jobQueue;
+	protected ArrayList<Job> jobQueue;
 
 	public JobManager() {
 		this.jobQueue = new ArrayList<Job>();
@@ -41,13 +41,13 @@ public class JobManager {
 		Collections.sort(jobQueue);
 	}
 
-	private synchronized Job dequeue(int index) {
+	protected synchronized Job dequeue(int index) {
 		if (jobQueue.size() == 0)
 			return null;
 		return jobQueue.remove(0);
 	}
 
-	private synchronized void processMessages() {
+	protected synchronized void processMessages() {
 		while (jobQueue.size() > 0) {
 			Job currJob = this.dequeue(0);
 			currJob.execute(this);
