@@ -43,6 +43,7 @@ public class Server {
 			Socket newSocket = acceptNewConnection();
 			if (newSocket != null)
 				ConnectionManager.getInstance().createNewConnection(newSocket,jobManager);
+
 			System.out.println(newSocket.getRemoteSocketAddress() + " has connected.");
 		}
 	}
