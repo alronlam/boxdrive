@@ -1,10 +1,7 @@
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import server_manager.ServerManager;
+import server_manager.ServerCoordinator;
 
 public class ServerManagerDriver {
-	private static ServerManager sm;
+	private static ServerCoordinator sm;
 
 	public static void main(String[] args) {
 		/*
@@ -16,6 +13,6 @@ public class ServerManagerDriver {
 
 		// start servermanager
 		// start 3 servers
-		// connect to servermanager
+		// connect servers to servermanager
 	}
 }

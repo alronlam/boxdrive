@@ -1,16 +1,39 @@
-package job;
+package serverjobs;
 
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
 import conn.Connection;
 
-public class JobFactory {
+public class ServerJobFactory {
 		
-	static Job createJob(JsonObject json, Connection connection) {
-		String type = json.getString(Constants.JSON.TYPE);
+	static ServerJob createJob(JsonObject json, Connection connection) {
+		String clientJobType = json.getString(Constants.JSON.TYPE);
 		
-		Job toGet = null;
+		ServerJob toGet = null;
+		
+		// this is temporary, need to make another set of commands for the server
+		// probably need to understand the jobs fully na rin
+		
+		switch (clientJobType) {
+			case Constants.Type.CREATE:
+				// toGet = new 
+				break;
+				
+			case Constants.Type.DELETE:
+				break;
+
+			case Constants.Type.FILE:
+				break;
+
+			case Constants.Type.LIST:
+				break;
+
+			case Constants.Type.REQUEST:
+				break;
+		}
+		
+		/* why cant this be a switch again?
 		if (type.equals(Constants.Type.CREATE)) {
 			toGet = new CreateJob(json, connection);
 		
@@ -29,6 +52,7 @@ public class JobFactory {
 		} else {
 			// Empty Job
 		}
+		*/
 		
 		toGet.setForReceiving();
 		return toGet;

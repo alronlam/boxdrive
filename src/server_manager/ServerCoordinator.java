@@ -11,7 +11,7 @@ import commons.Constants;
 import conn.ConnectionManager;
 import server.Server;
 
-public class ServerManager extends Server{
+public class ServerCoordinator extends Server{
 	// extended from server for connection commands
 	
 	private FileDirectory dir;
@@ -20,10 +20,10 @@ public class ServerManager extends Server{
 	public static void main(String args[]) {
 		// replace "server" with whatever foldername should be
 		Path p = Paths.get("server");
-		new ServerManager(p);
+		new ServerCoordinator(p);
 	}
 	
-	public ServerManager(Path path) {
+	public ServerCoordinator(Path path) {
 		super(path);
 	}
 

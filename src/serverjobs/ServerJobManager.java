@@ -1,5 +1,7 @@
-package job;
+package serverjobs;
 
+import job.Job;
+import job.JobManager;
 import conn.ConnectionManager;
 
 public class ServerJobManager extends JobManager{

@@ -6,8 +6,10 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import serverjobs.ServerJobManager;
 import job.JobManager;
-import job.ServerJobManager;
+import commons.Constants;
+import conn.ConnectionManager;
 
 import commons.Constants;
 
@@ -15,8 +17,8 @@ import conn.ConnectionManager;
 
 public class Server {
 	private ServerSocket serverSocket;
-	private JobManager jobManager;
-
+	private ServerJobManager jobManager;
+	
 	public static void main(String args[]) {
 		new Server(Paths.get("server"));
 	}
@@ -37,12 +39,12 @@ public class Server {
 
 		acceptConnections();
 	}
-
-	private void acceptConnections() {
+	
+	protected void acceptConnections() {
 		while (true) {
 			Socket newSocket = acceptNewConnection();
 			if (newSocket != null)
-				ConnectionManager.getInstance().createNewConnection(newSocket,jobManager);
+				ConnectionManager.getInstance().createNewConnection(newSocket, jobManager);
 			System.out.println(newSocket.getRemoteSocketAddress() + " has connected.");
 		}
 	}
