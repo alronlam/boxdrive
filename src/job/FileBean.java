@@ -12,7 +12,7 @@ import org.vertx.java.core.json.JsonObject;
 import commons.Constants;
 import commons.Util;
 
-class FileBean {
+public class FileBean {
 	private String filename;
 	private long lastModified;
 	private byte[] checksum;
@@ -22,7 +22,7 @@ class FileBean {
 	 * 
 	 * @param path A localized Path.
 	 */
-	FileBean(Path path) {
+	public FileBean(Path path) {
 		// Remove top level folder from filename
 		filename = path.subpath(1, path.getNameCount()).toString();
 		isDirectory = Files.isDirectory(path);
@@ -35,7 +35,7 @@ class FileBean {
 		}
 	}
 	
-	FileBean(JsonObject body) {
+	public FileBean(JsonObject body) {
 		filename = body.getString(Constants.Body.FILENAME);
 		lastModified = body.getLong(Constants.Body.LAST_MODIFIED);
 		checksum = body.getBinary(Constants.Body.CHECKSUM);
@@ -46,7 +46,7 @@ class FileBean {
 	 * Clone constructor.
 	 * @param file
 	 */
-	FileBean(FileBean file) {
+	public FileBean(FileBean file) {
 		this.filename = file.filename;
 		this.lastModified = file.lastModified;
 		this.checksum = file.checksum;
@@ -77,7 +77,7 @@ class FileBean {
 		return Paths.get(Constants.FOLDER, filename);
 	}
 	
-	JsonObject getJsonObject() {
+	public JsonObject getJsonObject() {
 		JsonObject json = new JsonObject();
 		
 		json.putString(Constants.Body.FILENAME, filename);
