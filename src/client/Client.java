@@ -3,7 +3,8 @@ package client;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import javax.swing.JFrame;
 
 import job.JobManager;
 import client.filerecords.ClientFileRecordManager;
@@ -19,7 +20,7 @@ public class Client {
 	private ClientFileRecordManager fileRecordManager;
 
 	public static void main(String args[]) {
-		new Client("localhost", Paths.get("client1"));
+		// new Client("localhost", Paths.get("client1"));
 	}
 
 	public Client(String serverAddr, Path path) {
@@ -40,6 +41,14 @@ public class Client {
 				shutDown();
 			}
 		});
+
+		JFrame frame = new JFrame();
+		frame.setTitle("BoxDrive Client");
+		frame.setSize(400, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
 	}
 
 	/***

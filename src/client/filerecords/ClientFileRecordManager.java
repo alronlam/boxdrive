@@ -21,9 +21,11 @@ import java.util.Collections;
 public class ClientFileRecordManager {
 
 	private final String RECORD_PATH;
+	private String sharedFolderName;
 
 	public ClientFileRecordManager(String sharedFolderName, String recordFileName) {
 
+		this.sharedFolderName = sharedFolderName;
 		this.RECORD_PATH = sharedFolderName + "_" + recordFileName;
 
 		// try to read from serialized list
@@ -54,6 +56,9 @@ public class ClientFileRecordManager {
 	}
 
 	public void serializeList() {
+
+		this.list = this.initRecordsBasedOnDirectory(this.sharedFolderName);
+
 		// serialize the List
 		try (OutputStream file = new FileOutputStream(RECORD_PATH);
 				OutputStream buffer = new BufferedOutputStream(file);
