@@ -36,12 +36,16 @@ public class Server {
 	}
 	
 	protected void acceptConnections() {
+		// maybe make a method sa connectionmanager for the serverjobmanager?
+		
+		/*
 		while (true) {
 			Socket newSocket = acceptNewConnection();
 			if (newSocket != null)
 				ConnectionManager.getInstance().createNewConnection(newSocket, jobManager);
 			System.out.println(newSocket.getRemoteSocketAddress() + " has connected.");
 		}
+		*/
 	}
 
 	public Socket acceptNewConnection() {

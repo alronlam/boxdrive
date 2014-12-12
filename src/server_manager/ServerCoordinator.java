@@ -1,14 +1,10 @@
 package server_manager;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
-import commons.Constants;
-import conn.ConnectionManager;
 import server.Server;
 
 public class ServerCoordinator extends Server{
@@ -18,7 +14,6 @@ public class ServerCoordinator extends Server{
 	private ServerSocket serverSocket;
 	
 	public static void main(String args[]) {
-		// replace "server" with whatever foldername should be
 		Path p = Paths.get("server");
 		new ServerCoordinator(p);
 	}
@@ -26,17 +21,18 @@ public class ServerCoordinator extends Server{
 	public ServerCoordinator(Path path) {
 		super(path);
 	}
-
-	// add a server to the server list
-	public void addServer(Server s) {
-		dir.addServer(s);
-		// handle connection to server as well
-	}
 	
-	public void broadcastToServers(Path p, int config) {
-		// broadcasts a specific file to the servers
-		// using a specific configuration defining which servers it'll send to
+	@Override
+	public Socket acceptNewConnection() {
+		// how does one differentiate a server and client?
+		
+		try {
+			System.out.println("Waiting for connection.");
+			Socket newSocket = serverSocket.accept();
+			return newSocket;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-	
-	// something about disconnection and connection
 }

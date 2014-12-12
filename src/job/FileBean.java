@@ -61,7 +61,7 @@ public class FileBean {
 		return lastModified;
 	}
 	
-	void setLastModified(long lastModified) {
+	public void setLastModified(long lastModified) {
 		this.lastModified = lastModified;
 	}
 	
@@ -69,11 +69,11 @@ public class FileBean {
 		return checksum;
 	}
 	
-	boolean isDirectory() {
+	public boolean isDirectory() {
 		return isDirectory;
 	}
 	
-	Path getLocalizedFile() {
+	public Path getLocalizedFile() {
 		return Paths.get(Constants.FOLDER, filename);
 	}
 	
@@ -103,7 +103,7 @@ public class FileBean {
 	 * 0 if this file is older than other, and a value greater than 0 if this file is newer 
 	 * than other. 
 	 */
-	int compareLastModifiedTime(Path other) {
+	public int compareLastModifiedTime(Path other) {
 		int comparison = -1;
 		try {
 			comparison = Files.getLastModifiedTime(other).compareTo(FileTime.fromMillis(lastModified));
