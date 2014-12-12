@@ -10,8 +10,6 @@ import java.nio.file.attribute.FileTime;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
-import client.filerecords.ClientFileRecordManager;
-
 import commons.Constants;
 
 import conn.Connection;
@@ -63,15 +61,12 @@ public class FileJob extends BasicJob {
 			}
 			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
 
-			// Update the FolderRecord
-			ClientFileRecordManager.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
-
-			
-			//Connection is null because this job is just created to be able to construct its JSON. It won't reall be processed.
+			// Connection is null because this job is just created to be able to
+			// construct its JSON. It won't reall be processed.
 			CreateJob createJobForBroadcasting = new CreateJob(localFile, null);
-			
+
 			return createJobForBroadcasting.getJson();
-			
+
 		} catch (IOException ex) {
 			try {
 				Files.delete(localFile);
