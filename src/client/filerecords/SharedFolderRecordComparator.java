@@ -8,7 +8,7 @@ import job.DeleteJob;
 import job.Job;
 import conn.Connection;
 
-public class ClientFileRecordComparator {
+public class SharedFolderRecordComparator {
 
 	public ArrayList<Job> compareAndGenerateJobs(ArrayList<FileRecord> newFileRecords,
 			ArrayList<FileRecord> oldFileRecords, long lastTimeOldRecordsModified, Connection serverConnection,
