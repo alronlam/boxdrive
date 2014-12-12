@@ -18,31 +18,20 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import commons.Constants;
-
 public class ClientFileRecordManager {
 
-	// Singleton-related variables and methods
+	private final String RECORD_PATH;
 
-	private static ClientFileRecordManager instance = new ClientFileRecordManager();
+	public ClientFileRecordManager(String sharedFolderName, String recordFileName) {
 
-	public static ClientFileRecordManager getInstance() {
-		return instance;
-	}
-
-	private static final String RECORD_FILE_NAME = "file_records.ser";
-
-	private ClientFileRecordManager() {
-
-		String directory = Constants.FOLDER; // temporary. will need to access
-		// the client's directory
+		this.RECORD_PATH = sharedFolderName + "_" + recordFileName;
 
 		// try to read from serialized list
 		// if not successful, then init the records based on directory
-		ArrayList<FileRecord> records = this.readFromSerializedList(RECORD_FILE_NAME);
+		ArrayList<FileRecord> records = this.readFromSerializedList(this.RECORD_PATH);
 		System.out.println("Read File	  Records: " + records);
 		if (records == null)
-			records = this.initRecordsBasedOnDirectory(directory);
+			records = this.initRecordsBasedOnDirectory(sharedFolderName);
 
 	}
 
@@ -64,9 +53,9 @@ public class ClientFileRecordManager {
 		return null;
 	}
 
-	private void serializeList(String filePath) {
+	public void serializeList() {
 		// serialize the List
-		try (OutputStream file = new FileOutputStream(filePath);
+		try (OutputStream file = new FileOutputStream(RECORD_PATH);
 				OutputStream buffer = new BufferedOutputStream(file);
 				ObjectOutput output = new ObjectOutputStream(buffer);) {
 			output.writeObject(this.list);
@@ -119,8 +108,6 @@ public class ClientFileRecordManager {
 		FileRecord newRecord = new FileRecord(fileName, dateTimeModified);
 		list.add(newRecord);
 		Collections.sort(list);
-
-		this.serializeList(RECORD_FILE_NAME);
 	}
 
 	private void modify(FileRecord targetRecord, long dateTimeModified) {
@@ -131,8 +118,6 @@ public class ClientFileRecordManager {
 			return;
 
 		targetRecord.setDateTimeModified(dateTimeModified);
-
-		this.serializeList(RECORD_FILE_NAME);
 	}
 
 	public void delete(String fileName, long dateTimeModified) {
@@ -145,8 +130,6 @@ public class ClientFileRecordManager {
 			return;
 
 		list.remove(targetRecord);
-
-		this.serializeList(RECORD_FILE_NAME);
 	}
 
 	private FileRecord retrieveFileRecord(String fileName) {
