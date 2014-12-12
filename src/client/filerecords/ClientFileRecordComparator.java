@@ -10,21 +10,20 @@ import conn.Connection;
 
 public class ClientFileRecordComparator {
 
-	public ArrayList<Job> compareAndGenerateJobs(ClientFileRecordManager oldRecord, ClientFileRecordManager newRecord,
-			Connection serverConnection, String sharedFolderName) {
+	public ArrayList<Job> compareAndGenerateJobs(ArrayList<FileRecord> newFileRecords,
+			ArrayList<FileRecord> oldFileRecords, long lastTimeOldRecordsModified, Connection serverConnection,
+			String sharedFolderName) {
 		ArrayList<Job> jobs = new ArrayList<Job>();
-		jobs.addAll(this.generateCreateJobs(oldRecord, newRecord, serverConnection, sharedFolderName));
-		jobs.addAll(this.generateModifyJobs(oldRecord, newRecord, serverConnection, sharedFolderName));
-		jobs.addAll(this.generateDeleteJobs(oldRecord, newRecord, serverConnection, sharedFolderName));
+		jobs.addAll(this.generateCreateJobs(oldFileRecords, newFileRecords, serverConnection, sharedFolderName));
+		jobs.addAll(this.generateModifyJobs(oldFileRecords, newFileRecords, serverConnection, sharedFolderName));
+		jobs.addAll(this.generateDeleteJobs(oldFileRecords, newFileRecords, serverConnection, sharedFolderName,
+				lastTimeOldRecordsModified));
 		return jobs;
 	}
 
-	private ArrayList<Job> generateCreateJobs(ClientFileRecordManager oldRecord, ClientFileRecordManager newRecord,
-			Connection serverConnection, String sharedFolderName) {
+	private ArrayList<Job> generateCreateJobs(ArrayList<FileRecord> newFileRecords,
+			ArrayList<FileRecord> oldFileRecords, Connection serverConnection, String sharedFolderName) {
 		ArrayList<Job> createJobs = new ArrayList<Job>();
-
-		ArrayList<FileRecord> newFileRecords = newRecord.getList();
-		ArrayList<FileRecord> oldFileRecords = oldRecord.getList();
 
 		for (FileRecord newFileRecord : newFileRecords) {
 			if (!oldFileRecords.contains(newFileRecord)) {
@@ -36,12 +35,9 @@ public class ClientFileRecordComparator {
 		return createJobs;
 	}
 
-	private ArrayList<Job> generateModifyJobs(ClientFileRecordManager oldRecord, ClientFileRecordManager newRecord,
-			Connection serverConnection, String sharedFolderName) {
+	private ArrayList<Job> generateModifyJobs(ArrayList<FileRecord> newFileRecords,
+			ArrayList<FileRecord> oldFileRecords, Connection serverConnection, String sharedFolderName) {
 		ArrayList<Job> modifyJobs = new ArrayList<Job>();
-
-		ArrayList<FileRecord> newFileRecords = newRecord.getList();
-		ArrayList<FileRecord> oldFileRecords = oldRecord.getList();
 
 		for (FileRecord newFileRecord : newFileRecords) {
 			int matchIndex = oldFileRecords.indexOf(newFileRecord);
@@ -59,19 +55,17 @@ public class ClientFileRecordComparator {
 		return modifyJobs;
 	}
 
-	private ArrayList<Job> generateDeleteJobs(ClientFileRecordManager oldRecord, ClientFileRecordManager newRecord,
-			Connection serverConnection, String sharedFolderName) {
+	private ArrayList<Job> generateDeleteJobs(ArrayList<FileRecord> newFileRecords,
+			ArrayList<FileRecord> oldFileRecords, Connection serverConnection, String sharedFolderName,
+			long lastTimeOldRecordsModified) {
 		ArrayList<Job> deleteJobs = new ArrayList<Job>();
-
-		ArrayList<FileRecord> newFileRecords = newRecord.getList();
-		ArrayList<FileRecord> oldFileRecords = oldRecord.getList();
 
 		for (FileRecord oldFileRecord : oldFileRecords) {
 			int matchIndex = newFileRecords.indexOf(oldFileRecord);
 
 			if (matchIndex < 0) {
-				deleteJobs.add(new DeleteJob(Paths.get(sharedFolderName + "/" + oldFileRecord.getFileName()), oldRecord
-						.getTimeLastModified(), serverConnection));
+				deleteJobs.add(new DeleteJob(Paths.get(sharedFolderName + "/" + oldFileRecord.getFileName()),
+						lastTimeOldRecordsModified, serverConnection));
 			}
 		}
 

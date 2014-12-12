@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 public class ClientFileRecordManager {
 
@@ -161,7 +162,7 @@ public class ClientFileRecordManager {
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder("Record as of " + new Date(this.timeLastModified).toString());
 
 		for (FileRecord record : list) {
 			sb.append(record.toString()).append("\n");
