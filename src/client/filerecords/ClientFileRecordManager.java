@@ -18,6 +18,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import commons.Constants;
+
 public class ClientFileRecordManager {
 
 	// Singleton-related variables and methods
@@ -28,17 +30,19 @@ public class ClientFileRecordManager {
 		return instance;
 	}
 
+	private static final String RECORD_FILE_NAME = "file_records.ser";
+
 	private ClientFileRecordManager() {
 
-		String directory = "client1"; // temporary. will need to access
-										// the client's directory
-		String recordFileName = "file_records.ser";
+		String directory = Constants.FOLDER; // temporary. will need to access
+		// the client's directory
 
 		// try to read from serialized list
 		// if not successful, then init the records based on directory
-//		ArrayList<FileRecord> records = this.readFromSerializedList(recordFileName);
-//		if (records == null)
-//			records = this.initRecordsBasedOnDirectory(directory);
+		ArrayList<FileRecord> records = this.readFromSerializedList(RECORD_FILE_NAME);
+		System.out.println("Read File	  Records: " + records);
+		if (records == null)
+			records = this.initRecordsBasedOnDirectory(directory);
 
 	}
 
@@ -69,6 +73,9 @@ public class ClientFileRecordManager {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+
+		System.out.println("\nCurrent record is now\n " + this.toString() + "\n");
+
 	}
 
 	private ArrayList<FileRecord> initRecordsBasedOnDirectory(String directory) {
@@ -112,6 +119,8 @@ public class ClientFileRecordManager {
 		FileRecord newRecord = new FileRecord(fileName, dateTimeModified);
 		list.add(newRecord);
 		Collections.sort(list);
+
+		this.serializeList(RECORD_FILE_NAME);
 	}
 
 	private void modify(FileRecord targetRecord, long dateTimeModified) {
@@ -122,6 +131,8 @@ public class ClientFileRecordManager {
 			return;
 
 		targetRecord.setDateTimeModified(dateTimeModified);
+
+		this.serializeList(RECORD_FILE_NAME);
 	}
 
 	public void delete(String fileName, long dateTimeModified) {
@@ -134,6 +145,8 @@ public class ClientFileRecordManager {
 			return;
 
 		list.remove(targetRecord);
+
+		this.serializeList(RECORD_FILE_NAME);
 	}
 
 	private FileRecord retrieveFileRecord(String fileName) {
@@ -159,4 +172,13 @@ public class ClientFileRecordManager {
 		return timeLastModified;
 	}
 
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		for (FileRecord record : list) {
+			sb.append(record.toString()).append("\n");
+		}
+
+		return sb.toString();
+	}
 }
