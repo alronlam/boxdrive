@@ -35,7 +35,11 @@ public class Client {
 		new Thread(new DirectoryListenerThread(path, conn, jobManager)).start();
 		;
 
-		Runtime.getRuntime().addShutdownHook(new ClientShutdownThread(this));
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				shutDown();
+			}
+		});
 	}
 
 	/***
@@ -68,20 +72,6 @@ public class Client {
 
 	public Socket getFirstSocket() {
 		return getSocket(0);
-	}
-
-	class ClientShutdownThread extends Thread {
-
-		private Client client;
-
-		public ClientShutdownThread(Client client) {
-			this.client = client;
-		}
-
-		public void run() {
-			client.shutDown();
-		}
-
 	}
 
 }
