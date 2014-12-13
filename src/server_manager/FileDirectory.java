@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import job.FileBean;
+import job.Job;
 
 import conn.Connection;
 
@@ -107,15 +108,17 @@ public class FileDirectory {
 		return out;
 	}
 
-	public List<Connection> getListForAddingNewFile(FileBean file) {
-		if (fileConfig.containsKey(file))
-			return null;
-
+	public List<Connection> getServerListForFile(FileBean file) {
 		List<Connection> out;
-		out = findAllServersWithConfig(runningValFile);
-		fileConfig.put(file, runningValFile);
-		runningValFile = (runningValFile + 1) % this.STORAGE_SERVER_GROUPS;
-	
+		
+		if (fileConfig.containsKey(file))
+			out = findAllServersWithConfig(fileConfig.get(file));
+		else{
+			out = findAllServersWithConfig(runningValFile);
+			fileConfig.put(file, runningValFile);
+			runningValFile = (runningValFile + 1) % this.STORAGE_SERVER_GROUPS;
+		}
+		
 		return out;
 	}
 

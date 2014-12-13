@@ -8,6 +8,7 @@ import java.util.Set;
 
 import server_manager.FileDirectory;
 import server_manager.FileObject;
+import job.BasicJob;
 import job.Job;
 import job.JobManager;
 import conn.Connection;
@@ -46,8 +47,12 @@ public class CoordinatorJobManager extends JobManager{
 			if(connMgrClients.hasConnection(job.getConnection())){
 				// the job came from clients
 				
-				// send to storage server group
+				// get serverlist from fileDirectory
+				List<Connection> connList = fileDirectory.getServerListForFile(((BasicJob)job).file);
 				
+				// send to storage server group
+				for(Connection conn : connList)
+					conn.write(job.getJson());
 			}
 			else {
 				// the job came from storage servers

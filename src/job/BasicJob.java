@@ -8,7 +8,7 @@ import commons.Constants;
 import conn.Connection;
 
 public abstract class BasicJob extends Job {
-	protected FileBean file;
+	public FileBean file;
 	
 	
 	/**
