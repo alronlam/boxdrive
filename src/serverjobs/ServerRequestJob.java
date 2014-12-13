@@ -30,7 +30,7 @@ public class ServerRequestJob extends ServerBasicJob {
 	}
 
 	@Override
-	public String executeLocal(ServerJobManager jobManager) {
+	public String executeLocal(CoordinatorJobManager jobManager) {
 		Path localFile = file.getLocalizedFile();
 
 		if (!Files.exists(localFile)) {

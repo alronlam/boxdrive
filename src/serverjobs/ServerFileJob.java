@@ -53,7 +53,7 @@ public class ServerFileJob extends ServerBasicJob {
 	}
 
 	@Override
-	public String executeLocal(ServerJobManager jobManager) {
+	public String executeLocal(CoordinatorJobManager jobManager) {
 		return null;
 		/*
 		// TODO handle newer existing file

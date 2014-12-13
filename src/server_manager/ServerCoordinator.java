@@ -6,13 +6,15 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import serverjobs.ServerJobManager;
+import job.JobManager;
+
+import serverjobs.CoordinatorJobManager;
 import commons.Constants;
 import conn.ConnectionManager;
 
 public class ServerCoordinator {
 	private ServerSocket serverSocketClient, serverSocketStorageServer;
-	private ServerJobManager jobManager;
+	private JobManager jobManager;
 	private ConnectionManager connMgrClients, connMgrStorageServers;
 
 	public static void main(String args[]) {
@@ -28,7 +30,7 @@ public class ServerCoordinator {
 		connMgrStorageServers = new ConnectionManager();
 
 		// TODO: Change to ServerJobManager
-		jobManager = new ServerJobManager(connMgrClients, connMgrStorageServers);
+		jobManager = new CoordinatorJobManager(connMgrClients, connMgrStorageServers);
 
 		try {
 			serverSocketStorageServer = new ServerSocket(Constants.COORDINATOR_PORT);
@@ -56,7 +58,7 @@ public class ServerCoordinator {
 			Socket newSocket = acceptNewConnection(serverSocket);
 			if (newSocket != null) {
 				connMgr.createNewConnection(newSocket, jobManager);
-				jobManager.updateFileDirectory();
+				((CoordinatorJobManager)jobManager).updateFileDirectory();
 			}
 			System.out.println(newSocket.getRemoteSocketAddress() + " has connected.");
 		}

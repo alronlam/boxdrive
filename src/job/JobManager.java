@@ -24,7 +24,7 @@ public class JobManager {
 	
 	public JobManager(ConnectionManager connMgrClient, ConnectionManager connMgrStorageServer) {
 		this.jobQueue = new ArrayList<Job>();
-		this.connMgrClients = connMgrClients;
+		this.connMgrClients = connMgrClient;
 		this.connMgrStorageServers = connMgrStorageServer;
 	}
 	

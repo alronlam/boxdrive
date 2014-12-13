@@ -29,7 +29,7 @@ public class ServerDeleteJob extends ServerBasicJob {
 	}
 
 	@Override
-	public String executeLocal(ServerJobManager jobManager) {
+	public String executeLocal(CoordinatorJobManager jobManager) {
 		return null;
 		/*
 		Path localFile = file.getLocalizedFile();
