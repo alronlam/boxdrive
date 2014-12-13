@@ -24,7 +24,8 @@ public class ServerJobManager extends JobManager{
 		fileDirectory.addServer(connMgrStorageServers.getLastConnection());
 	}
 	
-	public String forwardJob(Job job){
+	public String forwardJob(ServerJob job){
+		//fileDirectory.getServersFromConfig(config);
 		return null;
 	}
 

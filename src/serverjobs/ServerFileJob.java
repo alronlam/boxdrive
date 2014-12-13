@@ -15,12 +15,16 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
 import client.filerecords.ClientFileRecordManager;
-
 import commons.Constants;
-
 import conn.Connection;
 
-public class ServerFileJob extends FileJob {
+public class ServerFileJob extends ServerBasicJob {
+	protected final int BUFFER_SIZE = 8096;
+	protected String fileByteString;
+
+	
+	// unsure if the constructors still need this
+	// they probably do
 	/**
 	 * Constructor for receiving.
 	 * 
@@ -29,6 +33,8 @@ public class ServerFileJob extends FileJob {
 	 */
 	public ServerFileJob(JsonObject json, Connection connection) {
 		super(json, connection);
+		JsonObject body = json.getObject(Constants.JSON.BODY);
+		fileByteString = body.getString(Constants.Body.FILEBYTES);
 	}
 
 	/**
@@ -39,10 +45,17 @@ public class ServerFileJob extends FileJob {
 	 */
 	public ServerFileJob(Path path, Connection connection) {
 		super(path, connection);
+		try {
+			fileByteString = Base64.encodeBytes(Files.readAllBytes(path));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	@Override
-	public String executeLocal(JobManager jobManager) {
+	public String executeLocal(ServerJobManager jobManager) {
+		return null;
+		/*
 		// TODO handle newer existing file
 		Path localFile = file.getLocalizedFile();
 
@@ -74,5 +87,17 @@ public class ServerFileJob extends FileJob {
 			}
 		}
 		return null;
+		*/
 	}
+	
+	@Override
+	public String getJson() {
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.FILE);
+		JsonObject body = file.getJsonObject();
+		body.putString(Constants.Body.FILEBYTES, fileByteString);
+		json.putObject(Constants.JSON.BODY, body);
+		return json.encode();
+	}
+
 }

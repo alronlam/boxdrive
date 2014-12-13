@@ -15,7 +15,7 @@ import org.vertx.java.core.json.JsonObject;
 import commons.Constants;
 import conn.Connection;
 
-public class ServerCreateJob extends CreateJob {
+public class ServerCreateJob extends ServerBasicJob {
 
 	public ServerCreateJob(Path path, Connection connection) {
 		super(path, connection);
@@ -25,9 +25,8 @@ public class ServerCreateJob extends CreateJob {
 		super(json, connection);
 	}
 
-	@Override
-	public String executeLocal(JobManager jobManager) {
-		return ((ServerJobManager)jobManager).forwardJob(this);
+	public String executeLocal(ServerJobManager jobManager) {
+		return jobManager.forwardJob(this);
 		
 //		Path localFile = file.getLocalizedFile();
 //
@@ -78,4 +77,14 @@ public class ServerCreateJob extends CreateJob {
 //		
 //		return null;
 	}
+	
+	@Override
+	public String getJson() {
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.CREATE);
+		JsonObject body = file.getJsonObject();
+		json.putObject(Constants.JSON.BODY, body);
+		return json.encode();
+	}
+
 }
