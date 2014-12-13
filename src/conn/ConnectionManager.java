@@ -39,6 +39,8 @@ public class ConnectionManager {
 	}
 	
 	public Connection getLastConnection(){
+		if(connections.size() == 0)
+			return null;
 		return connections.get(connections.size()-1);
 	}
 	

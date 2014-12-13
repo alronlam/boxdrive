@@ -20,6 +20,9 @@ public class FileDirectory {
 	// private Map<Connection, List<FileObject>> fileAssignment;
 	// public List<FileObject> fileConfig;
 
+	// TODO: possibly make a method in FileBean that just checks if the filename is equal, 
+	// as the key pairing in the map may be affected due to the modified time
+
 	private int runningValServer = 0;
 	private int runningValFile = 0;
 	private int STORAGE_SERVER_GROUPS = 3;
@@ -110,15 +113,15 @@ public class FileDirectory {
 
 	public List<Connection> getServerListForFile(FileBean file) {
 		List<Connection> out;
-		
+
 		if (fileConfig.containsKey(file))
 			out = findAllServersWithConfig(fileConfig.get(file));
-		else{
+		else {
 			out = findAllServersWithConfig(runningValFile);
 			fileConfig.put(file, runningValFile);
 			runningValFile = (runningValFile + 1) % this.STORAGE_SERVER_GROUPS;
 		}
-		
+
 		return out;
 	}
 

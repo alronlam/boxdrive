@@ -22,16 +22,13 @@ public class CoordinatorJobManager extends JobManager{
 	public CoordinatorJobManager(ConnectionManager connMgrClients,ConnectionManager connMgrStorageServers) {
 		super(connMgrClients,connMgrStorageServers);
 		
+		fileDirectory = new FileDirectory();
 		lastProcessedJobs = new HashMap<>();
-	}
-	
-	public CoordinatorJobManager() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void updateFileDirectory(){
 		Connection conn = connMgrStorageServers.getLastConnection();
-		if(fileDirectory.addServer(conn))
+		if(conn != null && fileDirectory.addServer(conn))
 			lastProcessedJobs.put(conn, new ArrayList<Job>());
 	}
 	
@@ -43,6 +40,7 @@ public class CoordinatorJobManager extends JobManager{
 	protected synchronized void processMessages() {
 		while (jobQueue.size() > 0) {
 			Job job = this.dequeue(0);
+			job.getConnection();
 			
 			if(connMgrClients.hasConnection(job.getConnection())){
 				// the job came from clients
@@ -62,7 +60,10 @@ public class CoordinatorJobManager extends JobManager{
 				}
 				else{
 					addJobToHistory(job);
-					// send to specific client
+					// TODO: send to specific client
+					
+					// temporarily sends to all clients
+					connMgrClients.broadcast(job.getJson());
 				}
 			}
 		}
