@@ -25,8 +25,8 @@ public class ServerCreateJob extends ServerBasicJob {
 		super(json, connection);
 	}
 
-	public String executeLocal(ServerJobManager jobManager) {
-		return jobManager.forwardJob(this);
+	public String executeLocal(CoordinatorJobManager jobManager) {
+		return null;
 		
 //		Path localFile = file.getLocalizedFile();
 //
