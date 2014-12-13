@@ -6,13 +6,16 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import job.JobManager;
+
+import serverjobs.CoordinatorJobManager;
 import serverjobs.ServerJobManager;
 import commons.Constants;
 import conn.ConnectionManager;
 
 public class Server {
 	private ServerSocket serverSocket;
-	private ServerJobManager jobManager;
+	private JobManager jobManager;
 	private ConnectionManager connectionManager;
 	
 	public static void main(String args[]) {

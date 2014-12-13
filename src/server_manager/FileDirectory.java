@@ -22,13 +22,15 @@ public class FileDirectory {
 	// }
 
 	// for initializing a new server
-	public void addServer(Connection conn) {
+	public boolean addServer(Connection conn) {
 		if (!serverConfig.containsKey(conn)) {
 			serverConfig.put(conn, runningVal);
 			fileAssignment.put(conn, new ArrayList<FileObject>());
 
 			runningVal = (runningVal + 1) % 3;
+			return true;
 		}
+		return false;
 	}
 
 	/**

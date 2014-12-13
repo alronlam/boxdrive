@@ -6,13 +6,13 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import serverjobs.ServerJobManager;
+import serverjobs.CoordinatorJobManager;
 import commons.Constants;
 import conn.ConnectionManager;
 
 public class StorageServer {
 	private ServerSocket serverSocket;
-	private ServerJobManager jobManager;
+	private CoordinatorJobManager jobManager;
 
 	public StorageServer(Path path) {
 		Constants.FOLDER = path.toString();

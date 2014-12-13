@@ -12,7 +12,7 @@ public abstract class ServerJob implements Comparable<ServerJob> {
 	}
 	
 	
-	public String execute(ServerJobManager jobManager) {
+	public String execute(CoordinatorJobManager jobManager) {
 		if (toSend) {
 			connection.write(getJson());
 			return null;
@@ -21,7 +21,7 @@ public abstract class ServerJob implements Comparable<ServerJob> {
 		}
 	}
 	
-	public abstract String executeLocal(ServerJobManager jobManager);
+	public abstract String executeLocal(CoordinatorJobManager jobManager);
 	public abstract String getJson();
 	
 	public long getCreateTime() {
