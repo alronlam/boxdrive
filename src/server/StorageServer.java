@@ -17,7 +17,7 @@ public class StorageServer {
 	public StorageServer(Path path) {
 		Constants.FOLDER = path.toString();
 
-		jobManager = new ServerJobManager();
+		//jobManager = new ServerJobManager();
 		
 		try {
 			serverSocket = new ServerSocket(Constants.PORT);

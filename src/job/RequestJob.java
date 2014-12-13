@@ -15,11 +15,11 @@ public class RequestJob extends BasicJob {
 	 * Creates a Request with the same parameters as the job argument.
 	 * @param job
 	 */
-	RequestJob(BasicJob job) {
+	public RequestJob(BasicJob job) {
 		super(job);
 	}
 	
-	RequestJob(JsonObject json, Connection connection) {
+	public RequestJob(JsonObject json, Connection connection) {
 		super(json, connection);
 	}
 
