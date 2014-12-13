@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import job.FileBean;
 
 import conn.Connection;
 
@@ -12,22 +15,36 @@ import server.Server;
 
 public class FileDirectory {
 	private Map<Connection, Integer> serverConfig;
-	private Map<Connection, List<FileObject>> fileAssignment;
-	public List<FileObject> fileConfig;
+	private Map<FileBean, Integer> fileConfig;
+	// private Map<Connection, List<FileObject>> fileAssignment;
+	// public List<FileObject> fileConfig;
 
-	private int runningVal = 0;
+	private int runningValServer = 0;
+	private int runningValFile = 0;
+	private int STORAGE_SERVER_GROUPS = 3;
 
 	// public List<Connection> getServerList() {
 	// return serverList;
 	// }
 
+	public FileDirectory() {
+		serverConfig = new HashMap<>();
+		// for(int i = 0; i < STORAGE_SERVER_GROUPS; ++i)
+		// serverConfig.put(i, new ArrayList<Connection>());
+
+		fileConfig = new HashMap<>();
+		// for(int i = 0; i < STORAGE_SERVER_GROUPS; ++i)
+		// fileConfig.put(i, new ArrayList<FileBean>());
+	}
+
 	// for initializing a new server
 	public boolean addServer(Connection conn) {
 		if (!serverConfig.containsKey(conn)) {
-			serverConfig.put(conn, runningVal);
-			fileAssignment.put(conn, new ArrayList<FileObject>());
+			// serverConfig.get(runningVal).add(conn);
+			serverConfig.put(conn, runningValServer);
+			// fileAssignment.put(conn, new ArrayList<FileObject>());
 
-			runningVal = (runningVal + 1) % 3;
+			runningValServer = (runningValServer + 1) % STORAGE_SERVER_GROUPS;
 			return true;
 		}
 		return false;
@@ -40,16 +57,16 @@ public class FileDirectory {
 	 * @param list
 	 * @return
 	 */
-	public void setServerDirectory(Connection s, List<FileObject> list) {
-		List<FileObject> currList = fileAssignment.get(s);
-		currList.clear();
-		currList.addAll(list);
-	}
+	// public void setServerDirectory(Connection s, List<FileObject> list) {
+	// List<FileObject> currList = fileAssignment.get(s);
+	// currList.clear();
+	// currList.addAll(list);
+	// }
 
 	// actually needed stuff
-	public List<FileObject> getFileList(Connection s) {
-		return fileAssignment.get(s);
-	}
+	// public List<FileObject> getFileList(Connection s) {
+	// return fileAssignment.get(s);
+	// }
 
 	/**
 	 * Finds first server that stores Path p in the hash map. Returns null if file not found. Use this for retrieving server files for a client.
@@ -72,23 +89,42 @@ public class FileDirectory {
 	 * @param p
 	 * @return
 	 */
-	// public List<Connection> findAllServersWithFile(FileObject p) {
-	// List<Connection> out = new ArrayList<>();
-	//
-	// for (Connection s : serverList) {
-	// if (fileAssignment.get(s).contains(p))
-	// out.add(s);
-	// }
-	//
-	// return out;
-	// }
+	public List<Connection> findAllServersWithFile(FileBean file) {
+
+		int config = fileConfig.get(file);
+
+		return findAllServersWithConfig(config);
+	}
+
+	public List<Connection> findAllServersWithConfig(int config) {
+		List<Connection> out = new ArrayList<>();
+
+		for (Connection conn : serverConfig.keySet()) {
+			if (!serverConfig.get(conn).equals(config))
+				out.add(conn);
+		}
+
+		return out;
+	}
+
+	public List<Connection> getListForAddingNewFile(FileBean file) {
+		if (fileConfig.containsKey(file))
+			return null;
+
+		List<Connection> out;
+		out = findAllServersWithConfig(runningValFile);
+		fileConfig.put(file, runningValFile);
+		runningValFile = (runningValFile + 1) % this.STORAGE_SERVER_GROUPS;
+	
+		return out;
+	}
 
 	// utility stuff
-	public int indexOfPath(Connection s, FileObject p) {
-		return fileAssignment.get(s).indexOf(p);
-	}
+	// public int indexOfPath(Connection s, FileObject p) {
+	// return fileAssignment.get(s).indexOf(p);
+	// }
 
-	public FileObject getPath(Connection s, int index) {
-		return fileAssignment.get(s).get(index);
-	}
+	// public FileObject getPath(Connection s, int index) {
+	// return fileAssignment.get(s).get(index);
+	// }
 }
