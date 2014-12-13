@@ -27,7 +27,7 @@ public class ServerCreateJob extends CreateJob {
 
 	@Override
 	public String executeLocal(JobManager jobManager) {
-		return ((ServerJobManager)jobManager).forwardJob(this);
+		return ((CoordinatorJobManager)jobManager).forwardJob(this);
 		
 //		Path localFile = file.getLocalizedFile();
 //

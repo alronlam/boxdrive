@@ -7,7 +7,7 @@ import java.util.List;
 import job.JobManager;
 
 public class ConnectionManager {
-	private static ConnectionManager connectionManager;
+	//private static ConnectionManager connectionManager;
 
 	private List<Connection> connections;
 
@@ -34,7 +34,13 @@ public class ConnectionManager {
 		return connections.get(index);
 	}
 	
+	public boolean hasConnection(Connection conn){
+		return connections.contains(conn);
+	}
+	
 	public Connection getLastConnection(){
+		if(connections.size() == 0)
+			return null;
 		return connections.get(connections.size()-1);
 	}
 	

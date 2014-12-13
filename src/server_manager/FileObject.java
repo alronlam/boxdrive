@@ -2,12 +2,14 @@ package server_manager;
 
 import java.nio.file.Path;
 
+import job.FileBean;
+
 public class FileObject {
-	public Path path;
+	public FileBean file;
 	public int config;
 	
-	public FileObject(Path p, int c) {
-		path = p;
+	public FileObject(FileBean file, int c) {
+		this.file = file;
 		config = c;
 	}
 	

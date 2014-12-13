@@ -36,7 +36,7 @@ public abstract class Job implements Comparable<Job> {
 		return toSend;
 	}
 	
-	protected Connection getConnection() {
+	public Connection getConnection() {
 		return connection;
 	}
 	

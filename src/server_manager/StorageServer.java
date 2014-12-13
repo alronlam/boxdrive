@@ -5,6 +5,9 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import serverjobs.CoordinatorJobManager;
+import serverjobs.ServerJobManager;
+
 import job.JobManager;
 
 import commons.Constants;
@@ -30,7 +33,7 @@ public class StorageServer {
 		connectionManager = new ConnectionManager();
 		
 		// TODO: Change to ServerJobManager
-		jobManager = new JobManager();
+		jobManager = new ServerJobManager(connectionManager);
 
 		Connection conn = attemptConnection(serverAddr);
 		//new Thread(new DirectoryListenerThread(path, conn, jobManager)).start();;
