@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import job.CreateJob;
+import job.DeleteJob;
+import job.Job;
+import job.JobManager;
+
 import org.vertx.java.core.json.JsonObject;
 
 import client.filerecords.ClientFileRecordManager;
@@ -14,29 +19,18 @@ import commons.Constants;
 
 import conn.Connection;
 
-public class ServerDeleteJob extends ServerBasicJob {
+public class ServerDeleteJob extends DeleteJob {
 
-	ServerDeleteJob(JsonObject json, Connection connection) {
+	public ServerDeleteJob(JsonObject json, Connection connection) {
 		super(json, connection);
 	}
 
-	/**
-	 * @param path
-	 *            A localized Path.
-	 * @param lastModified
-	 *            The time of deletion.
-	 * @param socket
-	 */
 	public ServerDeleteJob(Path path, long lastModified, Connection connection) {
-		super(path, connection);
-		file.setLastModified(lastModified);
+		super(path, lastModified, connection);
 	}
 
 	@Override
-	public String executeLocal(ServerJobManager jobManager) {
-		return null;
-		
-		/*
+	public String executeLocal(JobManager jobManager) {
 		Path localFile = file.getLocalizedFile();
 		if (!Files.exists(localFile)) {
 			return null;
@@ -63,34 +57,5 @@ public class ServerDeleteJob extends ServerBasicJob {
 		}
 		
 		return null;
-		*/
-	}
-
-	/**
-	 * {@link http://stackoverflow.com/a/4026761/2247074}
-	 * 
-	 * @throws FileNotFoundException
-	 */
-	private synchronized boolean deleteRecursive(File path) throws FileNotFoundException {
-		System.out.println("Deleting: " + path.toString());
-
-		if (!path.exists())
-			throw new FileNotFoundException(path.getAbsolutePath());
-		boolean ret = true;
-		if (path.isDirectory()) {
-			for (File f : path.listFiles()) {
-				ret = ret && deleteRecursive(f);
-			}
-		}
-		return ret && path.delete();
-	}
-
-	@Override
-	public String getJson() {
-		JsonObject json = new JsonObject();
-		json.putString(Constants.JSON.TYPE, Constants.Type.DELETE);
-		JsonObject body = file.getJsonObject();
-		json.putObject(Constants.JSON.BODY, body);
-		return json.encode();
 	}
 }

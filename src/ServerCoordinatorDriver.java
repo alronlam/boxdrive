@@ -1,6 +1,10 @@
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import server.Server;
 import server_manager.ServerCoordinator;
 
-public class ServerManagerDriver {
+public class ServerCoordinatorDriver {
 	private static ServerCoordinator sm;
 
 	public static void main(String[] args) {
@@ -14,5 +18,10 @@ public class ServerManagerDriver {
 		// start servermanager
 		// start 3 servers
 		// connect servers to servermanager
+		
+		String sharedFolder = "server";
+		Path sharedFolderPath = Paths.get(sharedFolder);
+		// Start-up the server
+		new ServerCoordinator(sharedFolderPath);
 	}
 }

@@ -53,11 +53,11 @@ public class FileBean {
 		this.isDirectory = file.isDirectory;
 	}
 	
-	String getFilename() {
+	public String getFilename() {
 		return filename;
 	}
 	
-	long getLastModified() {
+	public long getLastModified() {
 		return lastModified;
 	}
 	
@@ -88,7 +88,7 @@ public class FileBean {
 		return json;
 	}
 	
-	boolean hasSameContents(Path other) {
+	public boolean hasSameContents(Path other) {
 		boolean hasSame = false;
 		byte[] otherChecksum = Util.getChecksum(other.toString());
 		hasSame = Arrays.equals(checksum, otherChecksum);

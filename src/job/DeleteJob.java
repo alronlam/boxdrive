@@ -16,7 +16,7 @@ import conn.Connection;
 
 public class DeleteJob extends BasicJob {
 
-	DeleteJob(JsonObject json, Connection connection) {
+	public DeleteJob(JsonObject json, Connection connection) {
 		super(json, connection);
 	}
 
@@ -67,7 +67,7 @@ public class DeleteJob extends BasicJob {
 	 * 
 	 * @throws FileNotFoundException
 	 */
-	private synchronized boolean deleteRecursive(File path) throws FileNotFoundException {
+	public synchronized boolean deleteRecursive(File path) throws FileNotFoundException {
 		System.out.println("Deleting: " + path.toString());
 
 		if (!path.exists())

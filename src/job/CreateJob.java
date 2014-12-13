@@ -23,7 +23,7 @@ public class CreateJob extends BasicJob {
 		super(path, connection);
 	}
 
-	CreateJob(JsonObject json, Connection connection) {
+	public CreateJob(JsonObject json, Connection connection) {
 		super(json, connection);
 	}
 

@@ -5,6 +5,7 @@ public class Constants {
 	public static String FOLDER = "";
 	public static byte[] EOF = "\r\n\r\n".getBytes();
 	public static int PORT = 8080;
+	public static int COORDINATOR_PORT = 10;
 	
 	/**
 	 * JSON Fields.
