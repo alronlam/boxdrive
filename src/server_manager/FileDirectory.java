@@ -136,6 +136,7 @@ public class FileDirectory {
 			for (FileBean fb : fileConfig.keySet()) {
 				if (fb.equals(file) && fb.compareTo(file) == -1) {
 					fb.setLastModified(file.getLastModified());
+					break;
 				}
 			}
 		} else {
