@@ -3,6 +3,8 @@ package client.filerecords;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class SyncManager {
 
@@ -15,28 +17,41 @@ public class SyncManager {
 	}
 
 	private ArrayList<FileRecord> fileRecords;
-	private Condition isFileRecordsInitialized;
+	private Lock lock = new ReentrantLock();
+	private Condition isFileRecordsInitialized = lock.newCondition();
 
-	public synchronized void clearFileRecords() {
+	public void clearFileRecords() {
+		lock.lock();
 		fileRecords = null;
+		lock.unlock();
 	}
 
-	public synchronized void initFileRecords(List<FileRecord> fileRecords) {
+	public void initFileRecords(List<FileRecord> fileRecords) {
+		lock.lock();
+		System.out.println("Records have been initialized!");
 		this.fileRecords = new ArrayList<FileRecord>(fileRecords);
 		isFileRecordsInitialized.signal();
+		lock.unlock();
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized ArrayList<FileRecord> getFileRecords() {
-		return (ArrayList<FileRecord>) fileRecords.clone();
+	public ArrayList<FileRecord> getFileRecords() {
+		lock.lock();
+		ArrayList<FileRecord> clone = (ArrayList<FileRecord>) fileRecords.clone();
+		lock.unlock();
+		return clone;
 	}
 
-	public synchronized void waitForFileRecords() {
+	public void waitForFileRecords() {
+		lock.lock();
 		try {
+			System.out.println("Im gonna wait.");
 			while (fileRecords == null)
 				isFileRecordsInitialized.await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			lock.unlock();
 		}
 	}
 }

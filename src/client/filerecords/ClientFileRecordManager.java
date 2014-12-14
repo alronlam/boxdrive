@@ -35,6 +35,8 @@ public class ClientFileRecordManager {
 		System.out.println("Read File	  Records: " + records);
 		if (records == null)
 			records = this.initRecordsBasedOnDirectory(sharedFolderName);
+		else
+			records = this.updateRecordsTimeModified(records, sharedFolderName);
 
 	}
 
@@ -89,6 +91,28 @@ public class ClientFileRecordManager {
 		}
 
 		return records;
+	}
+
+	private ArrayList<FileRecord> updateRecordsTimeModified(ArrayList<FileRecord> fileRecords, String directory) {
+
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(directory))) {
+
+			for (FileRecord fileRecord : fileRecords) {
+				Path path = this.getPath(directoryStream, fileRecord.getFileName());
+				if (path != null)
+					fileRecord.setDateTimeModified(Files.getLastModifiedTime(path).toMillis());
+			}
+
+			Collections.sort(fileRecords);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return fileRecords;
+	}
+
+	private Path getPath(DirectoryStream<Path> directoryStream, String filename) {
+		return null;
 	}
 
 	// The rest of the class
