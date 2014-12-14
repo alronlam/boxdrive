@@ -36,7 +36,7 @@ public class FileJob extends BasicJob {
 	 * @param path
 	 * @param connection
 	 */
-	FileJob(Path path, Connection connection) {
+	public FileJob(Path path, Connection connection) {
 		super(path, connection);
 		try {
 			fileByteString = Base64.encodeBytes(Files.readAllBytes(path));
