@@ -39,8 +39,6 @@ public class Client {
 		Thread dirListenThread = new Thread(new DirectoryListenerThread(path, conn, jobManager));
 		dirListenThread.setName("Directory Listener Thread");
 		dirListenThread.start();
-		new Thread(new DirectoryListenerThread(path, conn, jobManager)).start();
-		;
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
