@@ -45,7 +45,7 @@ public class Client {
 
 		initShutDownHook();
 		initAndShowFrame();
-		clientJobManager.syncWithCoordinator(conn);
+		clientJobManager.syncWithCoordinator(conn, fileRecordManager, path.toString());
 	}
 
 	private void initShutDownHook() {
