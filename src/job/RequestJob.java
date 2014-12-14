@@ -1,12 +1,8 @@
 package job;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-import conn.Connection;
 import filemanager.FileManager;
 
 public class RequestJob extends BasicJob {
@@ -19,8 +15,8 @@ public class RequestJob extends BasicJob {
 		super(job);
 	}
 	
-	public RequestJob(JsonObject json, Connection connection) {
-		super(json, connection);
+	public RequestJob(JsonObject json) {
+		super(json);
 	}
 
 	@Override
@@ -30,7 +26,7 @@ public class RequestJob extends BasicJob {
 			return null;
 		}
 		
-		Job forSending = new FileJob(file, this.getConnection(), filemanager);
+		Job forSending = new FileJob(file, filemanager);
 		return forSending;
 	}
 

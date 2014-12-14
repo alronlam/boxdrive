@@ -41,10 +41,10 @@ public abstract class JobManager {
 	 * @param jsonString
 	 * @param jsonJobHandlingThread
 	 */
-	public synchronized void handleNewJsonMessage(String jsonString, Connection connection) {
+	public synchronized void handleNewJsonMessage(String jsonString) {
 		JsonObject json = new JsonObject(jsonString);
 
-		Job newJob = JobFactory.createJob(json, connection);
+		Job newJob = JobFactory.createJob(json);
 		handleNewJob(newJob);
 	}
 

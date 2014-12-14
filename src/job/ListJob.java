@@ -10,8 +10,8 @@ import filemanager.FileManager;
 
 public class ListJob extends Job {
 	
-	ListJob(JsonObject json, Connection connection) {
-		super(connection);
+	ListJob(JsonObject json) {
+		super();
 	}
 
 	private List<FileBean> files;

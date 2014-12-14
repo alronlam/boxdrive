@@ -1,17 +1,10 @@
 package job;
 
-import conn.Connection;
 import filemanager.FileManager;
 
 public abstract class Job implements Comparable<Job> {
-	protected Connection connection;
 	private final long createTime = System.currentTimeMillis();
 	private boolean toSend = true;
-	
-	Job(Connection connection) {
-		this.connection = connection;
-	}
-	
 	
 	
 	public abstract Job execute(FileManager filemanager);
@@ -27,10 +20,6 @@ public abstract class Job implements Comparable<Job> {
 	
 	public boolean isToSend() {
 		return toSend;
-	}
-	
-	public Connection getConnection() {
-		return connection;
 	}
 	
 	public int compareTo(Job other) {

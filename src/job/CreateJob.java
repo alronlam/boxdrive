@@ -29,12 +29,12 @@ public class CreateJob extends BasicJob {
 	 *            A localized path.
 	 * @param socket
 	 */
-	public CreateJob(FileBean file, Connection connection) {
-		super(file, connection);
+	public CreateJob(FileBean file) {
+		super(file);
 	}
 
-	public CreateJob(JsonObject json, Connection connection) {
-		super(json, connection);
+	public CreateJob(JsonObject json) {
+		super(json);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class CreateJob extends BasicJob {
 			// Send a new Create Job if local file is newer.
 			if (comparison > 0) {
 				FileBean updatedFile = filemanager.getUpdatedFileBean(file);
-				Job forSending = new CreateJob(updatedFile, connection);
+				Job forSending = new CreateJob(updatedFile);
 				return forSending;
 				
 				// jobManager.handleNewJob(forSending);

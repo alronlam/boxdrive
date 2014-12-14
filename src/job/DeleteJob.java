@@ -9,8 +9,8 @@ import filemanager.FileManager;
 
 public class DeleteJob extends BasicJob {
 
-	DeleteJob(JsonObject json, Connection connection) {
-		super(json, connection);
+	DeleteJob(JsonObject json) {
+		super(json);
 	}
 
 	/**
@@ -20,8 +20,8 @@ public class DeleteJob extends BasicJob {
 	 *            The time of deletion.
 	 * @param socket
 	 */
-	public DeleteJob(FileBean file, long lastModified, Connection connection) {
-		super(file, connection);
+	public DeleteJob(FileBean file, long lastModified) {
+		super(file);
 		file.setLastModified(lastModified);
 	}
 

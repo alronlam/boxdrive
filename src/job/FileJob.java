@@ -15,8 +15,8 @@ public class FileJob extends BasicJob {
 	 * @param json
 	 * @param connection
 	 */
-	FileJob(JsonObject json, Connection connection) {
-		super(json, connection);
+	FileJob(JsonObject json) {
+		super(json);
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		fileByteString = body.getString(Constants.Body.FILEBYTES);
 	}
@@ -27,8 +27,8 @@ public class FileJob extends BasicJob {
 	 * @param path
 	 * @param connection
 	 */
-	public FileJob(FileBean file, Connection connection, FileManager filemanager) {
-		super(file, connection);
+	public FileJob(FileBean file, FileManager filemanager) {
+		super(file);
 		filemanager.getFileBytes(file);
 	}
 
