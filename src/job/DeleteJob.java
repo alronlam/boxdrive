@@ -47,7 +47,7 @@ public class DeleteJob extends BasicJob {
 				deleteRecursive(localFile.toFile());
 
 				// Update the FolderRecord
-				ClientFileRecordManager.getInstance().delete(file.getFilename(), file.getLastModified());
+				ClientFileRecordManager.getInstance().delete(file.getFilename());//, file.getLastModified());
 				return this.getJson();
 			} catch (IOException ex) {
 				System.err.println("Error deleting file.");
