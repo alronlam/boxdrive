@@ -1,4 +1,4 @@
-package job;
+package serverjobs;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -7,26 +7,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 
+import job.CreateJob;
+import job.FileJob;
+import job.JobManager;
+
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
 import client.filerecords.ClientFileRecordManager;
-
 import commons.Constants;
-
 import conn.Connection;
 
-public class FileJob extends BasicJob {
+public class ServerFileJob extends ServerBasicJob {
 	protected final int BUFFER_SIZE = 8096;
 	protected String fileByteString;
 
+	
+	// unsure if the constructors still need this
+	// they probably do
 	/**
 	 * Constructor for receiving.
 	 * 
 	 * @param json
 	 * @param connection
 	 */
-	public FileJob(JsonObject json, Connection connection) {
+	public ServerFileJob(JsonObject json, Connection connection) {
 		super(json, connection);
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		fileByteString = body.getString(Constants.Body.FILEBYTES);
@@ -38,7 +43,7 @@ public class FileJob extends BasicJob {
 	 * @param path
 	 * @param connection
 	 */
-	public FileJob(Path path, Connection connection) {
+	public ServerFileJob(Path path, Connection connection) {
 		super(path, connection);
 		try {
 			fileByteString = Base64.encodeBytes(Files.readAllBytes(path));
@@ -48,7 +53,9 @@ public class FileJob extends BasicJob {
 	}
 
 	@Override
-	public String executeLocal(JobManager jobManager) {
+	public String executeLocal(CoordinatorJobManager jobManager) {
+		return null;
+		/*
 		// TODO handle newer existing file
 		Path localFile = file.getLocalizedFile();
 
@@ -80,8 +87,9 @@ public class FileJob extends BasicJob {
 			}
 		}
 		return null;
+		*/
 	}
-
+	
 	@Override
 	public String getJson() {
 		JsonObject json = new JsonObject();
@@ -91,4 +99,5 @@ public class FileJob extends BasicJob {
 		json.putObject(Constants.JSON.BODY, body);
 		return json.encode();
 	}
+
 }

@@ -15,6 +15,7 @@ import job.JobManager;
 public class Connection {
 	// Socket-related variables
 	public Socket socket;
+	public static String identifier;
 	
 	// Message-related variables
 	private ArrayList<String> msgQueue;
@@ -25,6 +26,7 @@ public class Connection {
 	
 	public Connection(Socket socket, JobManager jobManager) {
 		this.socket = socket;
+		this.identifier = String.valueOf(socket.getPort());
 
 		awaitMessage = new Semaphore(0);
 		messageMutex = new Semaphore(1);
@@ -34,6 +36,10 @@ public class Connection {
 
 		new ReadThread().start();
 		new JSONJobHandlingThread().start();
+	}
+	
+	public String toString(){
+		return identifier;
 	}
 
 	/**
@@ -102,6 +108,10 @@ public class Connection {
 
 	class ReadThread extends Thread {
 
+		ReadThread(){
+			this.setName("ReadThread for "+ identifier);
+		}
+		
 		@Override
 		public void run() {
 			while (true) {
@@ -112,7 +122,7 @@ public class Connection {
 					InputStream inStream = socket.getInputStream();
 					ObjectInputStream is = new ObjectInputStream(inStream);
 					str = (String) is.readObject();
-					System.out.println("Received: ");
+					System.out.println("   Received: ");
 					System.out.println(str);
 					
 				} catch (ClassNotFoundException e) {
@@ -136,6 +146,11 @@ public class Connection {
 	}
 
 	class JSONJobHandlingThread extends Thread {
+		
+		JSONJobHandlingThread(){
+			this.setName("JSONThread for "+ identifier);
+		}
+		
 		@Override
 		public void run() {
 			String json;

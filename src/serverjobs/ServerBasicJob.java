@@ -1,4 +1,4 @@
-package job;
+package serverjobs;
 
 import java.nio.file.Path;
 
@@ -6,29 +6,32 @@ import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
 import conn.Connection;
+import job.FileBean;
 
-public abstract class BasicJob extends Job {
-	public FileBean file;
+
+public abstract class ServerBasicJob extends ServerJob {
+	protected FileBean file;
 	
 	
 	/**
 	 * Clone constructor.
 	 * @param job
 	 */
-	BasicJob(BasicJob job) {
+	ServerBasicJob(ServerBasicJob job) {
 		super(job.getConnection());
 		this.file = new FileBean(job.file);
 	}
 	
-	BasicJob(Path path, Connection connection) {
+	ServerBasicJob(Path path, Connection connection) {
 		super(connection);
 		file = new FileBean(path);
 	}
 	
 
-	BasicJob(JsonObject json, Connection connection) {
+	ServerBasicJob(JsonObject json, Connection connection) {
 		super(connection);
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		file = new FileBean(body);
 	}
+
 }

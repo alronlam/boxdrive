@@ -1,9 +1,12 @@
-package client;
+package server_manager;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import serverjobs.CoordinatorJobManager;
+import serverjobs.ServerJobManager;
 
 import job.JobManager;
 
@@ -12,35 +15,35 @@ import conn.Connection;
 import conn.ConnectionManager;
 
 
-public class Client {
+public class StorageServer {
 	private Socket socket;
 	private JobManager jobManager;
 	private ConnectionManager connectionManager;
+	public int storageGroup;
 
 	public static void main(String args[])	{
-		new Client("localhost",Paths.get("client1"));
+		new StorageServer("localhost",Paths.get("client1"));
 	}	
 	
-	public Client(String serverAddr, Path path) {
+	public StorageServer(String serverAddr, Path path) {
 		Constants.FOLDER = path.toString(); // Makeshift global. Bad.
 		
 		// ServerJobManager.getInstance().setFolder(FOLDER);
-
+		
 		connectionManager = new ConnectionManager();
 		
-		jobManager = new JobManager();
+		// TODO: Change to ServerJobManager
+		jobManager = new ServerJobManager(connectionManager);
 
 		Connection conn = attemptConnection(serverAddr);
-		Thread dirListenThread = new Thread(new DirectoryListenerThread(path, conn, jobManager));
-		dirListenThread.setName("Directory Listener Thread");
-		dirListenThread.start();
+		//new Thread(new DirectoryListenerThread(path, conn, jobManager)).start();;
 	}
 
 	private Connection attemptConnection(String serverAddr) {
 		do {
 
 			try {
-				socket = new Socket(serverAddr, Constants.PORT);
+				socket = new Socket(serverAddr, Constants.COORDINATOR_PORT);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

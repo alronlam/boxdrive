@@ -7,17 +7,17 @@ import java.util.List;
 import job.JobManager;
 
 public class ConnectionManager {
-	private static ConnectionManager connectionManager;
+	//private static ConnectionManager connectionManager;
 
 	private List<Connection> connections;
 
-	public static ConnectionManager getInstance(){
-		if(connectionManager == null)
-			connectionManager = new ConnectionManager();
-		return connectionManager;
-	}
+//	private static ConnectionManager getInstance(){
+//		if(connectionManager == null)
+//			connectionManager = new ConnectionManager();
+//		return connectionManager;
+//	}
 	
-	private ConnectionManager() {
+	public ConnectionManager() {
 		connections = new ArrayList<>();
 	}
 
@@ -28,6 +28,20 @@ public class ConnectionManager {
 		// System.out.println("New connection with: " + socket.getInetAddress());
 		// broadcast("Hello");
 		// System.out.println(this.connections.get(0).read());
+	}
+	
+	public Connection getConnection(int index){
+		return connections.get(index);
+	}
+	
+	public boolean hasConnection(Connection conn){
+		return connections.contains(conn);
+	}
+	
+	public Connection getLastConnection(){
+		if(connections.size() == 0)
+			return null;
+		return connections.get(connections.size()-1);
 	}
 	
 	public Socket getSocket(int index) {

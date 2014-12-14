@@ -1,18 +1,18 @@
-package job;
+package serverjobs;
 
 import conn.Connection;
 
-public abstract class Job implements Comparable<Job> {
+public abstract class ServerJob implements Comparable<ServerJob> {
 	private Connection connection;
 	private final long createTime = System.currentTimeMillis();
 	private boolean toSend = true;
 	
-	Job(Connection connection) {
+	ServerJob(Connection connection) {
 		this.connection = connection;
 	}
 	
 	
-	public String execute(JobManager jobManager) {
+	public String execute(CoordinatorJobManager jobManager) {
 		if (toSend) {
 			connection.write(getJson());
 			return null;
@@ -21,7 +21,7 @@ public abstract class Job implements Comparable<Job> {
 		}
 	}
 	
-	public abstract String executeLocal(JobManager jobManager);
+	public abstract String executeLocal(CoordinatorJobManager jobManager);
 	public abstract String getJson();
 	
 	public long getCreateTime() {
@@ -36,11 +36,11 @@ public abstract class Job implements Comparable<Job> {
 		return toSend;
 	}
 	
-	public Connection getConnection() {
+	protected Connection getConnection() {
 		return connection;
 	}
 	
-	public int compareTo(Job other) {
+	public int compareTo(ServerJob other) {
 		int comparison = 0;
 		if (createTime > other.createTime) {
 			comparison = 1;

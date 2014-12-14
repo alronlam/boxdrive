@@ -7,16 +7,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import job.JobManager;
-import job.ServerJobManager;
 
+import serverjobs.CoordinatorJobManager;
+import serverjobs.ServerJobManager;
 import commons.Constants;
-
 import conn.ConnectionManager;
 
 public class Server {
 	private ServerSocket serverSocket;
 	private JobManager jobManager;
-
+	private ConnectionManager connectionManager;
+	
 	public static void main(String args[]) {
 		new Server(Paths.get("server"));
 	}
@@ -25,9 +26,11 @@ public class Server {
 		Constants.FOLDER = path.toString();
 
 		// ServerJobManager.getInstance().setFolder(FOLDER);
+		
+		connectionManager = new ConnectionManager();
 
 		// TODO: Change to ServerJobManager
-		jobManager = new ServerJobManager();
+		jobManager = new ServerJobManager(connectionManager);
 		
 		try {
 			serverSocket = new ServerSocket(Constants.PORT);
@@ -37,12 +40,12 @@ public class Server {
 
 		acceptConnections();
 	}
-
-	private void acceptConnections() {
+	
+	protected void acceptConnections() {
 		while (true) {
 			Socket newSocket = acceptNewConnection();
 			if (newSocket != null)
-				ConnectionManager.getInstance().createNewConnection(newSocket,jobManager);
+				connectionManager.createNewConnection(newSocket, jobManager);
 			System.out.println(newSocket.getRemoteSocketAddress() + " has connected.");
 		}
 	}
@@ -59,7 +62,7 @@ public class Server {
 	}
 
 	public Socket getSocket(int index) {
-		return ConnectionManager.getInstance().getSocket(index);
+		return connectionManager.getSocket(index);
 	}
 
 	public Socket getFirstSocket() {

@@ -6,15 +6,28 @@ import java.util.Collections;
 import org.vertx.java.core.json.JsonObject;
 
 import conn.Connection;
+import conn.ConnectionManager;
 
 public class JobManager {
 
 	protected ArrayList<Job> jobQueue;
+	protected ConnectionManager connMgrClients,connMgrStorageServers;
 
 	public JobManager() {
 		this.jobQueue = new ArrayList<Job>();
 	}
 
+	public JobManager(ConnectionManager connMgr) {
+		this.jobQueue = new ArrayList<Job>();
+		this.connMgrClients = connMgr;
+	}
+	
+	public JobManager(ConnectionManager connMgrClient, ConnectionManager connMgrStorageServer) {
+		this.jobQueue = new ArrayList<Job>();
+		this.connMgrClients = connMgrClient;
+		this.connMgrStorageServers = connMgrStorageServer;
+	}
+	
 	/**
 	 * This method will be called when a new JSON message is received from a
 	 * socket.

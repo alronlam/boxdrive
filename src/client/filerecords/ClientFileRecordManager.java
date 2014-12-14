@@ -124,7 +124,7 @@ public class ClientFileRecordManager {
 		targetRecord.setDateTimeModified(dateTimeModified);
 	}
 
-	public void delete(String fileName, long dateTimeModified) {
+	public void delete(String fileName) {
 
 		this.timeLastModified = System.currentTimeMillis();
 
