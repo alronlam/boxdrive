@@ -21,7 +21,7 @@ public class FileDirectory {
 	// private Map<Connection, List<FileObject>> fileAssignment;
 	// public List<FileObject> fileConfig;
 
-	// TODO: possibly make a method in FileBean that just checks if the filename is equal, 
+	// TODO: possibly make a method in FileBean that just checks if the filename is equal,
 	// as the key pairing in the map may be affected due to the modified time
 
 	private int runningValServer = 0;
@@ -75,17 +75,17 @@ public class FileDirectory {
 
 	public List<Connection> getServersFromConfig(int config) {
 		List<Connection> out = new ArrayList<Connection>();
-		
+
 		for (Connection c : serverConfig.keySet())
 			if (serverConfig.get(c) == config)
 				out.add(c);
-		
+
 		if (!out.isEmpty())
 			return out;
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Finds first server that stores Path p in the hash map. Returns null if file not found. Use this for retrieving server files for a client.
 	 * 
@@ -130,10 +130,15 @@ public class FileDirectory {
 
 		System.out.println(serverConfig);
 		System.out.println(fileConfig);
-		
-		if (fileConfig.containsKey(file))
+
+		if (fileConfig.containsKey(file)) {
 			out = findAllServersWithConfig(fileConfig.get(file));
-		else {
+			for (FileBean fb : fileConfig.keySet()) {
+				if (fb.equals(file) && fb.compareTo(file) == -1) {
+					fb.setLastModified(file.getLastModified());
+				}
+			}
+		} else {
 			out = findAllServersWithConfig(runningValFile);
 			fileConfig.put(file, runningValFile);
 			runningValFile = (runningValFile + 1) % this.STORAGE_SERVER_GROUPS;
@@ -141,7 +146,6 @@ public class FileDirectory {
 
 		return out;
 	}
-
 	// utility stuff
 	// public int indexOfPath(Connection s, FileObject p) {
 	// return fileAssignment.get(s).indexOf(p);
