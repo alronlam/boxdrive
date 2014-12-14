@@ -12,17 +12,16 @@ import job.RequestJob;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-
 import conn.Connection;
 
-public class ServerRequestJob extends RequestJob {
+public class ServerRequestJob extends ServerBasicJob {
 
 	/**
 	 * Creates a Request with the same parameters as the job argument.
 	 * 
 	 * @param job
 	 */
-	public ServerRequestJob(BasicJob job) {
+	public ServerRequestJob(ServerBasicJob job) {
 		super(job);
 	}
 
@@ -31,7 +30,7 @@ public class ServerRequestJob extends RequestJob {
 	}
 
 	@Override
-	public String executeLocal(JobManager jobManager) {
+	public String executeLocal(CoordinatorJobManager jobManager) {
 		Path localFile = file.getLocalizedFile();
 
 		if (!Files.exists(localFile)) {
@@ -42,5 +41,14 @@ public class ServerRequestJob extends RequestJob {
 		jobManager.handleNewJob(forSending);
 
 		return null;
+	}
+	
+	@Override
+	public String getJson() {
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.REQUEST);
+		JsonObject body = file.getJsonObject();
+		json.putObject(Constants.JSON.BODY, body);
+		return json.encode();
 	}
 }

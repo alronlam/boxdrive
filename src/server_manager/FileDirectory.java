@@ -72,6 +72,19 @@ public class FileDirectory {
 	// return fileAssignment.get(s);
 	// }
 
+	public List<Connection> getServersFromConfig(int config) {
+		List<Connection> out = new ArrayList<Connection>();
+		
+		for (Connection c : serverConfig.keySet())
+			if (serverConfig.get(c) == config)
+				out.add(c);
+		
+		if (!out.isEmpty())
+			return out;
+		
+		return null;
+	}
+	
 	/**
 	 * Finds first server that stores Path p in the hash map. Returns null if file not found. Use this for retrieving server files for a client.
 	 * 

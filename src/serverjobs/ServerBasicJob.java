@@ -33,4 +33,5 @@ public abstract class ServerBasicJob extends ServerJob {
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		file = new FileBean(body);
 	}
+
 }
