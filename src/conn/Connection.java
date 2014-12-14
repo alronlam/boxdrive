@@ -37,6 +37,10 @@ public class Connection {
 		new ReadThread().start();
 		new JSONJobHandlingThread().start();
 	}
+	
+	public String toString(){
+		return identifier;
+	}
 
 	/**
 	 * Sends string over to connected peer through the socket
