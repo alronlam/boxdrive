@@ -10,7 +10,7 @@ import server_manager.FileDirectory;
 import server_manager.FileObject;
 import job.BasicJob;
 import job.Job;
-import job.JobManager;
+import job.manager.JobManager;
 import conn.Connection;
 import conn.ConnectionManager;
 

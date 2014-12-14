@@ -3,8 +3,7 @@ package client;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import job.JobManager;
-
+import job.manager.JobManager;
 import conn.Connection;
 
 public class DirectoryListenerThread implements Runnable {

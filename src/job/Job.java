@@ -1,9 +1,10 @@
 package job;
 
 import conn.Connection;
+import filemanager.FileManager;
 
 public abstract class Job implements Comparable<Job> {
-	private Connection connection;
+	protected Connection connection;
 	private final long createTime = System.currentTimeMillis();
 	private boolean toSend = true;
 	
@@ -12,16 +13,8 @@ public abstract class Job implements Comparable<Job> {
 	}
 	
 	
-	public String execute(JobManager jobManager) {
-		if (toSend) {
-			connection.write(getJson());
-			return null;
-		} else {
-			return executeLocal(jobManager);
-		}
-	}
 	
-	public abstract String executeLocal(JobManager jobManager);
+	public abstract Job execute(FileManager filemanager);
 	public abstract String getJson();
 	
 	public long getCreateTime() {

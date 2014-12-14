@@ -6,8 +6,7 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import job.JobManager;
-
+import job.manager.JobManager;
 import serverjobs.CoordinatorJobManager;
 import commons.Constants;
 import conn.ConnectionManager;

@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import job.FileBean;
 import job.Job;
-
 import conn.Connection;
-
+import filemanager.FileBean;
 import server.Server;
 
 public class FileDirectory {

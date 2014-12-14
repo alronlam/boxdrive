@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
-import job.JobManager;
+import job.manager.JobManager;
 
 public class Connection {
 	// Socket-related variables

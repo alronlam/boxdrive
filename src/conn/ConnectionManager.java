@@ -4,7 +4,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import job.JobManager;
+import job.manager.JobManager;
 
 public class ConnectionManager {
 	//private static ConnectionManager connectionManager;

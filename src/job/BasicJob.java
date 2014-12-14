@@ -6,6 +6,7 @@ import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
 import conn.Connection;
+import filemanager.FileBean;
 
 public abstract class BasicJob extends Job {
 	public FileBean file;
@@ -20,9 +21,9 @@ public abstract class BasicJob extends Job {
 		this.file = new FileBean(job.file);
 	}
 	
-	BasicJob(Path path, Connection connection) {
+	BasicJob(FileBean file, Connection connection) {
 		super(connection);
-		file = new FileBean(path);
+		this.file = file;
 	}
 	
 

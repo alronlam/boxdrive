@@ -9,7 +9,7 @@ import java.nio.file.attribute.FileTime;
 
 import job.CreateJob;
 import job.FileJob;
-import job.JobManager;
+import job.manager.JobManager;
 
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;

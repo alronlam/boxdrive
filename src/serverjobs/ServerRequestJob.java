@@ -6,8 +6,8 @@ import java.nio.file.Path;
 import job.BasicJob;
 import job.FileJob;
 import job.Job;
-import job.JobManager;
 import job.RequestJob;
+import job.manager.JobManager;
 
 import org.vertx.java.core.json.JsonObject;
 

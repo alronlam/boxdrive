@@ -2,7 +2,7 @@ package server_manager;
 
 import java.nio.file.Path;
 
-import job.FileBean;
+import filemanager.FileBean;
 
 public class FileObject {
 	public FileBean file;

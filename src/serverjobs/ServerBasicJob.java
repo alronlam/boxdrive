@@ -6,7 +6,7 @@ import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
 import conn.Connection;
-import job.FileBean;
+import filemanager.FileBean;
 
 
 public abstract class ServerBasicJob extends ServerJob {

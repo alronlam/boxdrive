@@ -6,8 +6,8 @@ import java.nio.file.Path;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-
 import conn.Connection;
+import filemanager.FileManager;
 
 public class RequestJob extends BasicJob {
 	
@@ -24,17 +24,14 @@ public class RequestJob extends BasicJob {
 	}
 
 	@Override
-	public String executeLocal(JobManager jobManager) {
-		Path localFile = file.getLocalizedFile();
+	public Job execute(FileManager filemanager) {
 		
-		if (!Files.exists(localFile)) {
+		if (!filemanager.exists(file)) {
 			return null;
 		}
 		
-		Job forSending = new FileJob(localFile, this.getConnection());
-		jobManager.handleNewJob(forSending);
-		
-		return null;
+		Job forSending = new FileJob(file, this.getConnection(), filemanager);
+		return forSending;
 	}
 
 	@Override

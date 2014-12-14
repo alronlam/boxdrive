@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
-import job.JobManager;
+import job.manager.JobManager;
 
 import org.vertx.java.core.json.JsonObject;
 

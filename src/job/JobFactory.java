@@ -7,7 +7,7 @@ import conn.Connection;
 
 public class JobFactory {
 		
-	static Job createJob(JsonObject json, Connection connection) {
+	public static Job createJob(JsonObject json, Connection connection) {
 		String type = json.getString(Constants.JSON.TYPE);
 		
 		Job toGet = null;

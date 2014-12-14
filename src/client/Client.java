@@ -7,9 +7,8 @@ import java.nio.file.Paths;
 
 import javax.swing.JFrame;
 
-import job.JobManager;
+import job.manager.JobManager;
 import client.filerecords.ClientFileRecordManager;
-
 import commons.Constants;
 import conn.Connection;
 import conn.ConnectionManager;

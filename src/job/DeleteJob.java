@@ -1,16 +1,11 @@
 package job;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-
 import conn.Connection;
+import filemanager.FileBean;
+import filemanager.FileManager;
 
 public class DeleteJob extends BasicJob {
 
@@ -25,55 +20,29 @@ public class DeleteJob extends BasicJob {
 	 *            The time of deletion.
 	 * @param socket
 	 */
-	public DeleteJob(Path path, long lastModified, Connection connection) {
-		super(path, connection);
+	public DeleteJob(FileBean file, long lastModified, Connection connection) {
+		super(file, connection);
 		file.setLastModified(lastModified);
 	}
 
 	@Override
-	public String executeLocal(JobManager jobManager) {
-		Path localFile = file.getLocalizedFile();
-		if (!Files.exists(localFile)) {
+	public Job execute(FileManager filemanager) {
+		if (!filemanager.exists(file)) {
 			return null;
 		}
 
-		int comparison = file.compareLastModifiedTime(localFile);
+		int comparison = filemanager.compareLastModifiedTime(file);
 
 		// If local file is older, then safe to delete.
 		if (comparison < 0) {
-			try {
-				deleteRecursive(localFile.toFile());
-				return this.getJson();
-			} catch (IOException ex) {
-				System.err.println("Error deleting file.");
-			}
-
-			// If local file is newer, send a Create Job to remote.
+			filemanager.delete(file);
+			
 		} else {
-			Job forSending = new CreateJob(localFile, this.getConnection());
-			jobManager.handleNewJob(forSending);
+			Job forSending = new CreateJob(this);
+			return forSending;
 		}
 
 		return null;
-	}
-
-	/**
-	 * {@link http://stackoverflow.com/a/4026761/2247074}
-	 * 
-	 * @throws FileNotFoundException
-	 */
-	private synchronized boolean deleteRecursive(File path) throws FileNotFoundException {
-		System.out.println("Deleting: " + path.toString());
-
-		if (!path.exists())
-			throw new FileNotFoundException(path.getAbsolutePath());
-		boolean ret = true;
-		if (path.isDirectory()) {
-			for (File f : path.listFiles()) {
-				ret = ret && deleteRecursive(f);
-			}
-		}
-		return ret && path.delete();
 	}
 
 	@Override

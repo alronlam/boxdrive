@@ -5,6 +5,8 @@ import java.util.List;
 import org.vertx.java.core.json.JsonObject;
 
 import conn.Connection;
+import filemanager.FileBean;
+import filemanager.FileManager;
 
 public class ListJob extends Job {
 	
@@ -15,7 +17,7 @@ public class ListJob extends Job {
 	private List<FileBean> files;
 	
 	@Override
-	public String executeLocal(JobManager jobManager) {
+	public Job execute(FileManager filemanager) {
 		return null;
 	}
 
