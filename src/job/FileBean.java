@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.filerecords.FileRecord;
+
 import commons.Constants;
 import commons.Util;
 
@@ -102,12 +104,14 @@ public class FileBean implements Comparable<FileBean> {
 	}
 
 	/**
-	 * Compares the last modified times of the received file with an existing file.
+	 * Compares the last modified times of the received file with an existing
+	 * file.
 	 * 
 	 * @param other
 	 *            A localized Path to the other file.
-	 * @return 0 if this file is modified at the same time as other, a value less than 0 if this file is older than other, and a value greater than 0 if this file is newer than
-	 *         other.
+	 * @return 0 if this file is modified at the same time as other, a value
+	 *         less than 0 if this file is older than other, and a value greater
+	 *         than 0 if this file is newer than other.
 	 */
 	int compareLastModifiedTime(Path other) {
 		int comparison = -1;
@@ -133,10 +137,10 @@ public class FileBean implements Comparable<FileBean> {
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return filename.hashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		return compareTo((FileBean) o) == 0;
@@ -150,4 +154,9 @@ public class FileBean implements Comparable<FileBean> {
 		}
 		return comparison;
 	}
+
+	public FileRecord toFileRecord() {
+		return new FileRecord(this.filename, this.lastModified);
+	}
+
 }
