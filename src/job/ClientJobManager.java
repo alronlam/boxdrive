@@ -29,7 +29,12 @@ public class ClientJobManager extends JobManager {
 		ArrayList<Job> newJobs = comparator.compareAndGenerateJobs(newFileRecords, oldFileRecords,
 				lastTimeOldRecordsModified, serverConnection, sharedFolderName);
 
-		for (Job newJob : newJobs)
+		System.out.println("\nSYNC RESULTS:");
+		for (Job newJob : newJobs) {
+			System.out.println(newJob.getJson());
 			this.handleNewJob(newJob);
+		}
+
+		System.out.println("SYNC DONE:\n");
 	}
 }

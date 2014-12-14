@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
+import job.RequestJob;
 import conn.Connection;
 
 public class SharedFolderRecordComparator {
@@ -13,10 +14,13 @@ public class SharedFolderRecordComparator {
 	public ArrayList<Job> compareAndGenerateJobs(ArrayList<FileRecord> newFileRecords,
 			ArrayList<FileRecord> oldFileRecords, long lastTimeOldRecordsModified, Connection serverConnection,
 			String sharedFolderName) {
+
+		System.out.println("\n Comparator: old = " + oldFileRecords.toString() + " new = " + newFileRecords.toString());
+
 		ArrayList<Job> jobs = new ArrayList<Job>();
-		jobs.addAll(this.generateCreateJobs(oldFileRecords, newFileRecords, serverConnection, sharedFolderName));
-		jobs.addAll(this.generateModifyJobs(oldFileRecords, newFileRecords, serverConnection, sharedFolderName));
-		jobs.addAll(this.generateDeleteJobs(oldFileRecords, newFileRecords, serverConnection, sharedFolderName,
+		jobs.addAll(this.generateCreateJobs(newFileRecords, oldFileRecords, serverConnection, sharedFolderName));
+		jobs.addAll(this.generateModifyJobs(newFileRecords, oldFileRecords, serverConnection, sharedFolderName));
+		jobs.addAll(this.generateDeleteJobs(newFileRecords, oldFileRecords, serverConnection, sharedFolderName,
 				lastTimeOldRecordsModified));
 		return jobs;
 	}
@@ -44,7 +48,9 @@ public class SharedFolderRecordComparator {
 
 			if (matchIndex >= 0) {
 				FileRecord matchInOldRecords = oldFileRecords.get(matchIndex);
+
 				if (newFileRecord.getDateTimeModified() > matchInOldRecords.getDateTimeModified()) {
+
 					modifyJobs.add(new CreateJob(Paths.get(sharedFolderName + "/" + newFileRecord.getFileName()),
 							serverConnection));
 				}
