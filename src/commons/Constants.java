@@ -7,6 +7,8 @@ public class Constants {
 	public static int PORT = 8080;
 	public static int COORDINATOR_PORT = 10;
 	
+	public static String FOLDER_RECORD_FILENAME = "folderRecord.ser";
+	
 	/**
 	 * JSON Fields.
 	 */

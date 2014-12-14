@@ -17,28 +17,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 public class ClientFileRecordManager {
 
-	// Singleton-related variables and methods
+	private final String RECORD_PATH;
+	private String sharedFolderName;
 
-	private static ClientFileRecordManager instance = new ClientFileRecordManager();
+	public ClientFileRecordManager(String sharedFolderName, String recordFileName) {
 
-	public static ClientFileRecordManager getInstance() {
-		return instance;
-	}
-
-	private ClientFileRecordManager() {
-
-		String directory = "client1"; // temporary. will need to access
-										// the client's directory
-		String recordFileName = "file_records.ser";
+		this.sharedFolderName = sharedFolderName;
+		this.RECORD_PATH = sharedFolderName + "_" + recordFileName;
 
 		// try to read from serialized list
 		// if not successful, then init the records based on directory
-//		ArrayList<FileRecord> records = this.readFromSerializedList(recordFileName);
-//		if (records == null)
-//			records = this.initRecordsBasedOnDirectory(directory);
+		ArrayList<FileRecord> records = this.readFromSerializedList(this.RECORD_PATH);
+		System.out.println("Read File	  Records: " + records);
+		if (records == null)
+			records = this.initRecordsBasedOnDirectory(sharedFolderName);
 
 	}
 
@@ -60,15 +56,21 @@ public class ClientFileRecordManager {
 		return null;
 	}
 
-	private void serializeList(String filePath) {
+	public void serializeList() {
+
+		this.list = this.initRecordsBasedOnDirectory(this.sharedFolderName);
+
 		// serialize the List
-		try (OutputStream file = new FileOutputStream(filePath);
+		try (OutputStream file = new FileOutputStream(RECORD_PATH);
 				OutputStream buffer = new BufferedOutputStream(file);
 				ObjectOutput output = new ObjectOutputStream(buffer);) {
 			output.writeObject(this.list);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+
+		System.out.println("\nCurrent record is now\n " + this.toString() + "\n");
+
 	}
 
 	private ArrayList<FileRecord> initRecordsBasedOnDirectory(String directory) {
@@ -124,7 +126,7 @@ public class ClientFileRecordManager {
 		targetRecord.setDateTimeModified(dateTimeModified);
 	}
 
-	public void delete(String fileName) {
+	public void delete(String fileName, long dateTimeModified) {
 
 		this.timeLastModified = System.currentTimeMillis();
 
@@ -159,4 +161,13 @@ public class ClientFileRecordManager {
 		return timeLastModified;
 	}
 
+	public String toString() {
+		StringBuilder sb = new StringBuilder("Record as of " + new Date(this.timeLastModified).toString());
+
+		for (FileRecord record : list) {
+			sb.append(record.toString()).append("\n");
+		}
+
+		return sb.toString();
+	}
 }

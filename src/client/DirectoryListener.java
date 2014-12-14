@@ -55,7 +55,6 @@ import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
 import job.JobManager;
-import client.filerecords.ClientFileRecordManager;
 import conn.Connection;
 
 /**
@@ -138,14 +137,6 @@ public class DirectoryListener {
 		if (connection != null) {
 			Job createJob = new CreateJob(path, connection);
 			jobManager.handleNewJob(createJob);
-			try {
-				ClientFileRecordManager.getInstance().handleCreateOrModify(path.getFileName().toString(),
-						Files.getLastModifiedTime(path).toMillis());
-			} catch (IOException e) {
-				e.printStackTrace();
-				// should do something here in case recording the create wasn't
-				// successful
-			}
 		}
 	}
 
@@ -153,14 +144,6 @@ public class DirectoryListener {
 		if (connection != null) {
 			Job createJob = new CreateJob(path, connection);
 			jobManager.handleNewJob(createJob);
-			try {
-				ClientFileRecordManager.getInstance().handleCreateOrModify(path.getFileName().toString(),
-						Files.getLastModifiedTime(path).toMillis());
-			} catch (IOException e) {
-				e.printStackTrace();
-				// should do something here in case recording the create wasn't
-				// successful
-			}
 		}
 	}
 
@@ -168,7 +151,6 @@ public class DirectoryListener {
 		if (connection != null) {
 			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
 			jobManager.handleNewJob(deleteJob);
-			ClientFileRecordManager.getInstance().delete(path.getFileName().toString());
 		}
 	}
 
@@ -217,8 +199,7 @@ public class DirectoryListener {
 				}
 
 				if (kind == ENTRY_CREATE) {
-					System.out.println("create called");
-//					create(child);
+					create(child);
 					continue;
 
 				} else if (kind == ENTRY_DELETE) {
@@ -226,8 +207,7 @@ public class DirectoryListener {
 					continue;
 
 				} else if (kind == ENTRY_MODIFY) {
-					System.out.println("modify called");
-//					modify(child);
+					modify(child);
 					continue;
 				}
 			}

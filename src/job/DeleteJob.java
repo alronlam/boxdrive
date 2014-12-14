@@ -8,15 +8,13 @@ import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
-import client.filerecords.ClientFileRecordManager;
-
 import commons.Constants;
 
 import conn.Connection;
 
 public class DeleteJob extends BasicJob {
 
-	public DeleteJob(JsonObject json, Connection connection) {
+	DeleteJob(JsonObject json, Connection connection) {
 		super(json, connection);
 	}
 
@@ -45,9 +43,6 @@ public class DeleteJob extends BasicJob {
 		if (comparison < 0) {
 			try {
 				deleteRecursive(localFile.toFile());
-
-				// Update the FolderRecord
-				ClientFileRecordManager.getInstance().delete(file.getFilename(), file.getLastModified());
 				return this.getJson();
 			} catch (IOException ex) {
 				System.err.println("Error deleting file.");
@@ -58,7 +53,7 @@ public class DeleteJob extends BasicJob {
 			Job forSending = new CreateJob(localFile, this.getConnection());
 			jobManager.handleNewJob(forSending);
 		}
-		
+
 		return null;
 	}
 
@@ -67,7 +62,7 @@ public class DeleteJob extends BasicJob {
 	 * 
 	 * @throws FileNotFoundException
 	 */
-	public synchronized boolean deleteRecursive(File path) throws FileNotFoundException {
+	private synchronized boolean deleteRecursive(File path) throws FileNotFoundException {
 		System.out.println("Deleting: " + path.toString());
 
 		if (!path.exists())

@@ -1,5 +1,7 @@
 package client.filerecords;
 
+import java.io.Serializable;
+import java.util.Date;
 
 /***
  * Represents a record of one file in the shared folder. Do not give out a
@@ -10,7 +12,7 @@ package client.filerecords;
  * @author user
  * 
  */
-public class FileRecord implements Comparable<FileRecord> {
+public class FileRecord implements Comparable<FileRecord>, Serializable {
 
 	private String fileName;
 	private long dateTimeModified;
@@ -41,6 +43,13 @@ public class FileRecord implements Comparable<FileRecord> {
 	public boolean equals(Object other) {
 		FileRecord o = (FileRecord) other;
 		return fileName.equals(o.fileName);
+	}
+
+	public String toString() {
+
+		Date time = new Date(dateTimeModified);
+		return fileName + " - " + time.toString();
+
 	}
 
 }

@@ -10,15 +10,13 @@ import java.nio.file.attribute.FileTime;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
-import client.filerecords.ClientFileRecordManager;
-
 import commons.Constants;
 
 import conn.Connection;
 
 public class FileJob extends BasicJob {
-	protected final int BUFFER_SIZE = 8096;
-	protected String fileByteString;
+	private final int BUFFER_SIZE = 8096;
+	private String fileByteString;
 
 	/**
 	 * Constructor for receiving.
@@ -26,7 +24,7 @@ public class FileJob extends BasicJob {
 	 * @param json
 	 * @param connection
 	 */
-	public FileJob(JsonObject json, Connection connection) {
+	FileJob(JsonObject json, Connection connection) {
 		super(json, connection);
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		fileByteString = body.getString(Constants.Body.FILEBYTES);
@@ -38,7 +36,7 @@ public class FileJob extends BasicJob {
 	 * @param path
 	 * @param connection
 	 */
-	public FileJob(Path path, Connection connection) {
+	FileJob(Path path, Connection connection) {
 		super(path, connection);
 		try {
 			fileByteString = Base64.encodeBytes(Files.readAllBytes(path));
@@ -53,7 +51,8 @@ public class FileJob extends BasicJob {
 		Path localFile = file.getLocalizedFile();
 
 		byte[] fileBytes = Base64.decode(fileByteString);
-		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes); FileOutputStream outputStream = new FileOutputStream(localFile.toFile())) {
+		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes);
+				FileOutputStream outputStream = new FileOutputStream(localFile.toFile())) {
 			int read = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
 			while ((read = inputStream.read(buffer)) != -1) {
@@ -62,10 +61,8 @@ public class FileJob extends BasicJob {
 			}
 			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
 
-			// Update the FolderRecord
-			ClientFileRecordManager.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
-
-			// Connection is null because this job is just created to be able to construct its JSON. It won't reall be processed.
+			// Connection is null because this job is just created to be able to
+			// construct its JSON. It won't reall be processed.
 			CreateJob createJobForBroadcasting = new CreateJob(localFile, null);
 
 			return createJobForBroadcasting.getJson();
