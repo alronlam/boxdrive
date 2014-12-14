@@ -6,17 +6,17 @@ public class Constants {
 	public static byte[] EOF = "\r\n\r\n".getBytes();
 	public static int PORT = 8080;
 	public static int COORDINATOR_PORT = 10;
-	
+
 	public static String FOLDER_RECORD_FILENAME = "folderRecord.ser";
-	
+
 	/**
 	 * JSON Fields.
 	 */
 	public class JSON {
 		public final static String TYPE = "type";
-		public final static String BODY = "body";	
+		public final static String BODY = "body";
 	}
-	
+
 	/**
 	 * JSON Body keys.
 	 */
@@ -27,7 +27,7 @@ public class Constants {
 		public final static String IS_DIRECTORY = "is directory";
 		public final static String FILEBYTES = "file bytes";
 	}
-	
+
 	/**
 	 * Job Types.
 	 */
@@ -38,5 +38,6 @@ public class Constants {
 		public final static String FILE = "file";
 		public final static String LIST = "list";
 		public final static String REQUEST = "request";
+		public final static String LIST_RESULT = "list_res";
 	}
 }
