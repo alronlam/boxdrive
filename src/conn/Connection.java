@@ -49,8 +49,8 @@ public class Connection {
 	 *            String to be sent to peer
 	 */
 	public void write(String msg) {
-		System.out.println("Sending: ");
-		System.out.println(msg);
+//		System.out.println("Sending: ");
+//		System.out.println(msg);
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ObjectOutputStream os = new ObjectOutputStream(out);
@@ -122,8 +122,8 @@ public class Connection {
 					InputStream inStream = socket.getInputStream();
 					ObjectInputStream is = new ObjectInputStream(inStream);
 					str = (String) is.readObject();
-					System.out.println("   Received: ");
-					System.out.println(str);
+//					System.out.println("   Received: ");
+//					System.out.println(str);
 					
 				} catch (ClassNotFoundException e) {
 					System.err.println("Failed to parse stream data as String.");

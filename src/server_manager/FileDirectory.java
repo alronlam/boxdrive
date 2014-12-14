@@ -3,6 +3,7 @@ package server_manager;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,11 +33,11 @@ public class FileDirectory {
 	// }
 
 	public FileDirectory() {
-		serverConfig = new HashMap<>();
+		serverConfig = new LinkedHashMap<>();
 		// for(int i = 0; i < STORAGE_SERVER_GROUPS; ++i)
 		// serverConfig.put(i, new ArrayList<Connection>());
 
-		fileConfig = new HashMap<>();
+		fileConfig = new LinkedHashMap<>();
 		// for(int i = 0; i < STORAGE_SERVER_GROUPS; ++i)
 		// fileConfig.put(i, new ArrayList<FileBean>());
 	}
