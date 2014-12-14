@@ -127,6 +127,9 @@ public class FileDirectory {
 	public List<Connection> getServerListForFile(FileBean file) {
 		List<Connection> out;
 
+		System.out.println(serverConfig);
+		System.out.println(fileConfig);
+		
 		if (fileConfig.containsKey(file))
 			out = findAllServersWithConfig(fileConfig.get(file));
 		else {
