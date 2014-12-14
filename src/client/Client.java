@@ -31,7 +31,9 @@ public class Client {
 		jobManager = new JobManager();
 
 		Connection conn = attemptConnection(serverAddr);
-		new Thread(new DirectoryListenerThread(path, conn, jobManager)).start();;
+		Thread dirListenThread = new Thread(new DirectoryListenerThread(path, conn, jobManager));
+		dirListenThread.setName("Directory Listener Thread");
+		dirListenThread.start();
 	}
 
 	private Connection attemptConnection(String serverAddr) {

@@ -136,6 +136,7 @@ public class DirectoryListener {
 
 	private void create(Path path) {
 		if (connection != null) {
+			System.out.println("Job Created.");
 			Job createJob = new CreateJob(path, connection);
 			jobManager.handleNewJob(createJob);
 			try {
@@ -224,6 +225,7 @@ public class DirectoryListener {
 				}
 
 				if (kind == ENTRY_CREATE) {
+					System.out.println("a file has been created");
 					create(child);
 					continue;
 
