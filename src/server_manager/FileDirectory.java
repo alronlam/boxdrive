@@ -1,19 +1,13 @@
 package server_manager;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import job.FileBean;
-import job.Job;
-
+import client.filerecords.FileRecord;
 import conn.Connection;
-
-import server.Server;
 
 public class FileDirectory {
 	private Map<Connection, Integer> serverConfig;
@@ -21,7 +15,8 @@ public class FileDirectory {
 	// private Map<Connection, List<FileObject>> fileAssignment;
 	// public List<FileObject> fileConfig;
 
-	// TODO: possibly make a method in FileBean that just checks if the filename is equal, 
+	// TODO: possibly make a method in FileBean that just checks if the filename
+	// is equal,
 	// as the key pairing in the map may be affected due to the modified time
 
 	private int runningValServer = 0;
@@ -56,7 +51,8 @@ public class FileDirectory {
 	}
 
 	/**
-	 * If the ArrayList of files already exist for the server, just dump it here.
+	 * If the ArrayList of files already exist for the server, just dump it
+	 * here.
 	 * 
 	 * @param s
 	 * @param list
@@ -75,19 +71,20 @@ public class FileDirectory {
 
 	public List<Connection> getServersFromConfig(int config) {
 		List<Connection> out = new ArrayList<Connection>();
-		
+
 		for (Connection c : serverConfig.keySet())
 			if (serverConfig.get(c) == config)
 				out.add(c);
-		
+
 		if (!out.isEmpty())
 			return out;
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * Finds first server that stores Path p in the hash map. Returns null if file not found. Use this for retrieving server files for a client.
+	 * Finds first server that stores Path p in the hash map. Returns null if
+	 * file not found. Use this for retrieving server files for a client.
 	 * 
 	 * @param p
 	 * @return
@@ -102,7 +99,8 @@ public class FileDirectory {
 	// }
 
 	/**
-	 * Basically the findServer function but returns all of them in a list. Use this for updating server files.
+	 * Basically the findServer function but returns all of them in a list. Use
+	 * this for updating server files.
 	 * 
 	 * @param p
 	 * @return
@@ -130,7 +128,7 @@ public class FileDirectory {
 
 		System.out.println(serverConfig);
 		System.out.println(fileConfig);
-		
+
 		if (fileConfig.containsKey(file))
 			out = findAllServersWithConfig(fileConfig.get(file));
 		else {
@@ -140,6 +138,16 @@ public class FileDirectory {
 		}
 
 		return out;
+	}
+
+	public List<FileRecord> getListOfFileRecords() {
+		List<FileRecord> listOfFileRecords = new ArrayList<FileRecord>();
+
+		for (FileBean fileBean : fileConfig.keySet()) {
+			listOfFileRecords.add(fileBean.toFileRecord());
+		}
+
+		return listOfFileRecords;
 	}
 
 	// utility stuff
