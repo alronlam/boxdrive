@@ -59,7 +59,7 @@ public class FileBean implements Comparable<FileBean> {
 		this.isDirectory = file.isDirectory;
 	}
 
-	String getFilename() {
+	public String getFilename() {
 		return filename;
 	}
 
