@@ -172,8 +172,11 @@ public class DirectoryListener {
 				continue;
 			}
 
+//			List<WatchEvent<?>> eventList;
+//			eventList = key.pollEvents();
+			
 			// TODO: remove duplicates
-			removeDuplicates(key, dir);
+//			eventList = removeDuplicates(key, dir, eventList);
 
 			for (WatchEvent<?> event : key.pollEvents()) {
 				Kind<?> kind = event.kind();
@@ -230,8 +233,8 @@ public class DirectoryListener {
 	}
 
 	// custom made, not from reference
-	private void removeDuplicates(WatchKey key, Path dir) {
-		List<WatchEvent<?>> toDelete, eventList;
+	private List<WatchEvent<?>> removeDuplicates(WatchKey key, Path dir, List<WatchEvent<?>> eventList) {
+		List<WatchEvent<?>> toDelete;
 		toDelete = new ArrayList<>();
 
 		List<Path> paths;
@@ -251,11 +254,12 @@ public class DirectoryListener {
 		}
 
 		if (!toDelete.isEmpty())
-			System.out.println("Removing " + toDelete.size() + " duplicate events");
+			System.out.println("Removed " + toDelete.size() + " duplicate events");
 
 		for (WatchEvent<?> we : toDelete) {
 			eventList.remove(we);
 		}
 
+		return eventList;
 	}
 }
