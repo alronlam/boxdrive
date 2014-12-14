@@ -28,7 +28,6 @@ public class Client {
 
 		connectionManager = new ConnectionManager();
 		
-		// TODO: Change to ServerJobManager
 		jobManager = new JobManager();
 
 		Connection conn = attemptConnection(serverAddr);
