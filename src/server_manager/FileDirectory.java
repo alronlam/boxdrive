@@ -137,13 +137,6 @@ public class FileDirectory {
 
 		return out;
 	}
-
-	// utility stuff
-	// public int indexOfPath(Connection s, FileObject p) {
-	// return fileAssignment.get(s).indexOf(p);
-	// }
-
-	// public FileObject getPath(Connection s, int index) {
-	// return fileAssignment.get(s).get(index);
-	// }
+	
+	
 }

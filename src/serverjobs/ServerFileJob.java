@@ -9,7 +9,9 @@ import java.nio.file.attribute.FileTime;
 
 import job.CreateJob;
 import job.FileJob;
+import job.Job;
 import job.JobManager;
+import job.RequestJob;
 
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
@@ -19,12 +21,11 @@ import commons.Constants;
 import conn.Connection;
 
 public class ServerFileJob extends ServerBasicJob {
+	// unsure if the constructors still need this
+	// they probably dont
 	protected final int BUFFER_SIZE = 8096;
 	protected String fileByteString;
 
-	
-	// unsure if the constructors still need this
-	// they probably do
 	/**
 	 * Constructor for receiving.
 	 * 
@@ -54,40 +55,14 @@ public class ServerFileJob extends ServerBasicJob {
 
 	@Override
 	public String executeLocal(CoordinatorJobManager jobManager) {
+		Connection c = null;
+		
+		// c isn't provided in current implementation
+		// see comment in serverrequestjob
+		Job forSending = new RequestJob(file.getJsonObject(), c);
+		jobManager.handleNewJob(forSending);
+		
 		return null;
-		/*
-		// TODO handle newer existing file
-		Path localFile = file.getLocalizedFile();
-
-		byte[] fileBytes = Base64.decode(fileByteString);
-		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes); FileOutputStream outputStream = new FileOutputStream(localFile.toFile())) {
-			int read = 0;
-			byte[] buffer = new byte[BUFFER_SIZE];
-			while ((read = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, read);
-				System.out.println("wrting: " + buffer);
-			}
-			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
-
-			// Update the FolderRecord
-			ClientFileRecordManager.getInstance().handleCreateOrModify(file.getFilename(), file.getLastModified());
-
-			// Connection is null because this job is just created to be able to construct its JSON. It won't reall be processed.
-			CreateJob createJobForBroadcasting = new CreateJob(localFile, null);
-
-			return createJobForBroadcasting.getJson();
-
-		} catch (IOException ex) {
-			try {
-				Files.delete(localFile);
-				System.err.println("Error. Deleting: " + localFile.toString());
-			} catch (IOException ex1) {
-				// something went terribly, horribly wrong
-				ex1.printStackTrace();
-			}
-		}
-		return null;
-		*/
 	}
 	
 	@Override

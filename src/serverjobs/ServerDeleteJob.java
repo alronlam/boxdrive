@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import job.CreateJob;
 import job.DeleteJob;
@@ -30,35 +31,15 @@ public class ServerDeleteJob extends ServerBasicJob {
 
 	@Override
 	public String executeLocal(CoordinatorJobManager jobManager) {
-		return null;
-		/*
-		Path localFile = file.getLocalizedFile();
-		if (!Files.exists(localFile)) {
-			return null;
-		}
-
-		int comparison = file.compareLastModifiedTime(localFile);
-
-		// If local file is older, then safe to delete.
-		if (comparison < 0) {
-			try {
-				deleteRecursive(localFile.toFile());
-
-				// Update the FolderRecord
-				ClientFileRecordManager.getInstance().delete(file.getFilename(), file.getLastModified());
-				return this.getJson();
-			} catch (IOException ex) {
-				System.err.println("Error deleting file.");
-			}
-
-			// If local file is newer, send a Create Job to remote.
-		} else {
-			Job forSending = new CreateJob(localFile, this.getConnection());
+		// broadcast to all servers that need to delete the file
+		List<Connection> connections = jobManager.getFileDirectory().getServerListForFile(file);
+		
+		for (Connection c : connections) {
+			Job forSending = new DeleteJob(file.getJsonObject(), c);
 			jobManager.handleNewJob(forSending);
 		}
 		
 		return null;
-		*/
 	}
 	
 	@Override

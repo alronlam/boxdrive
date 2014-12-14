@@ -9,6 +9,7 @@ import java.util.Set;
 import server_manager.FileDirectory;
 import server_manager.FileObject;
 import job.BasicJob;
+import job.FileBean;
 import job.Job;
 import job.JobManager;
 import conn.Connection;
@@ -84,5 +85,9 @@ public class CoordinatorJobManager extends JobManager{
 		list.add(job);
 		while(list.size() > this.HISTORY_SIZE)
 			list.remove(0);
+	}
+	
+	public FileDirectory getFileDirectory() {
+		return fileDirectory;
 	}
 }
