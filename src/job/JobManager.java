@@ -45,6 +45,7 @@ public class JobManager {
 	public synchronized void handleNewJob(Job newJob) {
 		this.enqueue(newJob);
 
+		System.out.println("handleNewJob called.");
 		if (jobQueue.size() == 1)
 			this.processMessages();
 	}
