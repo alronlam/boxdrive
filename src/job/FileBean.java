@@ -11,11 +11,16 @@ import org.vertx.java.core.json.JsonObject;
 import commons.Constants;
 import commons.Util;
 
-public class FileBean {
+public class FileBean implements Comparable<FileBean> {
 	private String filename;
 	private long lastModified;
 	private byte[] checksum;
 	private boolean isDirectory = false;
+
+	@Override
+	public String toString() {
+		return filename;
+	}
 
 	/**
 	 * 
@@ -97,14 +102,12 @@ public class FileBean {
 	}
 
 	/**
-	 * Compares the last modified times of the received file with an existing
-	 * file.
+	 * Compares the last modified times of the received file with an existing file.
 	 * 
 	 * @param other
 	 *            A localized Path to the other file.
-	 * @return 0 if this file is modified at the same time as other, a value
-	 *         less than 0 if this file is older than other, and a value greater
-	 *         than 0 if this file is newer than other.
+	 * @return 0 if this file is modified at the same time as other, a value less than 0 if this file is older than other, and a value greater than 0 if this file is newer than
+	 *         other.
 	 */
 	int compareLastModifiedTime(Path other) {
 		int comparison = -1;
@@ -125,6 +128,25 @@ public class FileBean {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		return comparison;
+	}
+
+	@Override
+	public int hashCode(){
+		return filename.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return compareTo((FileBean) o) == 0;
+	}
+
+	@Override
+	public int compareTo(FileBean o) {
+		int comparison = 0;
+		if (!filename.equals(o.filename)) {
+			comparison = 1;
 		}
 		return comparison;
 	}
