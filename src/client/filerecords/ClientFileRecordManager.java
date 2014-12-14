@@ -32,11 +32,15 @@ public class ClientFileRecordManager {
 		// try to read from serialized list
 		// if not successful, then init the records based on directory
 		ArrayList<FileRecord> records = this.readFromSerializedList(this.RECORD_PATH);
-		System.out.println("Read File	  Records: " + records);
+
 		if (records == null)
 			records = this.initRecordsBasedOnDirectory(sharedFolderName);
 		else
 			records = this.updateRecordsTimeModified(records, sharedFolderName);
+
+		this.list = records;
+
+		System.out.println("Read File Records: " + this.list);
 
 	}
 
