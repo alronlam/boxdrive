@@ -14,8 +14,9 @@ import conn.Connection;
 
 public class ListJob extends Job {
 
-	ListJob(JsonObject json, Connection connection) {
+	ListJob(Connection connection) {
 		super(connection);
+
 	}
 
 	@Override
@@ -40,5 +41,4 @@ public class ListJob extends Job {
 		json.putString(Constants.JSON.TYPE, Constants.Type.LIST);
 		return json.toString();
 	}
-
 }

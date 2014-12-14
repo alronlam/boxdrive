@@ -7,13 +7,14 @@ import java.nio.file.Paths;
 
 import javax.swing.JFrame;
 
+import job.ClientJobManager;
 import job.JobManager;
 import client.filerecords.ClientFileRecordManager;
 
 import commons.Constants;
+
 import conn.Connection;
 import conn.ConnectionManager;
-
 
 public class Client {
 	private Socket socket;
@@ -21,38 +22,47 @@ public class Client {
 	private ConnectionManager connectionManager;
 	private ClientFileRecordManager fileRecordManager;
 
-	public static void main(String args[])	{
-		new Client("localhost",Paths.get("client1"));
-	}	
-	
+	public static void main(String args[]) {
+		new Client("localhost", Paths.get("client1"));
+	}
+
 	public Client(String serverAddr, Path path) {
 		Constants.FOLDER = path.toString(); // Makeshift global. Bad.
-		
+
 		// ServerJobManager.getInstance().setFolder(FOLDER);
 
 		connectionManager = new ConnectionManager();
-		
-		jobManager = new JobManager();
+
+		ClientJobManager clientJobManager = new ClientJobManager();
+		jobManager = clientJobManager;
 		fileRecordManager = new ClientFileRecordManager(path.toString(), Constants.FOLDER_RECORD_FILENAME);
 
+		// Initialize directory listeners
 		Connection conn = attemptConnection(serverAddr);
 		Thread dirListenThread = new Thread(new DirectoryListenerThread(path, conn, jobManager));
 		dirListenThread.setName("Directory Listener Thread");
 		dirListenThread.start();
 
+		initShutDownHook();
+		initAndShowFrame();
+		clientJobManager.syncWithCoordinator(conn);
+	}
+
+	private void initShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				shutDown();
 			}
 		});
+	}
 
+	private void initAndShowFrame() {
 		JFrame frame = new JFrame();
 		frame.setTitle("BoxDrive Client");
 		frame.setSize(400, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
 	}
 
 	/***
@@ -71,7 +81,7 @@ public class Client {
 				e.printStackTrace();
 			}
 			if (socket != null) {
-				Connection connection = connectionManager.createNewConnection(socket,jobManager);
+				Connection connection = connectionManager.createNewConnection(socket, jobManager);
 				System.out.println(socket.getRemoteSocketAddress() + " has connected.");
 				return connection;
 			}

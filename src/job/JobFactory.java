@@ -22,7 +22,7 @@ public class JobFactory {
 			toGet = new FileJob(json, connection);
 
 		} else if (type.equals(Constants.Type.LIST)) {
-			toGet = new ListJob(json, connection);
+			toGet = new ListJob(connection);
 
 		} else if (type.equals(Constants.Type.REQUEST)) {
 			toGet = new RequestJob(json, connection);
