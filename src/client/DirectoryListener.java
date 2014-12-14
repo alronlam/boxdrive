@@ -136,7 +136,6 @@ public class DirectoryListener {
 
 	private void create(Path path) {
 		if (connection != null) {
-			System.out.println("Job Created.");
 			Job createJob = new CreateJob(path, connection);
 			jobManager.handleNewJob(createJob);
 			try {
@@ -169,14 +168,7 @@ public class DirectoryListener {
 		if (connection != null) {
 			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
 			jobManager.handleNewJob(deleteJob);
-			try {
-				ClientFileRecordManager.getInstance().delete(path.getFileName().toString(),
-						Files.getLastModifiedTime(path).toMillis());
-			} catch (IOException e) {
-				e.printStackTrace();
-				// should do something here in case recording the create wasn't
-				// successful
-			}
+			ClientFileRecordManager.getInstance().delete(path.getFileName().toString());
 		}
 	}
 
@@ -225,8 +217,8 @@ public class DirectoryListener {
 				}
 
 				if (kind == ENTRY_CREATE) {
-					System.out.println("a file has been created");
-					create(child);
+					System.out.println("create called");
+//					create(child);
 					continue;
 
 				} else if (kind == ENTRY_DELETE) {
@@ -234,7 +226,8 @@ public class DirectoryListener {
 					continue;
 
 				} else if (kind == ENTRY_MODIFY) {
-					modify(child);
+					System.out.println("modify called");
+//					modify(child);
 					continue;
 				}
 			}
