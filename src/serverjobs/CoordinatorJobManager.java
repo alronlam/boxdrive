@@ -43,12 +43,18 @@ public class CoordinatorJobManager extends JobManager {
 			if (connMgrClients.hasConnection(job.getConnection())) {
 				// the job came from clients
 
-				// get serverlist from fileDirectory
-				List<Connection> connList = fileDirectory.getServerListForFile(((BasicJob) job).file);
+				if (job instanceof BasicJob) {
+					// get serverlist from fileDirectory
+					List<Connection> connList = fileDirectory.getServerListForFile(((BasicJob) job).file);
 
-				// send to storage server group
-				for (Connection conn : connList)
-					conn.write(job.getJson());
+					// send to storage server group
+					for (Connection conn : connList)
+						conn.write(job.getJson());
+				} else {
+					// this is list job. don't let it reach the storage servers.
+					// execute here
+					job.execute(this);
+				}
 			} else {
 				// the job came from storage servers
 
