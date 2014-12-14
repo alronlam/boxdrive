@@ -61,11 +61,11 @@ public class FileBean implements Comparable<FileBean> {
 		this.isDirectory = file.isDirectory;
 	}
 
-	String getFilename() {
+	public String getFilename() {
 		return filename;
 	}
 
-	long getLastModified() {
+	public long getLastModified() {
 		return lastModified;
 	}
 
@@ -143,14 +143,16 @@ public class FileBean implements Comparable<FileBean> {
 
 	@Override
 	public boolean equals(Object o) {
-		return compareTo((FileBean) o) == 0;
+		return filename.equals(((FileBean)o).filename);
 	}
 
 	@Override
 	public int compareTo(FileBean o) {
 		int comparison = 0;
-		if (!filename.equals(o.filename)) {
+		if (this.getLastModified() > o.getLastModified()) {
 			comparison = 1;
+		} else if (this.getLastModified() < o.getLastModified()) {
+			comparison = -1;
 		}
 		return comparison;
 	}

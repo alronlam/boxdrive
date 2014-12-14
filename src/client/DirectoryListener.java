@@ -48,8 +48,12 @@ import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import job.CreateJob;
 import job.DeleteJob;
@@ -58,8 +62,7 @@ import job.JobManager;
 import conn.Connection;
 
 /**
- * Class for watching a directory (or tree) for changes to files. Modified from
- * https://docs.oracle.com/javase/tutorial/essential/io/notification.html
+ * Class for watching a directory (or tree) for changes to files. Modified from https://docs.oracle.com/javase/tutorial/essential/io/notification.html
  */
 
 public class DirectoryListener {
@@ -75,9 +78,6 @@ public class DirectoryListener {
 		return (WatchEvent<T>) event;
 	}
 
-	
-	
-	
 	/**
 	 * Register the given directory with the WatchService
 	 */
@@ -97,8 +97,7 @@ public class DirectoryListener {
 	}
 
 	/**
-	 * Register the given directory, and all its sub-directories, with the
-	 * WatchService.
+	 * Register the given directory, and all its sub-directories, with the WatchService.
 	 */
 	private void registerAll(final Path start) throws IOException {
 		// register directory and sub-directories
@@ -173,6 +172,12 @@ public class DirectoryListener {
 				continue;
 			}
 
+//			List<WatchEvent<?>> eventList;
+//			eventList = key.pollEvents();
+			
+			// TODO: remove duplicates
+//			eventList = removeDuplicates(key, dir, eventList);
+
 			for (WatchEvent<?> event : key.pollEvents()) {
 				Kind<?> kind = event.kind();
 
@@ -199,7 +204,8 @@ public class DirectoryListener {
 				}
 
 				if (kind == ENTRY_CREATE) {
-					create(child);
+					// System.out.println("file created");
+					// create(child);
 					continue;
 
 				} else if (kind == ENTRY_DELETE) {
@@ -207,6 +213,7 @@ public class DirectoryListener {
 					continue;
 
 				} else if (kind == ENTRY_MODIFY) {
+					System.out.println("file modified");
 					modify(child);
 					continue;
 				}
@@ -223,5 +230,36 @@ public class DirectoryListener {
 				}
 			}
 		}
+	}
+
+	// custom made, not from reference
+	private List<WatchEvent<?>> removeDuplicates(WatchKey key, Path dir, List<WatchEvent<?>> eventList) {
+		List<WatchEvent<?>> toDelete;
+		toDelete = new ArrayList<>();
+
+		List<Path> paths;
+		paths = new ArrayList<>();
+
+		eventList = key.pollEvents();
+		for (WatchEvent<?> we : eventList) {
+			WatchEvent<Path> ev = cast(we);
+			Path name = ev.context();
+			Path child = dir.resolve(name);
+
+			if (!paths.contains(child)) {
+				paths.add(child);
+			} else {
+				toDelete.add(we);
+			}
+		}
+
+		if (!toDelete.isEmpty())
+			System.out.println("Removed " + toDelete.size() + " duplicate events");
+
+		for (WatchEvent<?> we : toDelete) {
+			eventList.remove(we);
+		}
+
+		return eventList;
 	}
 }

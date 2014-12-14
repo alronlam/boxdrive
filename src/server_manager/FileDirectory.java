@@ -17,6 +17,7 @@ public class FileDirectory {
 
 	// TODO: possibly make a method in FileBean that just checks if the filename
 	// is equal,
+
 	// as the key pairing in the map may be affected due to the modified time
 
 	private int runningValServer = 0;
@@ -129,9 +130,16 @@ public class FileDirectory {
 		System.out.println(serverConfig);
 		System.out.println(fileConfig);
 
-		if (fileConfig.containsKey(file))
+		if (fileConfig.containsKey(file)) {
+
 			out = findAllServersWithConfig(fileConfig.get(file));
-		else {
+			for (FileBean fb : fileConfig.keySet()) {
+				if (fb.equals(file) && fb.compareTo(file) == -1) {
+					fb.setLastModified(file.getLastModified());
+					break;
+				}
+			}
+		} else {
 			out = findAllServersWithConfig(runningValFile);
 			fileConfig.put(file, runningValFile);
 			runningValFile = (runningValFile + 1) % this.STORAGE_SERVER_GROUPS;
@@ -149,7 +157,6 @@ public class FileDirectory {
 
 		return listOfFileRecords;
 	}
-
 	// utility stuff
 	// public int indexOfPath(Connection s, FileObject p) {
 	// return fileAssignment.get(s).indexOf(p);
