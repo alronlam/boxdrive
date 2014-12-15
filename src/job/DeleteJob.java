@@ -36,13 +36,12 @@ public class DeleteJob extends BasicJob {
 		// If local file is older, then safe to delete.
 		if (comparison < 0) {
 			filemanager.delete(file);
+			return new BroadcastJob(this);
 			
 		} else {
 			Job forSending = new CreateJob(this);
 			return forSending;
 		}
-
-		return null;
 	}
 
 	@Override

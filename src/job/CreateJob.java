@@ -62,9 +62,8 @@ public class CreateJob extends BasicJob {
 				if (filemanager.hasSameContents(file)) {
 					filemanager.setLastModifiedTime(file);
 
-					// BROADCAST
-					return this.getJson();
-					
+					Job forSending = new BroadcastJob(this);
+					return forSending;
 					// Request for file if local file is older and has different
 					// contents.
 				} else {

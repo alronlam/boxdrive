@@ -38,10 +38,10 @@ public class FileJob extends BasicJob {
 		Job toSend = null;
 		boolean success = filemanager.createFile(file, fileByteString);
 		if (success) {
-			// TODO Broadcast
+			Job createJob = new CreateJob(this);
+			toSend = new BroadcastJob(createJob);
 		}
 		return toSend;
-
 	}
 
 	@Override
