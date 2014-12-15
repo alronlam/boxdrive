@@ -1,29 +1,29 @@
 package serverjobs;
 
-import java.util.ArrayList;
-
-import client.Connection;
-import client.ConnectionManager;
-import server_manager.FileDirectory;
-import server_manager.FileObject;
+import job.BroadcastJob;
 import job.Job;
 import job.manager.JobManager;
+import client.Client;
+import file.FileManager;
 
 public class ServerJobManager extends JobManager{
 
-	public ServerJobManager(ConnectionManager connMgr) {
-		super(connMgr);
+	public ServerJobManager(FileManager fileManager) {
+		super(fileManager);
 	}
-	
+
 	@Override
-	protected synchronized void processMessages() {
-		while (jobQueue.size() > 0) {
-			Job currJob = this.dequeue(0);
-			
-			String toBroadcast = currJob.execute(this);
-			
-			if(toBroadcast != null)
-				connMgrClients.broadcast(toBroadcast);
+	protected void actuallyProcessMessages(Job job, Client client) {
+		JobClient jc = this.dequeue(0);
+		Job currJob = jc.job;
+		Client client = jc.client;
+		if (currJob.isToSend()) {
+			client.getConnection().write(currJob.getJson());
+		} else {
+			Job toSend = currJob.execute(fileManager);
+			if (toSend != null && !(toSend instanceof BroadcastJob)) {
+				this.handleNewJob(toSend, client);
+			}
 		}
 	}
 }

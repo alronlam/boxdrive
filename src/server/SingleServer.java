@@ -11,25 +11,17 @@ import job.manager.JobManager;
 import serverjobs.CoordinatorJobManager;
 import serverjobs.ServerJobManager;
 import commons.Constants;
+import file.SingleFolderFileManager;
 
-public class Server {
+public class SingleServer {
 	private ServerSocket serverSocket;
 	private JobManager jobManager;
-	private ConnectionManager connectionManager;
 	
-	public static void main(String args[]) {
-		new Server(Paths.get("server"));
-	}
-
-	public Server(Path path) {
-		Constants.FOLDER = path.toString();
-
-		// ServerJobManager.getInstance().setFolder(FOLDER);
+	
+	public SingleServer(String localFolder) {
+		SingleFolderFileManager fileManager = new SingleFolderFileManager(localFolder);
 		
-		connectionManager = new ConnectionManager();
-
-		// TODO: Change to ServerJobManager
-		jobManager = new ServerJobManager(connectionManager);
+		jobManager = new ServerJobManager(fileManager);
 		
 		try {
 			serverSocket = new ServerSocket(Constants.PORT);

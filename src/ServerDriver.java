@@ -1,7 +1,7 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import server.Server;
+import server.SingleServer;
 
 public class ServerDriver {
 
@@ -9,6 +9,6 @@ public class ServerDriver {
 		String sharedFolder = "server";
 		Path sharedFolderPath = Paths.get(sharedFolder);
 		// Start-up the server
-		new Server(sharedFolderPath);
+		new SingleServer(sharedFolderPath);
 	}
 }

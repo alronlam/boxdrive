@@ -14,8 +14,10 @@ import job.manager.JobManager;
 
 public class Connection {
 	// Socket-related variables
-	public Socket socket;
-	public String identifier;
+	private Client client;
+	private Socket socket;
+	private String identifier;
+	private Listener listener = null;
 	
 	// Message-related variables
 	private ArrayList<String> msgQueue;
@@ -23,7 +25,8 @@ public class Connection {
 	private Semaphore messageMutex;
 	
 	
-	public Connection(Socket socket) {
+	public Connection(Client client, Socket socket) {
+		this.client = client;
 		this.socket = socket;
 		this.identifier = String.valueOf(socket.getPort());
 
@@ -42,12 +45,10 @@ public class Connection {
 	/**
 	 * Sends string over to connected peer through the socket
 	 * 
-	 * @param msg
-	 *            String to be sent to peer
+	 * @param msg  String to be sent to peer
 	 */
 	public void write(String msg) {
-//		System.out.println("Sending: ");
-//		System.out.println(msg);
+
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ObjectOutputStream os = new ObjectOutputStream(out);
@@ -61,8 +62,7 @@ public class Connection {
 	/**
 	 * Sends byte data over to peer through the socket
 	 * 
-	 * @param bytes
-	 *            Array of Bytes, each of which would be sent to the peer
+	 * @param bytes  Array of Bytes, each of which would be sent to the peer
 	 */
 	private void write(byte bytes[]) {
 		try {
@@ -123,6 +123,8 @@ public class Connection {
 					System.err.println("Failed to parse stream data as String.");
 				} catch (IOException e) {
 					System.err.println("Failed to read from socket stream.");
+					listener.connectionDropped(client);
+					break;
 				}
 
 				if (str != null) {
@@ -137,5 +139,21 @@ public class Connection {
 				}
 			}
 		}
+	}
+	
+	Socket getSocket() {
+		return socket;
+	}
+	
+	String getIdentifier() {
+		return identifier;
+	}
+	
+	public void setListener(Listener listener) {
+		this.listener = listener;
+	}
+	
+	public interface Listener {
+		void connectionDropped(Client client);
 	}
 }

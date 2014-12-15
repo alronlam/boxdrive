@@ -1,7 +1,7 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import server.Server;
+import server.SingleServer;
 import server_manager.ServerCoordinator;
 
 public class ServerCoordinatorDriver {

@@ -62,7 +62,7 @@ public class ActualClient extends Client {
 				e.printStackTrace();
 			}
 			if (socket != null) {
-				Connection connection = new Connection(socket);
+				Connection connection = new Connection(this, socket);
 				System.out.println(socket.getRemoteSocketAddress() + " has connected.");
 				return connection;
 			}
@@ -72,7 +72,7 @@ public class ActualClient extends Client {
 	
 	class JSONJobHandlingThread extends Thread {
 		JSONJobHandlingThread(){
-			this.setName("JSONThread for " + ActualClient.this.getConnection().identifier);
+			this.setName("JSONThread for " + ActualClient.this.getConnection().getIdentifier());
 		}
 		
 		@Override

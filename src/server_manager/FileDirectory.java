@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import client.Connection;
 import job.Job;
 import file.FileBean;
-import server.Server;
+import server.SingleServer;
 
 public class FileDirectory {
 	private Map<Connection, Integer> serverConfig;

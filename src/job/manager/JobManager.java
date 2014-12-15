@@ -57,11 +57,12 @@ public abstract class JobManager {
 
 	protected synchronized void processMessages() {
 		while (jobQueue.size() > 0) {
-			actuallyProcessMessages();			
+			JobClient jc = this.dequeue(0);
+			actuallyProcessMessages(jc.job, jc.client);			
 		}
 	}
 	
-	protected class JobClient implements Comparable<JobClient> {
+	private class JobClient implements Comparable<JobClient> {
 		Job job;
 		Client client;
 		JobClient(Job job, Client client) {
@@ -75,5 +76,5 @@ public abstract class JobManager {
 		}
 	}
 	
-	protected abstract void actuallyProcessMessages();
+	protected abstract void actuallyProcessMessages(Job job, Client client);
 }

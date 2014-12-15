@@ -7,28 +7,23 @@ import client.Client;
 import file.FileManager;
 
 public class BroadcastJob extends Job {
-	private List<Client> clients = new ArrayList<>();
 	private Job job;
 	
 	BroadcastJob(Job job) {
 		this.job = job;
 	}
 	
-	void addClient(Client client) {
-		clients.add(client);
-	}
-	
+	/**
+	 * Does nothing. ClientManagers should handle the actual broadcast.
+	 */
 	@Override
 	public Job execute(FileManager filemanager) {
-		for (Client client : clients) {
-			client.getConnection().write(job.getJson());
-		}
 		return null;
 	}
 	
 	@Override
 	public String getJson() {
-		return null;
+		return job.getJson();
 	}
 
 }

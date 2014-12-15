@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 import client.ConnectionManager;
 import commons.Constants;
-import server.Server;
+import server.SingleServer;
 
-public class ServerManager extends Server {
+public class ServerManager extends SingleServer {
 	// extended from server for connection commands
 
 	private FileDirectory dir;
@@ -28,7 +28,7 @@ public class ServerManager extends Server {
 	}
 
 	// add a server to the server list
-	public void addServer(Server s) {
+	public void addServer(SingleServer s) {
 		// dir.addServer(s);
 		// handle connection to server as well
 	}

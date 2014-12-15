@@ -5,9 +5,9 @@ import file.FileManager;
 import job.BroadcastJob;
 import job.Job;
 
-public class ClientJobManager extends JobManager {
+public class ServerJobManager extends JobManager {
 	
-	public ClientJobManager(FileManager fileManager) {
+	public ServerJobManager(FileManager fileManager) {
 		super(fileManager);
 	}
 	
@@ -17,7 +17,7 @@ public class ClientJobManager extends JobManager {
 			client.getConnection().write(job.getJson());
 		} else {
 			Job toSend = job.execute(fileManager);
-			if (toSend != null && !(toSend instanceof BroadcastJob)) {
+			if (toSend != null) {
 				this.handleNewJob(toSend, client);
 			}
 		}
