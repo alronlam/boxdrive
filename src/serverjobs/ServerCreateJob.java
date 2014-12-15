@@ -7,13 +7,13 @@ import java.nio.file.attribute.FileTime;
 
 import job.CreateJob;
 import job.Job;
-import job.JobManager;
 import job.RequestJob;
+import job.manager.JobManager;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.Connection;
 import commons.Constants;
-import conn.Connection;
 
 public class ServerCreateJob extends ServerBasicJob {
 

@@ -9,13 +9,13 @@ import java.nio.file.Path;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
-import job.JobManager;
+import job.manager.JobManager;
 
 import org.vertx.java.core.json.JsonObject;
 
-import client.filerecords.ClientFileRecordManager;
+import client.Connection;
+import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
-import conn.Connection;
 
 public class ServerDeleteJob extends ServerBasicJob {
 

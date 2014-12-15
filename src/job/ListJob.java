@@ -4,18 +4,20 @@ import java.util.List;
 
 import org.vertx.java.core.json.JsonObject;
 
-import conn.Connection;
+import client.Connection;
+import file.FileBean;
+import file.FileManager;
 
 public class ListJob extends Job {
 	
-	ListJob(JsonObject json, Connection connection) {
-		super(connection);
+	ListJob(JsonObject json) {
+		super();
 	}
 
 	private List<FileBean> files;
 	
 	@Override
-	public String executeLocal(JobManager jobManager) {
+	public Job execute(FileManager filemanager) {
 		return null;
 	}
 

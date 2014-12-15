@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import job.FileBean;
+import client.Connection;
 import job.Job;
-
-import conn.Connection;
-
-import server.Server;
+import file.FileBean;
+import server.SingleServer;
 
 public class FileDirectory {
 	private Map<Connection, Integer> serverConfig;

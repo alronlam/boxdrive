@@ -2,35 +2,47 @@ package job;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.ActualClient;
+import client.Client;
+import client.Connection;
 import commons.Constants;
-import conn.Connection;
 
 public class JobFactory {
 		
-	static Job createJob(JsonObject json, Connection connection) {
+	public static Job createJob(JsonObject json) {
 		String type = json.getString(Constants.JSON.TYPE);
 		
 		Job toGet = null;
 		if (type.equals(Constants.Type.CREATE)) {
-			toGet = new CreateJob(json, connection);
+			toGet = new CreateJob(json);
 		
 		} else if (type.equals(Constants.Type.DELETE)) {
-			toGet = new DeleteJob(json, connection);
+			toGet = new DeleteJob(json);
 		
 		} else if (type.equals(Constants.Type.FILE)) {
-			toGet = new FileJob(json, connection);
+			toGet = new FileJob(json);
 		
 		} else if (type.equals(Constants.Type.LIST)) {
-			toGet = new ListJob(json, connection);
+			toGet = new ListJob(json);
 		
 		} else if (type.equals(Constants.Type.REQUEST)) {
-			toGet = new RequestJob(json, connection);
+			toGet = new RequestJob(json);
 		
 		} else {
 			// Empty Job
 		}
 		
 		toGet.setForReceiving();
+		return toGet;
+	}
+	
+	public static Job getConfig(Client client) {
+		ConfigJob toGet = null;
+		if (client instanceof ActualClient) {
+			toGet = new ConfigJob();
+			toGet.setAsActual();
+		}
+		
 		return toGet;
 	}
 }

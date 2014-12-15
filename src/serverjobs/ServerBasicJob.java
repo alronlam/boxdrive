@@ -4,9 +4,9 @@ import java.nio.file.Path;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.Connection;
 import commons.Constants;
-import conn.Connection;
-import job.FileBean;
+import file.FileBean;
 
 
 public abstract class ServerBasicJob extends ServerJob {

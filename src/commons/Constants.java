@@ -38,5 +38,13 @@ public class Constants {
 		public final static String FILE = "file";
 		public final static String LIST = "list";
 		public final static String REQUEST = "request";
+		public final static String CONFIG = "config";
+	}
+	
+	public class Config {
+		public final static String CLIENT_TYPE = "client type";
+		public final static String ACTUAL = "actual";
+		
+		public final static String VIRTUAL_SERVER = "virtual server";
 	}
 }

@@ -5,14 +5,12 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import client.Connection;
+import client.ConnectionManager;
+import job.manager.JobManager;
 import serverjobs.CoordinatorJobManager;
 import serverjobs.ServerJobManager;
-
-import job.JobManager;
-
 import commons.Constants;
-import conn.Connection;
-import conn.ConnectionManager;
 
 
 public class StorageServer {

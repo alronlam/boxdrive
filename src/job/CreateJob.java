@@ -7,73 +7,77 @@ import java.nio.file.attribute.FileTime;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.Connection;
 import commons.Constants;
-import conn.Connection;
+import file.FileBean;
+import file.FileManager;
 
 public class CreateJob extends BasicJob {
-
+	
+	/**
+	 * Clone constructor
+	 * @param job
+	 */
+	public CreateJob(BasicJob job) {
+		super(job);
+	}
+	
 	/**
 	 * Constructor for sending.
 	 * 
-	 * @param path
-	 *            A localized path.
-	 * @param socket
+	 * @param file
 	 */
-	public CreateJob(Path path, Connection connection) {
-		super(path, connection);
+	public CreateJob(FileBean file) {
+		super(file);
 	}
 
-	public CreateJob(JsonObject json, Connection connection) {
-		super(json, connection);
+	public CreateJob(JsonObject json) {
+		super(json);
 	}
 
 	@Override
-	public String executeLocal(JobManager jobManager) {
-		Path localFile = file.getLocalizedFile();
-
+	public Job execute(FileManager filemanager) {
 		// Create folders immediately.
 		if (file.isDirectory()) {
-			try {
-				Files.createDirectory(localFile);
-			} catch (IOException ex) {
-				// FileAlreadyExistsException
+			if (!filemanager.exists(file)) {
+				filemanager.createDirectory(file);
+				Job forSending = new BroadcastJob(this);
+				return forSending;	
 			}
-			return null;
-		}
-
-		if (Files.exists(localFile)) {
-			int comparison = file.compareLastModifiedTime(localFile);
+			
+		} else if (filemanager.exists(file)) {
+			int comparison = filemanager.compareLastModifiedTime(file);
 
 			// Send a new Create Job if local file is newer.
 			if (comparison > 0) {
-				Job forSending = new CreateJob(localFile, this.getConnection());
-				jobManager.handleNewJob(forSending);
+				FileBean updatedFile = filemanager.getFileBean(file.getFilename());
+				Job forSending = new CreateJob(updatedFile);
+				return forSending;
+				
+				// jobManager.handleNewJob(forSending);
 
 				// Update local file's last modified time if it is older and has
 				// same contents.
 			} else if (comparison < 0)
-				if (file.hasSameContents(localFile)) {
-					try {
-						Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				if (filemanager.hasSameContents(file)) {
+					filemanager.setLastModifiedTime(file);
 
-					return this.getJson();
+					Job forSending = new BroadcastJob(this);
+					return forSending;
 					// Request for file if local file is older and has different
 					// contents.
 				} else {
 					Job forSending = new RequestJob(this);
-					jobManager.handleNewJob(forSending);
+					return forSending;
 				}
 			else{
-				//if comparison == 0 then just ignore the job
+				// if comparison == 0 then just ignore the job
 			}
+			
+		// File doesn't exist yet		
 		} else {
-
-			// File doesn't exist yet
 			Job forSending = new RequestJob(this);
-			jobManager.handleNewJob(forSending);
+			return forSending;
 		}
 		
 		return null;

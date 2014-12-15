@@ -1,6 +1,6 @@
 package serverjobs;
 
-import conn.Connection;
+import client.Connection;
 
 public abstract class ServerJob implements Comparable<ServerJob> {
 	private Connection connection;
