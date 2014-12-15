@@ -29,7 +29,8 @@ public class Connection {
 		this.client = client;
 		this.socket = socket;
 		this.identifier = String.valueOf(socket.getPort());
-
+		
+		client.setConnection(this);
 		awaitMessage = new Semaphore(0);
 		messageMutex = new Semaphore(1);
 		msgQueue = new ArrayList<>();

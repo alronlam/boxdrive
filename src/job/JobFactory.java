@@ -2,6 +2,8 @@ package job;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.ActualClient;
+import client.Client;
 import client.Connection;
 import commons.Constants;
 
@@ -31,6 +33,16 @@ public class JobFactory {
 		}
 		
 		toGet.setForReceiving();
+		return toGet;
+	}
+	
+	public static Job getConfig(Client client) {
+		ConfigJob toGet = null;
+		if (client instanceof ActualClient) {
+			toGet = new ConfigJob();
+			toGet.setAsActual();
+		}
+		
 		return toGet;
 	}
 }

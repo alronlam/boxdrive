@@ -1,16 +1,18 @@
 package client;
 
+import job.Job;
+import job.JobFactory;
 import client.Connection;
 
 
-public abstract class Client {
+public class Client {
 	private Connection connection;
 		
 	public Connection getConnection() {
 		return connection;
 	}
 	
-	protected void setConnection(Connection connection) {
+	void setConnection(Connection connection) {
 		this.connection = connection;
 	}
 	
@@ -19,6 +21,13 @@ public abstract class Client {
 		return this.connection.getSocket().hashCode();
 	}
 	
+	
+	
+	protected void sendConfiguration() {
+		// Send configuration to server
+		Job configJob = JobFactory.getConfig(this);
+		getConnection().write(configJob.getJson());				
+	}
 	
 	@Override
 	public boolean equals(Object obj) {

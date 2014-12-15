@@ -10,6 +10,9 @@ import javax.swing.JFrame;
 import actualclient.DirectoryListenerThread;
 import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
+import job.ConfigJob;
+import job.Job;
+import job.JobFactory;
 import job.manager.ClientJobManager;
 import job.manager.JobManager;
 import file.SingleFolderFileManager;
@@ -26,6 +29,8 @@ public class ActualClient extends Client {
 		// fileRecordManager = new ClientFileRecordManager(path.toString(), Constants.FOLDER_RECORD_FILENAME);
 		
 		this.setConnection(attemptConnection(serverAddr));
+		this.sendConfiguration();
+		
 		Path localPath = Paths.get(localFolder);
 		Thread dirListenThread = new Thread(new DirectoryListenerThread(localPath, this, jobManager));
 		dirListenThread.setName("Directory Listener Thread");
@@ -43,7 +48,6 @@ public class ActualClient extends Client {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
 	}
 
 	/***
