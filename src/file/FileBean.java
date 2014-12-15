@@ -9,7 +9,6 @@ import java.util.Arrays;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-import commons.Util;
 
 public class FileBean implements Comparable<FileBean> {
 	private String filename;
@@ -19,7 +18,7 @@ public class FileBean implements Comparable<FileBean> {
 
 	@Override
 	public String toString() {
-		return filename;
+		return getJsonObject().toString();
 	}
 
 	public FileBean(String filename, long lastModified, byte[] checksum, boolean isDirectory) {
@@ -29,21 +28,6 @@ public class FileBean implements Comparable<FileBean> {
 		this.isDirectory = isDirectory;
 	}
 	
-	/**
-	 * @param path A non-localized Path.
-	 */
-	@Deprecated
-	public FileBean(Path path) {
-		filename = path.toString();
-		isDirectory = Files.isDirectory(path);
-		checksum = Util.getChecksum(path.toString());
-
-		try {
-			lastModified = Files.getLastModifiedTime(path).toMillis();
-		} catch (IOException e) {
-			lastModified = 0;
-		}
-	}
 
 	public FileBean(JsonObject body) {
 		filename = body.getString(Constants.Body.FILENAME);
@@ -95,18 +79,11 @@ public class FileBean implements Comparable<FileBean> {
 		return json;
 	}
 
-	boolean hasSameContents(Path other) {
-		boolean hasSame = false;
-		byte[] otherChecksum = Util.getChecksum(other.toString());
-		hasSame = Arrays.equals(checksum, otherChecksum);
-		return hasSame;
-	}
-
+	
 	/**
 	 * Compares the last modified times of the received file with an existing file.
 	 * 
-	 * @param other
-	 *            A localized Path to the other file.
+	 * @param other  A localized Path to the other file.
 	 * @return 0 if this file is modified at the same time as other, a value less than 0 if this file is older than other, and a value greater than 0 if this file is newer than
 	 *         other.
 	 */

@@ -18,6 +18,10 @@ public abstract class Job implements Comparable<Job> {
 		toSend = false;
 	}
 	
+	public void setForSending() {
+		toSend = true;
+	}
+	
 	public boolean isToSend() {
 		return toSend;
 	}

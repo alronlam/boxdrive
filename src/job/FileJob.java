@@ -36,13 +36,12 @@ public class FileJob extends BasicJob {
 	@Override
 	public Job execute(FileManager filemanager) {
 		// TODO handle newer existing file
-		Job toSend = null;
 		boolean success = filemanager.createFile(file, fileByteString);
 		if (success) {
 			Job createJob = new CreateJob(this);
-			toSend = new BroadcastJob(createJob);
+			return new BroadcastJob(createJob);
 		}
-		return toSend;
+		return null;
 	}
 
 	@Override

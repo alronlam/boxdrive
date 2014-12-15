@@ -3,24 +3,25 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import job.manager.ServerJobManager;
 import client.Client;
 import client.Connection;
-import job.manager.JobManager;
-import serverjobs.ServerJobManager;
 import commons.Constants;
 import file.SingleFolderFileManager;
 
 public class SingleServer {
 	private ServerSocket serverSocket;
-	private JobManager jobManager;
+	private ServerJobManager jobManager;
 	private SingleFolderFileManager fileManager;
-	private ActualClientManager clientManager;
+	private ClientManager clientManager;
 	
 	
 	public SingleServer(String localFolder) {
-		clientManager = new ActualClientManager();
 		fileManager = new SingleFolderFileManager(localFolder);
-		jobManager = new ServerJobManager(fileManager);
+		clientManager = new ClientManager();
+		
+		jobManager = new ServerJobManager(fileManager, clientManager);
 		
 		try {
 			serverSocket = new ServerSocket(Constants.PORT);

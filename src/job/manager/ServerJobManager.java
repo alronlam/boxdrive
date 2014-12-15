@@ -1,14 +1,17 @@
 package job.manager;
 
+import server.ClientManager;
 import client.Client;
 import file.FileManager;
 import job.BroadcastJob;
 import job.Job;
 
 public class ServerJobManager extends JobManager {
+	private ClientManager clientManager;
 	
-	public ServerJobManager(FileManager fileManager) {
+	public ServerJobManager(FileManager fileManager, ClientManager clientManager) {
 		super(fileManager);
+		this.clientManager = clientManager;
 	}
 	
 	@Override
@@ -18,8 +21,20 @@ public class ServerJobManager extends JobManager {
 		} else {
 			Job toSend = job.execute(fileManager);
 			if (toSend != null) {
-				this.handleNewJob(toSend, client);
+				if (toSend instanceof BroadcastJob) {
+					handleBroadcast(toSend, client);
+				}
+				else {
+					this.handleNewJob(toSend, client);
+				}
 			}
 		}
+	}
+	
+	
+	private void handleBroadcast(Job job, Client caller) {
+		
+		BroadcastJob toBroadcast = (BroadcastJob) job;
+		clientManager.broadcast(toBroadcast, caller, this);
 	}
 }

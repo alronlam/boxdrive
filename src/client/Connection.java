@@ -57,8 +57,7 @@ public class Connection {
 			ObjectOutputStream os = new ObjectOutputStream(out);
 			os.writeObject(msg);
 			this.write(out.toByteArray());
-			
-			System.out.println("Write: " + msg);
+			System.out.println("w: " + msg);
 		} catch (IOException e) {
 			System.err.println("Failed to set up streams for writing String to socket's stream.");
 		}
@@ -93,7 +92,7 @@ public class Connection {
 		} catch (InterruptedException e) {
 			System.err.println("Failed to resolve concurrency for message queue.");
 		}
-		System.out.println("Read: " + str);
+		System.out.println("r: " + str);
 		return str;
 	}
 

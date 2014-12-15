@@ -11,6 +11,7 @@ public class BroadcastJob extends Job {
 	
 	BroadcastJob(Job job) {
 		this.job = job;
+		job.setForSending();
 	}
 	
 	/**
@@ -19,6 +20,10 @@ public class BroadcastJob extends Job {
 	@Override
 	public Job execute(FileManager filemanager) {
 		return null;
+	}
+	
+	public Job getJob() {
+		return job;
 	}
 	
 	@Override

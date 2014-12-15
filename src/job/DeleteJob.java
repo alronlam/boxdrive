@@ -14,11 +14,8 @@ public class DeleteJob extends BasicJob {
 	}
 
 	/**
-	 * @param path
-	 *            A localized Path.
-	 * @param lastModified
-	 *            The time of deletion.
-	 * @param socket
+	 * @param file
+	 * @param lastModified  The time of deletion.
 	 */
 	public DeleteJob(FileBean file, long lastModified) {
 		super(file);
@@ -34,10 +31,11 @@ public class DeleteJob extends BasicJob {
 		int comparison = filemanager.compareLastModifiedTime(file);
 
 		// If local file is older, then safe to delete.
-		if (comparison < 0) {
+		if (comparison <= 0) {
 			filemanager.delete(file);
 			return new BroadcastJob(this);
-			
+		
+		// Else, tell remote that local has a more updated file.
 		} else {
 			Job forSending = new CreateJob(this);
 			return forSending;

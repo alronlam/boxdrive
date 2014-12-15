@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import job.BroadcastJob;
+import job.manager.JobManager;
 import client.Client;
 import client.Connection;
 
-public class ActualClientManager implements Connection.Listener {
+public class ClientManager implements Connection.Listener {
 	private List<Client> clients = new ArrayList<>();
+	
 	
 	void add(Client client) {
 		client.getConnection().setListener(this);
@@ -20,11 +22,10 @@ public class ActualClientManager implements Connection.Listener {
 	 * @param job
 	 * @param caller  Client to which the job would not be broadcasted to.
 	 */
-	void broadcast(BroadcastJob job, Client caller) {
+	public void broadcast(BroadcastJob job, Client caller, JobManager jobManager) {
 		for (Client client : clients) {
 			if (!client.equals(caller)) {
-				client.getConnection().write(job.getJson());
-				// JobManager.handle(client, job); // In case you want to queue the jobs first.
+				jobManager.handleNewJob(job.getJob(), client);
 			}
 		}
 	}

@@ -13,10 +13,9 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import org.vertx.java.core.json.impl.Base64;
-
-import commons.Util;
 
 public class SingleFolderFileManager implements FileManager {
 	private String localFolder;
@@ -28,7 +27,6 @@ public class SingleFolderFileManager implements FileManager {
 		this.localFolder = localFolder;
 		// Cheap hack to check number of back slashes
 		localPathNests = localFolder.length() - localFolder.replace("/", "").length(); 
-		System.out.println("local path nests: " + localPathNests);
 	}
 	
 	@Override
@@ -45,14 +43,41 @@ public class SingleFolderFileManager implements FileManager {
 	@Override
 	public boolean exists(FileBean file) {
 		Path localFile = this.getLocalizedFile(file.getFilename());
-		System.out.println("exists: " + localFile.toString() + ":" + Files.exists(localFile));
 		return Files.exists(localFile);
 	}
 
+	
+	/**
+	 * Compares the last modified times of the received file with an existing file.
+	 * 
+	 * @param file
+	 *            A localized Path to the other file.
+	 * @return 0 if this file is modified at the same time as other, a value less than 0 if this file is older than other, and a value greater than 0 if this file is newer than
+	 *         other.
+	 */
 	@Override
 	public int compareLastModifiedTime(FileBean file) {
 		Path localFile = this.getLocalizedFile(file.getFilename());
-		return file.compareLastModifiedTime(localFile);
+		
+		int comparison = -1;
+		try {
+
+			long difference = Files.getLastModifiedTime(localFile).toMillis() - file.getLastModified();
+
+			if (difference > 0)
+				return 1;
+
+			if (difference < 0)
+				return -1;
+
+			return 0;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return comparison;
+
+
 	}
 
 	@Override
@@ -76,7 +101,6 @@ public class SingleFolderFileManager implements FileManager {
 			byte[] buffer = new byte[BUFFER_SIZE];
 			while ((read = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, read);
-				System.out.println("wrting: " + buffer);
 			}
 			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
 			success = true;
@@ -109,7 +133,12 @@ public class SingleFolderFileManager implements FileManager {
 	@Override
 	public boolean hasSameContents(FileBean file) {
 		Path localFile = this.getLocalizedFile(file.getFilename());
-		return file.hasSameContents(localFile);
+		
+		boolean hasSame = false;
+		byte[] checksum = file.getChecksum();
+		byte[] otherChecksum = getChecksum(localFile.toString());
+		hasSame = Arrays.equals(checksum, otherChecksum);
+		return hasSame;
 	}
 
 	@Override
@@ -134,8 +163,6 @@ public class SingleFolderFileManager implements FileManager {
 	 * @throws FileNotFoundException
 	 */
 	private synchronized boolean deleteRecursive(File path) throws FileNotFoundException {
-		System.out.println("Deleting: " + path.toString());
-
 		if (!path.exists())
 			throw new FileNotFoundException(path.getAbsolutePath());
 		boolean ret = true;
@@ -151,14 +178,16 @@ public class SingleFolderFileManager implements FileManager {
 	public FileBean getFileBean(String filename) {
 		Path localFile = this.getLocalizedFile(filename);
 		long lastModified = 0;
-		try {
-			lastModified = Files.getLastModifiedTime(localFile).toMillis();
-		} catch (IOException e) {}
-		byte[] checksum = getChecksum(localFile.toString());
 		boolean isDirectory = Files.isDirectory(localFile);
+		byte[] checksum = null;
+		if (!isDirectory) {
+			checksum = getChecksum(localFile.toString());
+			try {
+				lastModified = Files.getLastModifiedTime(localFile).toMillis();
+			} catch (IOException e) {}
+		}
 		
 		Path delocalizedFile = this.delocalize(localFile);
-		System.out.println(delocalizedFile);
 		return new FileBean(delocalizedFile.toString(), lastModified, checksum, isDirectory);
 	}
 	

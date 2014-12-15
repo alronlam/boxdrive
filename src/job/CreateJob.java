@@ -39,16 +39,18 @@ public class CreateJob extends BasicJob {
 	public Job execute(FileManager filemanager) {
 		// Create folders immediately.
 		if (file.isDirectory()) {
-			filemanager.createDirectory(file);
-			return null;
-		}
-
-		if (filemanager.exists(file)) {
+			if (!filemanager.exists(file)) {
+				filemanager.createDirectory(file);
+				Job forSending = new BroadcastJob(this);
+				return forSending;	
+			}
+			
+		} else if (filemanager.exists(file)) {
 			int comparison = filemanager.compareLastModifiedTime(file);
 
 			// Send a new Create Job if local file is newer.
 			if (comparison > 0) {
-				FileBean updatedFile = filemanager.getFileBean(file.toString());
+				FileBean updatedFile = filemanager.getFileBean(file.getFilename());
 				Job forSending = new CreateJob(updatedFile);
 				return forSending;
 				
@@ -69,11 +71,11 @@ public class CreateJob extends BasicJob {
 					return forSending;
 				}
 			else{
-				//if comparison == 0 then just ignore the job
+				// if comparison == 0 then just ignore the job
 			}
-		} else {
 			
-			// File doesn't exist yet
+		// File doesn't exist yet		
+		} else {
 			Job forSending = new RequestJob(this);
 			return forSending;
 		}
