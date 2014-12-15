@@ -1,7 +1,7 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import client.Client;
+import actualclient.Client;
 
 public class ClientGroupDriver {
 	public static void main(String[] args) {

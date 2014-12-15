@@ -1,9 +1,8 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import actualclient.Client;
 import server_manager.StorageServer;
-
-import client.Client;
 
 public class StorageServerGroupDriver {
 	public static void main(String[] args) {

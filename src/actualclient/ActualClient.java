@@ -7,8 +7,8 @@ import java.nio.file.Paths;
 
 import javax.swing.JFrame;
 
-import client.DirectoryListenerThread;
-import client.filerecords.ClientFileRecordManager;
+import actualclient.DirectoryListenerThread;
+import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
 import job.manager.ClientJobManager;
 import job.manager.JobManager;

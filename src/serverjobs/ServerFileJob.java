@@ -14,7 +14,7 @@ import job.manager.JobManager;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
-import client.filerecords.ClientFileRecordManager;
+import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
 import conn.Connection;
 
