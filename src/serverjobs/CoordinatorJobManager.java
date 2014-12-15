@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import job.BasicJob;
+import job.DeleteJob;
 import job.Job;
 import job.JobManager;
 import server_manager.FileDirectory;
@@ -44,9 +45,13 @@ public class CoordinatorJobManager extends JobManager {
 				// the job came from clients
 
 				if (job instanceof BasicJob) {
+					BasicJob basicJob = (BasicJob)job;
+					
 					// get serverlist from fileDirectory
-					List<Connection> connList = fileDirectory.getServerListForFile(((BasicJob) job).file);
-
+					List<Connection> connList = fileDirectory.getServerListForFile(basicJob.file);
+					if(job instanceof DeleteJob)
+						fileDirectory.removeFileFromList(basicJob.file);
+					
 					// send to storage server group
 					for (Connection conn : connList)
 						conn.write(job.getJson());

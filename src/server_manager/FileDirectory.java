@@ -162,6 +162,10 @@ public class FileDirectory {
 	// return fileAssignment.get(s).indexOf(p);
 	// }
 
+	public void removeFileFromList(FileBean file) {
+		fileConfig.remove(file);
+	}
+
 	// public FileObject getPath(Connection s, int index) {
 	// return fileAssignment.get(s).get(index);
 	// }
