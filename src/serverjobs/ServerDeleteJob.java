@@ -13,9 +13,9 @@ import job.manager.JobManager;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.Connection;
 import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
-import conn.Connection;
 
 public class ServerDeleteJob extends ServerBasicJob {
 

@@ -2,8 +2,8 @@ package serverjobs;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.Connection;
 import commons.Constants;
-import conn.Connection;
 
 public class ServerJobFactory {
 		

@@ -51,12 +51,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
-import conn.Client;
+import client.Client;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
 import job.manager.JobManager;
-import filemanager.FileBean;
+import file.FileBean;
 
 /**
  * Class for watching a directory (or tree) for changes to files. Modified from

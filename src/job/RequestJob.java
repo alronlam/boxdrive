@@ -3,7 +3,7 @@ package job;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-import filemanager.FileManager;
+import file.FileManager;
 
 public class RequestJob extends BasicJob {
 	

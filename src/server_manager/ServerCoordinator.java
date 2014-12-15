@@ -6,10 +6,10 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import client.ConnectionManager;
 import job.manager.JobManager;
 import serverjobs.CoordinatorJobManager;
 import commons.Constants;
-import conn.ConnectionManager;
 
 public class ServerCoordinator {
 	private ServerSocket serverSocketClient, serverSocketStorageServer;

@@ -1,6 +1,6 @@
-package conn;
+package client;
 
-import conn.Connection;
+import client.Connection;
 
 
 public abstract class Client {

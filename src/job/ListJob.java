@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.vertx.java.core.json.JsonObject;
 
-import conn.Connection;
-import filemanager.FileBean;
-import filemanager.FileManager;
+import client.Connection;
+import file.FileBean;
+import file.FileManager;
 
 public class ListJob extends Job {
 	

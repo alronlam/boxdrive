@@ -14,9 +14,9 @@ import job.manager.JobManager;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 
+import client.Connection;
 import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
-import conn.Connection;
 
 public class ServerFileJob extends ServerBasicJob {
 	protected final int BUFFER_SIZE = 8096;

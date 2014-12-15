@@ -7,8 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import client.ConnectionManager;
 import commons.Constants;
-import conn.ConnectionManager;
 import server.Server;
 
 public class ServerManager extends Server {

@@ -1,10 +1,11 @@
 package job;
 
 import org.vertx.java.core.json.JsonObject;
+
+import client.Connection;
 import commons.Constants;
-import conn.Connection;
-import filemanager.FileBean;
-import filemanager.FileManager;
+import file.FileBean;
+import file.FileManager;
 
 public class FileJob extends BasicJob {
 	private String fileByteString;

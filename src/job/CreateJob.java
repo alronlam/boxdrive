@@ -7,10 +7,10 @@ import java.nio.file.attribute.FileTime;
 
 import org.vertx.java.core.json.JsonObject;
 
+import client.Connection;
 import commons.Constants;
-import conn.Connection;
-import filemanager.FileBean;
-import filemanager.FileManager;
+import file.FileBean;
+import file.FileManager;
 
 public class CreateJob extends BasicJob {
 	

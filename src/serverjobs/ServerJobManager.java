@@ -2,12 +2,12 @@ package serverjobs;
 
 import java.util.ArrayList;
 
+import client.Connection;
+import client.ConnectionManager;
 import server_manager.FileDirectory;
 import server_manager.FileObject;
 import job.Job;
 import job.manager.JobManager;
-import conn.Connection;
-import conn.ConnectionManager;
 
 public class ServerJobManager extends JobManager{
 

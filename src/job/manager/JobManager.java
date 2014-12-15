@@ -8,8 +8,8 @@ import job.JobFactory;
 
 import org.vertx.java.core.json.JsonObject;
 
-import conn.Client;
-import filemanager.FileManager;
+import client.Client;
+import file.FileManager;
 
 public abstract class JobManager {
 	

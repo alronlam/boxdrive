@@ -3,10 +3,10 @@ package actualclient.filerecords;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import client.Connection;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
-import conn.Connection;
 
 public class SharedFolderRecordComparator {
 

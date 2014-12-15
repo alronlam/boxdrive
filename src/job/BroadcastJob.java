@@ -3,8 +3,8 @@ package job;
 import java.util.ArrayList;
 import java.util.List;
 
-import conn.Client;
-import filemanager.FileManager;
+import client.Client;
+import file.FileManager;
 
 public class BroadcastJob extends Job {
 	private List<Client> clients = new ArrayList<>();

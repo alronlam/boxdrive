@@ -6,9 +6,9 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import client.ConnectionManager;
 import serverjobs.CoordinatorJobManager;
 import commons.Constants;
-import conn.ConnectionManager;
 
 public class StorageServer {
 	private ServerSocket serverSocket;

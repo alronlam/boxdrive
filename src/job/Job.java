@@ -1,6 +1,6 @@
 package job;
 
-import filemanager.FileManager;
+import file.FileManager;
 
 public abstract class Job implements Comparable<Job> {
 	private final long createTime = System.currentTimeMillis();

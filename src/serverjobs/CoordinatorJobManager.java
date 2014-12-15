@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import client.Connection;
+import client.ConnectionManager;
 import server_manager.FileDirectory;
 import server_manager.FileObject;
 import job.BasicJob;
 import job.Job;
 import job.manager.JobManager;
-import conn.Connection;
-import conn.ConnectionManager;
 
 public class CoordinatorJobManager extends JobManager{
 	private FileDirectory fileDirectory;

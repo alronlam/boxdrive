@@ -1,7 +1,7 @@
 package job.manager;
 
-import conn.Client;
-import filemanager.FileManager;
+import client.Client;
+import file.FileManager;
 import job.BroadcastJob;
 import job.Job;
 

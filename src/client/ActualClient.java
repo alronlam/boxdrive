@@ -1,4 +1,4 @@
-package conn;
+package client;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -12,7 +12,7 @@ import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
 import job.manager.ClientJobManager;
 import job.manager.JobManager;
-import filemanager.SingleFolderFileManager;
+import file.SingleFolderFileManager;
 
 public class ActualClient extends Client {
 	private ClientFileRecordManager fileRecordManager;

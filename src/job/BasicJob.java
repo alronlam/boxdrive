@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-import filemanager.FileBean;
+import file.FileBean;
 
 public abstract class BasicJob extends Job {
 	public FileBean file;
