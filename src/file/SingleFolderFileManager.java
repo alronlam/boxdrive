@@ -2,22 +2,33 @@ package file;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.vertx.java.core.json.impl.Base64;
 
-public class SingleFolderFileManager extends FileManager {
-	private String localfolder;
+import commons.Util;
+
+public class SingleFolderFileManager implements FileManager {
+	private String localFolder;
 	private final int BUFFER_SIZE = 8096;
+	private int localPathNests;
 	
-	public SingleFolderFileManager(String localfolder) {
-		this.localfolder = localfolder;
+	
+	public SingleFolderFileManager(String localFolder) {
+		this.localFolder = localFolder;
+		// Cheap hack to check number of back slashes
+		localPathNests = localFolder.length() - localFolder.replace("/", "").length(); 
+		System.out.println("local path nests: " + localPathNests);
 	}
 	
 	@Override
@@ -34,6 +45,7 @@ public class SingleFolderFileManager extends FileManager {
 	@Override
 	public boolean exists(FileBean file) {
 		Path localFile = this.getLocalizedFile(file.getFilename());
+		System.out.println("exists: " + localFile.toString() + ":" + Files.exists(localFile));
 		return Files.exists(localFile);
 	}
 
@@ -112,7 +124,7 @@ public class SingleFolderFileManager extends FileManager {
 	}
 	
 	private Path getLocalizedFile(String filename) {
-		return Paths.get(localfolder, filename);
+		return Paths.get(localFolder, filename);
 	}
 	
 	
@@ -136,9 +148,48 @@ public class SingleFolderFileManager extends FileManager {
 	}
 
 	@Override
-	public FileBean getUpdatedFileBean(FileBean file) {
-		Path localFile = this.getLocalizedFile(file.getFilename());
-		Path delocalizedFile = localFile.subpath(1, localFile.getNameCount());
-		return new FileBean(delocalizedFile);
+	public FileBean getFileBean(String filename) {
+		Path localFile = this.getLocalizedFile(filename);
+		long lastModified = 0;
+		try {
+			lastModified = Files.getLastModifiedTime(localFile).toMillis();
+		} catch (IOException e) {}
+		byte[] checksum = getChecksum(localFile.toString());
+		boolean isDirectory = Files.isDirectory(localFile);
+		
+		Path delocalizedFile = this.delocalize(localFile);
+		System.out.println(delocalizedFile);
+		return new FileBean(delocalizedFile.toString(), lastModified, checksum, isDirectory);
 	}
+	
+	private byte[] getChecksum(String filename) {
+		try {
+			InputStream fis =  new FileInputStream(filename);
+
+			byte[] buffer = new byte[1024];
+			MessageDigest complete = null;
+			
+			complete = MessageDigest.getInstance("MD5");
+			int numRead;
+	
+			do {
+				numRead = fis.read(buffer);
+				if (numRead > 0) {
+					complete.update(buffer, 0, numRead);
+				}
+			} while (numRead != -1);
+			
+			fis.close();
+			return complete.digest();
+		} catch (NoSuchAlgorithmException ex) {
+		} catch (IOException ex) {}
+		
+		return null;	
+   	
+	}
+	
+	private Path delocalize(Path localFile) {
+		return localFile.subpath(1 + localPathNests, localFile.getNameCount());
+	}
+	
 }

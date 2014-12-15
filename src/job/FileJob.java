@@ -30,7 +30,7 @@ public class FileJob extends BasicJob {
 	 */
 	public FileJob(FileBean file, FileManager filemanager) {
 		super(file);
-		filemanager.getFileBytes(file);
+		fileByteString = filemanager.getFileBytes(file);
 	}
 
 	@Override

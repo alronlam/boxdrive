@@ -22,9 +22,17 @@ public class FileBean implements Comparable<FileBean> {
 		return filename;
 	}
 
+	public FileBean(String filename, long lastModified, byte[] checksum, boolean isDirectory) {
+		this.filename = filename;
+		this.lastModified = lastModified;
+		this.checksum = checksum;
+		this.isDirectory = isDirectory;
+	}
+	
 	/**
 	 * @param path A non-localized Path.
 	 */
+	@Deprecated
 	public FileBean(Path path) {
 		filename = path.toString();
 		isDirectory = Files.isDirectory(path);

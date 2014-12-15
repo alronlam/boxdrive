@@ -48,7 +48,7 @@ public class CreateJob extends BasicJob {
 
 			// Send a new Create Job if local file is newer.
 			if (comparison > 0) {
-				FileBean updatedFile = filemanager.getUpdatedFileBean(file);
+				FileBean updatedFile = filemanager.getFileBean(file.toString());
 				Job forSending = new CreateJob(updatedFile);
 				return forSending;
 				

@@ -25,18 +25,20 @@ public class Connection {
 	private Semaphore messageMutex;
 	
 	
-	public Connection(Client client, Socket socket) {
-		this.client = client;
+	public Connection(Socket socket) {
 		this.socket = socket;
 		this.identifier = String.valueOf(socket.getPort());
 		
-		client.setConnection(this);
 		awaitMessage = new Semaphore(0);
 		messageMutex = new Semaphore(1);
 		msgQueue = new ArrayList<>();
 		
-
 		new ReadThread().start();
+	}
+	
+	
+	void setClient(Client client) {
+		this.client = client;
 	}
 	
 	public String toString(){
@@ -55,6 +57,8 @@ public class Connection {
 			ObjectOutputStream os = new ObjectOutputStream(out);
 			os.writeObject(msg);
 			this.write(out.toByteArray());
+			
+			System.out.println("Write: " + msg);
 		} catch (IOException e) {
 			System.err.println("Failed to set up streams for writing String to socket's stream.");
 		}
@@ -89,7 +93,7 @@ public class Connection {
 		} catch (InterruptedException e) {
 			System.err.println("Failed to resolve concurrency for message queue.");
 		}
-
+		System.out.println("Read: " + str);
 		return str;
 	}
 

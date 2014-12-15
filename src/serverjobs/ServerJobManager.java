@@ -14,13 +14,10 @@ public class ServerJobManager extends JobManager{
 
 	@Override
 	protected void actuallyProcessMessages(Job job, Client client) {
-		JobClient jc = this.dequeue(0);
-		Job currJob = jc.job;
-		Client client = jc.client;
-		if (currJob.isToSend()) {
-			client.getConnection().write(currJob.getJson());
+		if (job.isToSend()) {
+			client.getConnection().write(job.getJson());
 		} else {
-			Job toSend = currJob.execute(fileManager);
+			Job toSend = job.execute(fileManager);
 			if (toSend != null && !(toSend instanceof BroadcastJob)) {
 				this.handleNewJob(toSend, client);
 			}

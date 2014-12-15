@@ -57,6 +57,7 @@ import job.DeleteJob;
 import job.Job;
 import job.manager.JobManager;
 import file.FileBean;
+import file.FileManager;
 
 /**
  * Class for watching a directory (or tree) for changes to files. Modified from
@@ -68,8 +69,42 @@ public class DirectoryListener {
 	private final Map<WatchKey, Path> keys;
 	private final boolean recursive = true;
 	private boolean trace = false;
+	private Path localPath;
+	private int localPathNests;
 	private Client client;
 	private JobManager jobManager;
+	private FileManager fileManager;
+	
+	/**
+	 * Creates a WatchService and registers the given directory
+	 */
+	DirectoryListener(Path path, Client client, JobManager jobManager, FileManager fileManager) throws IOException {
+		this.localPath = path;
+		this.fileManager = fileManager;
+		
+		String line = localPath.toString();
+		// Cheap hack to check number of back slashes
+		localPathNests = line.length() - line.replace("\\", "").length(); 
+		
+		this.client = client;
+		this.jobManager = jobManager;
+		this.watcher = FileSystems.getDefault().newWatchService();
+		this.keys = new HashMap<WatchKey, Path>();
+	
+		if (recursive) {
+			System.out.format("Scanning %s ...\n", localPath);
+			registerAll(localPath);
+			System.out.println("Done.");
+		} else {
+			register(localPath);
+		}
+	
+		// enable trace after initial registration
+		this.trace = true;
+	}
+
+
+
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -112,35 +147,14 @@ public class DirectoryListener {
 		});
 	}
 
-	/**
-	 * Creates a WatchService and registers the given directory
-	 */
-	DirectoryListener(Path path, Client client, JobManager jobManager) throws IOException {
-		Path dir = path;
-		this.client = client;
-		this.jobManager = jobManager;
-		this.watcher = FileSystems.getDefault().newWatchService();
-		this.keys = new HashMap<WatchKey, Path>();
-
-		if (recursive) {
-			System.out.format("Scanning %s ...\n", dir);
-			registerAll(dir);
-			System.out.println("Done.");
-		} else {
-			register(dir);
-		}
-
-		// enable trace after initial registration
-		this.trace = true;
-	}
-
 	private Path delocalize(Path localFile) {
-		return localFile.subpath(1, localFile.getNameCount());
+		return localFile.subpath(1 + localPathNests, localFile.getNameCount());
 	}
 	
 	private void create(Path path) {
 		if (client != null) {
-			FileBean file = new FileBean(delocalize(path));
+			Path delocalized = delocalize(path);
+			FileBean file = fileManager.getFileBean(delocalized.toString());
 			Job createJob = new CreateJob(file);
 			jobManager.handleNewJob(createJob, client);
 		}
@@ -148,7 +162,8 @@ public class DirectoryListener {
 
 	private void modify(Path path) {
 		if (client != null) {
-			FileBean file = new FileBean(delocalize(path));
+			Path delocalized = delocalize(path);
+			FileBean file = fileManager.getFileBean(delocalized.toString());
 			Job createJob = new CreateJob(file);
 			jobManager.handleNewJob(createJob, client);
 		}
@@ -156,7 +171,8 @@ public class DirectoryListener {
 
 	private void delete(Path path) {
 		if (client != null) {
-			FileBean file = new FileBean(delocalize(path));
+			Path delocalized = delocalize(path);
+			FileBean file = fileManager.getFileBean(delocalized.toString());
 			Job deleteJob = new DeleteJob(file, System.currentTimeMillis());
 			jobManager.handleNewJob(deleteJob, client);
 		}

@@ -1,18 +1,13 @@
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import client.ActualClient;
 
 public class ClientDriver {
-	private static ActualClient client;
-
+	
 	public static void main(String[] args) {
 		String serverAddr = "localhost";
-		String sharedFolder = "client1";
+		String sharedFolder = "data/client1";
+		new ActualClient(serverAddr, sharedFolder);
 		
-		// Compare the previous state with the current state of the folder and
-		// then create jobs for downloading and uploading files accordingly.
-		
+		sharedFolder = "data/client2";
 		new ActualClient(serverAddr, sharedFolder);
 		
 	}

@@ -19,20 +19,22 @@ import file.SingleFolderFileManager;
 
 public class ActualClient extends Client {
 	private ClientFileRecordManager fileRecordManager;
-	private ClientJobManager jobManager;
 	private SingleFolderFileManager fileManager;
 	
 	public ActualClient(String serverAddr, String localFolder) {
+		System.out.println("client initialized");
 		fileManager = new SingleFolderFileManager(localFolder);
-		jobManager = new ClientJobManager(fileManager);
+		this.setJobManager(new ClientJobManager(fileManager));
 		
 		// fileRecordManager = new ClientFileRecordManager(path.toString(), Constants.FOLDER_RECORD_FILENAME);
 		
 		this.setConnection(attemptConnection(serverAddr));
 		this.sendConfiguration();
+		this.listenForJobs();
 		
 		Path localPath = Paths.get(localFolder);
-		Thread dirListenThread = new Thread(new DirectoryListenerThread(localPath, this, jobManager));
+		Thread dirListenThread = new Thread(
+				new DirectoryListenerThread(localPath, this, this.getJobManager(), fileManager));
 		dirListenThread.setName("Directory Listener Thread");
 		dirListenThread.start();
 
@@ -42,12 +44,13 @@ public class ActualClient extends Client {
 			}
 		});
 
+		
 		JFrame frame = new JFrame();
 		frame.setTitle("BoxDrive Client");
 		frame.setSize(400, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+		// frame.setVisible(true);
 	}
 
 	/***
@@ -60,33 +63,18 @@ public class ActualClient extends Client {
 	private Connection attemptConnection(String serverAddr) {
 		Socket socket = null;
 		do {
+			System.out.println("Client trying to connect;");
 			try {
 				socket = new Socket(serverAddr, Constants.PORT);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			if (socket != null) {
-				Connection connection = new Connection(this, socket);
+				Connection connection = new Connection(socket);
 				System.out.println(socket.getRemoteSocketAddress() + " has connected.");
 				return connection;
 			}
 		} while (socket == null);
 		return null;
-	}
-	
-	class JSONJobHandlingThread extends Thread {
-		JSONJobHandlingThread(){
-			this.setName("JSONThread for " + ActualClient.this.getConnection().getIdentifier());
-		}
-		
-		@Override
-		public void run() {
-			String json;
-
-			while (true) {
-				json = getConnection().read();
-				jobManager.handleNewJsonMessage(json, ActualClient.this);
-			}
-		}
 	}
 }

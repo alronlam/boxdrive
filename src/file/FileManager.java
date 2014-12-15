@@ -1,7 +1,7 @@
 package file;
 
 
-public abstract class FileManager {
+public interface FileManager {
 	public abstract void setLastModifiedTime(FileBean file);
 	public abstract boolean exists(FileBean file);
 	public abstract int compareLastModifiedTime(FileBean file);
@@ -10,5 +10,5 @@ public abstract class FileManager {
 	public abstract boolean hasSameContents(FileBean file);
 	public abstract void delete(FileBean file);
 	public abstract String getFileBytes(FileBean file);
-	public abstract FileBean getUpdatedFileBean(FileBean file);
+	public abstract FileBean getFileBean(String filename);
 }
