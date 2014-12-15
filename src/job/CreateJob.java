@@ -25,9 +25,7 @@ public class CreateJob extends BasicJob {
 	/**
 	 * Constructor for sending.
 	 * 
-	 * @param path
-	 *            A localized path.
-	 * @param socket
+	 * @param file
 	 */
 	public CreateJob(FileBean file) {
 		super(file);

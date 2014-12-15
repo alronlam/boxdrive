@@ -23,9 +23,7 @@ public class FileBean implements Comparable<FileBean> {
 	}
 
 	/**
-	 * 
-	 * @param path
-	 *            A non-localized Path.
+	 * @param path A non-localized Path.
 	 */
 	public FileBean(Path path) {
 		filename = path.toString();

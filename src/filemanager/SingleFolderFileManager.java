@@ -138,6 +138,7 @@ public class SingleFolderFileManager extends FileManager {
 	@Override
 	public FileBean getUpdatedFileBean(FileBean file) {
 		Path localFile = this.getLocalizedFile(file.getFilename());
-		return new FileBean(localFile);
+		Path delocalizedFile = localFile.subpath(1, localFile.getNameCount());
+		return new FileBean(delocalizedFile);
 	}
 }

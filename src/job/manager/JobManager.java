@@ -9,29 +9,17 @@ import job.JobFactory;
 import org.vertx.java.core.json.JsonObject;
 
 import conn.Client;
-import conn.Connection;
-import conn.ConnectionManager;
 import filemanager.FileManager;
 
 public abstract class JobManager {
 	
 	protected ArrayList<JobClient> jobQueue;
 	protected FileManager fileManager;
-	protected ConnectionManager connMgrClients, connMgrStorageServers;
-
-	public JobManager() {
-		this.jobQueue = new ArrayList<JobClient>();
-	}
+	
 
 	public JobManager(FileManager fileManager) {
-		this();
-		this.fileManager = fileManager;
-	}
-	
-	public JobManager(ConnectionManager connMgrClient, ConnectionManager connMgrStorageServer) {
 		this.jobQueue = new ArrayList<JobClient>();
-		this.connMgrClients = connMgrClient;
-		this.connMgrStorageServers = connMgrStorageServer;
+		this.fileManager = fileManager;
 	}
 	
 	/**

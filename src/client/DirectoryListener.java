@@ -51,11 +51,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
+import conn.Client;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;
 import job.manager.JobManager;
-import conn.Connection;
+import filemanager.FileBean;
 
 /**
  * Class for watching a directory (or tree) for changes to files. Modified from
@@ -67,8 +68,8 @@ public class DirectoryListener {
 	private final Map<WatchKey, Path> keys;
 	private final boolean recursive = true;
 	private boolean trace = false;
-	private Connection connection = null;
-	private JobManager jobManager = null;
+	private Client client;
+	private JobManager jobManager;
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -114,9 +115,9 @@ public class DirectoryListener {
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	DirectoryListener(Path path, Connection connection, JobManager jobManager) throws IOException {
+	DirectoryListener(Path path, Client client, JobManager jobManager) throws IOException {
 		Path dir = path;
-		this.connection = connection;
+		this.client = client;
 		this.jobManager = jobManager;
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
@@ -133,24 +134,31 @@ public class DirectoryListener {
 		this.trace = true;
 	}
 
+	private Path delocalize(Path localFile) {
+		return localFile.subpath(1, localFile.getNameCount());
+	}
+	
 	private void create(Path path) {
-		if (connection != null) {
-			Job createJob = new CreateJob(path, connection);
-			jobManager.handleNewJob(createJob);
+		if (client != null) {
+			FileBean file = new FileBean(delocalize(path));
+			Job createJob = new CreateJob(file);
+			jobManager.handleNewJob(createJob, client);
 		}
 	}
 
 	private void modify(Path path) {
-		if (connection != null) {
-			Job createJob = new CreateJob(path, connection);
-			jobManager.handleNewJob(createJob);
+		if (client != null) {
+			FileBean file = new FileBean(delocalize(path));
+			Job createJob = new CreateJob(file);
+			jobManager.handleNewJob(createJob, client);
 		}
 	}
 
 	private void delete(Path path) {
-		if (connection != null) {
-			Job deleteJob = new DeleteJob(path, System.currentTimeMillis(), connection);
-			jobManager.handleNewJob(deleteJob);
+		if (client != null) {
+			FileBean file = new FileBean(delocalize(path));
+			Job deleteJob = new DeleteJob(file, System.currentTimeMillis());
+			jobManager.handleNewJob(deleteJob, client);
 		}
 	}
 

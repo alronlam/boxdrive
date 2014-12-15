@@ -9,4 +9,8 @@ public abstract class Client {
 	public Connection getConnection() {
 		return connection;
 	}
+	
+	protected void setConnection(Connection connection) {
+		this.connection = connection;
+	}
 }

@@ -7,6 +7,9 @@ import job.Job;
 
 public class ClientJobManager extends JobManager {
 	
+	public ClientJobManager(FileManager fileManager) {
+		super(fileManager);
+	}
 	
 	@Override
 	protected void actuallyProcessMessages() {
