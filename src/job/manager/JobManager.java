@@ -8,18 +8,19 @@ import job.JobFactory;
 
 import org.vertx.java.core.json.JsonObject;
 
+import conn.Client;
 import conn.Connection;
 import conn.ConnectionManager;
 import filemanager.FileManager;
 
 public abstract class JobManager {
 	
-	protected ArrayList<Job> jobQueue;
+	protected ArrayList<JobClient> jobQueue;
 	protected FileManager fileManager;
 	protected ConnectionManager connMgrClients, connMgrStorageServers;
 
 	public JobManager() {
-		this.jobQueue = new ArrayList<Job>();
+		this.jobQueue = new ArrayList<JobClient>();
 	}
 
 	public JobManager(FileManager fileManager) {
@@ -28,7 +29,7 @@ public abstract class JobManager {
 	}
 	
 	public JobManager(ConnectionManager connMgrClient, ConnectionManager connMgrStorageServer) {
-		this.jobQueue = new ArrayList<Job>();
+		this.jobQueue = new ArrayList<JobClient>();
 		this.connMgrClients = connMgrClient;
 		this.connMgrStorageServers = connMgrStorageServer;
 	}
@@ -40,26 +41,27 @@ public abstract class JobManager {
 	 * @param jsonString
 	 * @param jsonJobHandlingThread
 	 */
-	public synchronized void handleNewJsonMessage(String jsonString) {
+	public synchronized void handleNewJsonMessage(String jsonString, Client client) {
 		JsonObject json = new JsonObject(jsonString);
 
 		Job newJob = JobFactory.createJob(json);
-		handleNewJob(newJob);
+		handleNewJob(newJob, client);
 	}
 
-	public synchronized void handleNewJob(Job newJob) {
-		this.enqueue(newJob);
+	public synchronized void handleNewJob(Job newJob, Client client) {
+		this.enqueue(newJob, client);
 
 		if (jobQueue.size() == 1)
 			this.processMessages();
 	}
 
-	private synchronized void enqueue(Job job) {
-		this.jobQueue.add(job);
+	private synchronized void enqueue(Job job, Client client) {
+		JobClient jobClient = new JobClient(job, client);
+		this.jobQueue.add(jobClient);
 		Collections.sort(jobQueue);
 	}
 
-	protected synchronized Job dequeue(int index) {
+	protected synchronized JobClient dequeue(int index) {
 		if (jobQueue.size() == 0)
 			return null;
 		return jobQueue.remove(0);
@@ -68,6 +70,20 @@ public abstract class JobManager {
 	protected synchronized void processMessages() {
 		while (jobQueue.size() > 0) {
 			actuallyProcessMessages();			
+		}
+	}
+	
+	protected class JobClient implements Comparable<JobClient> {
+		Job job;
+		Client client;
+		JobClient(Job job, Client client) {
+			this.job = job;
+			this.client = client;
+		}
+		@Override
+		public int compareTo(JobClient other) {
+			Job otherJob = other.job;
+			return this.job.compareTo(otherJob);
 		}
 	}
 	

@@ -6,22 +6,19 @@ import job.BroadcastJob;
 import job.Job;
 
 public class ClientJobManager extends JobManager {
-	Client client;
 	
-	public ClientJobManager(Client client, FileManager fileManager) {
-		super(fileManager);
-		this.client = client;
-	}
 	
 	@Override
 	protected void actuallyProcessMessages() {
-		Job currJob = this.dequeue(0);
+		JobClient jc = this.dequeue(0);
+		Job currJob = jc.job;
+		Client client = jc.client;
 		if (currJob.isToSend()) {
 			client.getConnection().write(currJob.getJson());
 		} else {
 			Job toSend = currJob.execute(fileManager);
 			if (toSend != null && !(toSend instanceof BroadcastJob)) {
-				this.handleNewJob(toSend);
+				this.handleNewJob(toSend, client);
 			}
 		}
 	}
