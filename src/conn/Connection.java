@@ -15,16 +15,15 @@ import job.manager.JobManager;
 public class Connection {
 	// Socket-related variables
 	public Socket socket;
-	public static String identifier;
+	public String identifier;
 	
 	// Message-related variables
 	private ArrayList<String> msgQueue;
 	private Semaphore awaitMessage;
 	private Semaphore messageMutex;
 	
-	private JobManager jobManager;
 	
-	public Connection(Socket socket, JobManager jobManager) {
+	public Connection(Socket socket) {
 		this.socket = socket;
 		this.identifier = String.valueOf(socket.getPort());
 
@@ -32,10 +31,8 @@ public class Connection {
 		messageMutex = new Semaphore(1);
 		msgQueue = new ArrayList<>();
 		
-		this.jobManager = jobManager;
 
 		new ReadThread().start();
-		new JSONJobHandlingThread().start();
 	}
 	
 	public String toString(){
@@ -67,7 +64,7 @@ public class Connection {
 	 * @param bytes
 	 *            Array of Bytes, each of which would be sent to the peer
 	 */
-	public void write(byte bytes[]) {
+	private void write(byte bytes[]) {
 		try {
 			OutputStream outStream = socket.getOutputStream();
 			outStream.write(bytes);
@@ -107,7 +104,6 @@ public class Connection {
 	}
 
 	class ReadThread extends Thread {
-
 		ReadThread(){
 			this.setName("ReadThread for "+ identifier);
 		}
@@ -122,8 +118,6 @@ public class Connection {
 					InputStream inStream = socket.getInputStream();
 					ObjectInputStream is = new ObjectInputStream(inStream);
 					str = (String) is.readObject();
-//					System.out.println("   Received: ");
-//					System.out.println(str);
 					
 				} catch (ClassNotFoundException e) {
 					System.err.println("Failed to parse stream data as String.");
@@ -141,23 +135,6 @@ public class Connection {
 					messageMutex.release();
 					awaitMessage.release();
 				}
-			}
-		}
-	}
-
-	class JSONJobHandlingThread extends Thread {
-		
-		JSONJobHandlingThread(){
-			this.setName("JSONThread for "+ identifier);
-		}
-		
-		@Override
-		public void run() {
-			String json;
-
-			while (true) {
-				json = read();
-				jobManager.handleNewJsonMessage(json, Connection.this);
 			}
 		}
 	}

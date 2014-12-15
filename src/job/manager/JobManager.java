@@ -22,9 +22,8 @@ public abstract class JobManager {
 		this.jobQueue = new ArrayList<Job>();
 	}
 
-	public JobManager(ConnectionManager connMgr, FileManager fileManager) {
-		this.jobQueue = new ArrayList<Job>();
-		this.connMgrClients = connMgr;
+	public JobManager(FileManager fileManager) {
+		this();
 		this.fileManager = fileManager;
 	}
 	
