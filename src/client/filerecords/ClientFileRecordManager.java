@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 
 public class ClientFileRecordManager {
 
@@ -31,28 +30,23 @@ public class ClientFileRecordManager {
 
 		// try to read from serialized list
 		// if not successful, then init the records based on directory
-		ArrayList<FileRecord> records = this.readFromSerializedList(this.RECORD_PATH);
+		this.folderRecord = this.readFromSerializedList(this.RECORD_PATH);
 
-		if (records == null)
-			records = this.initRecordsBasedOnDirectory(sharedFolderName);
-		else
-			records = this.updateRecordsTimeModified(records, sharedFolderName);
+		if (folderRecord == null)
+			folderRecord = new FolderRecord();// this.generateRecordBasedOnCurrentDirectoryState();
 
-		this.list = records;
-
-		System.out.println("Read File Records: " + this.list);
-
+		System.out.println("Read File Records: " + folderRecord.toString());
 	}
 
-	private ArrayList<FileRecord> readFromSerializedList(String filePath) {
-		// deserialize the quarks.ser file
+	private FolderRecord readFromSerializedList(String filePath) {
+
 		try (InputStream file = new FileInputStream(filePath);
 				InputStream buffer = new BufferedInputStream(file);
 				ObjectInput input = new ObjectInputStream(buffer);) {
 			// deserialize the List
-			ArrayList<FileRecord> records = (ArrayList<FileRecord>) input.readObject();
+			FolderRecord folderRecord = (FolderRecord) input.readObject();
 
-			return records;
+			return folderRecord;
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {
@@ -64,13 +58,14 @@ public class ClientFileRecordManager {
 
 	public void serializeList() {
 
-		this.list = this.initRecordsBasedOnDirectory(this.sharedFolderName);
+		folderRecord.setList(this.generateRecordBasedOnCurrentDirectoryState());
+		folderRecord.setTimeLastModified(System.currentTimeMillis());
 
 		// serialize the List
 		try (OutputStream file = new FileOutputStream(RECORD_PATH);
 				OutputStream buffer = new BufferedOutputStream(file);
 				ObjectOutput output = new ObjectOutputStream(buffer);) {
-			output.writeObject(this.list);
+			output.writeObject(folderRecord);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -79,11 +74,11 @@ public class ClientFileRecordManager {
 
 	}
 
-	private ArrayList<FileRecord> initRecordsBasedOnDirectory(String directory) {
+	public ArrayList<FileRecord> generateRecordBasedOnCurrentDirectoryState() {
 
 		ArrayList<FileRecord> records = new ArrayList<FileRecord>();
 
-		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(directory))) {
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(this.sharedFolderName))) {
 			for (Path path : directoryStream) {
 				FileRecord fileRecord = new FileRecord(path.getFileName().toString(), Files.getLastModifiedTime(path)
 						.toMillis());
@@ -102,100 +97,42 @@ public class ClientFileRecordManager {
 		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(directory))) {
 
 			for (FileRecord fileRecord : fileRecords) {
-				Path path = this.getPath(directoryStream, fileRecord.getFileName());
+				Path path = this.getPathFromDirectoryStream(directoryStream, fileRecord.getFileName());
+
 				if (path != null)
 					fileRecord.setDateTimeModified(Files.getLastModifiedTime(path).toMillis());
+
 			}
 
 			Collections.sort(fileRecords);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-
 		return fileRecords;
 	}
 
-	private Path getPath(DirectoryStream<Path> directoryStream, String filename) {
+	private Path getPathFromDirectoryStream(DirectoryStream<Path> directoryStream, String filename) {
+		for (Path path : directoryStream) {
+			if (path.getFileName().toString().equals(filename))
+				return path;
+		}
+
 		return null;
 	}
 
 	// The rest of the class
 
-	private ArrayList<FileRecord> list = new ArrayList<FileRecord>();
-	private long timeLastModified = 0; // time this folder record was last
-										// updated. this is just an internal
-										// time keeper used for when deletes
-										// happen while offline
+	private FolderRecord folderRecord;
 
-	public void handleCreateOrModify(String fileName, long dateTimeModified) {
-		FileRecord targetRecord = this.retrieveFileRecord(fileName);
-
-		if (targetRecord == null)
-			this.create(fileName, dateTimeModified);
-		else
-			this.modify(targetRecord, dateTimeModified);
-	}
-
-	private void create(String fileName, long dateTimeModified) {
-		this.timeLastModified = System.currentTimeMillis();
-
-		FileRecord newRecord = new FileRecord(fileName, dateTimeModified);
-		list.add(newRecord);
-		Collections.sort(list);
-	}
-
-	private void modify(FileRecord targetRecord, long dateTimeModified) {
-
-		this.timeLastModified = System.currentTimeMillis();
-
-		if (targetRecord == null)
-			return;
-
-		targetRecord.setDateTimeModified(dateTimeModified);
-	}
-
-	public void delete(String fileName, long dateTimeModified) {
-
-		this.timeLastModified = System.currentTimeMillis();
-
-		FileRecord targetRecord = this.retrieveFileRecord(fileName);
-
-		if (targetRecord == null)
-			return;
-
-		list.remove(targetRecord);
-	}
-
-	private FileRecord retrieveFileRecord(String fileName) {
-
-		FileRecord tempRecord = new FileRecord(fileName, 0);
-		// Overrode the equals method in FileRecord, so this should return the
-		// index of a file that has the specified fileName
-		int index = list.indexOf(tempRecord);
-
-		if (index < 0)
-			return null;
-
-		return list.get(index);
-
-	}
-
-	@SuppressWarnings("unchecked")
 	public ArrayList<FileRecord> getList() {
-		return (ArrayList<FileRecord>) list.clone();
+		return folderRecord.getList();
 	}
 
 	public long getTimeLastModified() {
-		return timeLastModified;
+		return folderRecord.getTimeLastModified();
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder("Record as of " + new Date(this.timeLastModified).toString());
-
-		for (FileRecord record : list) {
-			sb.append(record.toString()).append("\n");
-		}
-
-		return sb.toString();
+		return folderRecord.toString();
 	}
 }

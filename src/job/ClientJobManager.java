@@ -23,10 +23,11 @@ public class ClientJobManager extends JobManager {
 		// Compare with last record and generate appropriate jobs
 		SharedFolderRecordComparator comparator = new SharedFolderRecordComparator();
 		ArrayList<FileRecord> newFileRecords = SyncManager.getInstance().getFileRecords();
+		ArrayList<FileRecord> currFileRecords = fileRecordManager.generateRecordBasedOnCurrentDirectoryState();
 		ArrayList<FileRecord> oldFileRecords = fileRecordManager.getList();
 		long lastTimeOldRecordsModified = fileRecordManager.getTimeLastModified();
 
-		ArrayList<Job> newJobs = comparator.compareAndGenerateJobs(newFileRecords, oldFileRecords,
+		ArrayList<Job> newJobs = comparator.compareAndGenerateJobs(newFileRecords, currFileRecords, oldFileRecords,
 				lastTimeOldRecordsModified, serverConnection, sharedFolderName);
 
 		System.out.println("\nSYNC RESULTS:");

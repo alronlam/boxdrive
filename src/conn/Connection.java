@@ -124,7 +124,7 @@ public class Connection {
 					InputStream inStream = socket.getInputStream();
 					ObjectInputStream is = new ObjectInputStream(inStream);
 					str = (String) is.readObject();
-					System.out.println("   Received: ");
+					System.out.println("   RECEIVED from "+identifier+": ");
 					System.out.println(str);
 					
 				} catch (ClassNotFoundException e) {
