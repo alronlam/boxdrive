@@ -3,6 +3,7 @@ package job;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
+import file.FileBean;
 import file.FileManager;
 
 public class RequestJob extends BasicJob {
@@ -18,7 +19,11 @@ public class RequestJob extends BasicJob {
 	public RequestJob(JsonObject json) {
 		super(json);
 	}
-
+	
+	public RequestJob(FileBean file) {
+		super(file);
+	}
+	
 	@Override
 	public Job execute(FileManager filemanager) {
 		

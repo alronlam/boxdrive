@@ -22,15 +22,13 @@ public class FileJob extends BasicJob {
 		fileByteString = body.getString(Constants.Body.FILEBYTES);
 	}
 
-	/**
-	 * Constructor for sending.
-	 * 
-	 * @param path
-	 * @param connection
-	 */
-	public FileJob(FileBean file, FileManager filemanager) {
+	public FileJob(FileBean file, String fileByteString) {
 		super(file);
-		fileByteString = filemanager.getFileBytes(file);
+		this.fileByteString = fileByteString;
+	}
+	
+	public FileJob(FileBean file, FileManager filemanager) {
+		this(file, filemanager.getFileBytes(file)); 
 	}
 
 	@Override

@@ -17,9 +17,11 @@ public class ConfigJob extends Job {
 		return job;
 	}
 	
-	public static ConfigJob getServer() {
+	public static ConfigJob getStorageServer(String configuration, int number) {
 		ConfigJob job = new ConfigJob();
-		job.clientType = Constants.Config.ACTUAL;
+		job.clientType = Constants.Config.STORAGE_SERVER;
+		job.serverConfiguration = configuration;
+		job.serverNumber = number;
 		return job;
 	}
 	

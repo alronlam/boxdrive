@@ -45,8 +45,9 @@ public class Constants {
 		public static final String CLIENT_TYPE = "client type";
 		public static final String ACTUAL = "actual";
 		
-		
+		public static final String STORAGE_SERVER = "storage server";
 		public static final String SERVER_CONFIGURATION = "server configuration";
 		public static final String SERVER_NUMBER = "server number";
+		
 	}
 }
