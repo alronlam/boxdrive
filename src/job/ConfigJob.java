@@ -3,7 +3,7 @@ package job;
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
-
+import file.FileBean;
 import file.FileManager;
 
 /**
@@ -16,6 +16,17 @@ public class ConfigJob extends Job {
 		job.clientType = Constants.Config.ACTUAL;
 		return job;
 	}
+	
+	/**
+	 * 
+	 * @return A configuration for new storage servers.
+	 */
+	public static ConfigJob getStorageServer() {
+		ConfigJob job = new ConfigJob();
+		job.clientType = Constants.Config.STORAGE_SERVER;
+		return job;
+	}
+	
 	
 	public static ConfigJob getStorageServer(String configuration, int number) {
 		ConfigJob job = new ConfigJob();
@@ -32,6 +43,12 @@ public class ConfigJob extends Job {
 	
 	
 	private ConfigJob() {}
+	
+	ConfigJob(JsonObject json) {
+		JsonObject body = json.getObject(Constants.JSON.BODY);
+		clientType = body.getString(Constants.Config.CLIENT_TYPE);
+		
+	}
 	
 	/**
 	 * Does nothing.
@@ -51,10 +68,5 @@ public class ConfigJob extends Job {
 		body.putNumber(Constants.Config.SERVER_NUMBER, serverNumber);
 		json.putObject(Constants.JSON.BODY, body);
 		return json.encode();
-	}
-	
-	
-	void setVirtualServer(int serverNumber) {
-		this.serverNumber = serverNumber;
 	}
 }

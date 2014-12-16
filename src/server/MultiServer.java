@@ -4,21 +4,32 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.vertx.java.core.json.JsonObject;
+
+import server.manager.StorageServerManager;
+import server.manager.TriangleServerManager;
+import job.ConfigJob;
+import job.JobFactory;
 import job.manager.ServerJobManager;
 import client.Client;
 import client.Connection;
 import commons.Constants;
+import file.FileManager;
+import file.MultiServerFileManager;
 import file.SingleFolderFileManager;
 
 public class MultiServer {
 	private ServerSocket serverSocket;
 	private ServerJobManager jobManager;
-	private SingleFolderFileManager fileManager;
+	
+	private FileManager fileManager;
+	private StorageServerManager storageServerManager;
 	private ClientManager clientManager;
 	
 	
 	public MultiServer(String localFolder) {
-		fileManager = new SingleFolderFileManager(localFolder);
+		storageServerManager = new TriangleServerManager();
+		fileManager = new MultiServerFileManager(storageServerManager);
 		clientManager = new ClientManager();
 		
 		jobManager = new ServerJobManager(fileManager, clientManager);
@@ -38,7 +49,6 @@ public class MultiServer {
 			if (newSocket != null) {
 				Connection connection = new Connection(newSocket);
 				Client client = new Client(connection, jobManager);
-				connection.read(); // Read out the configuration. Assumed to be ActualClient.
 				clientManager.add(client);
 				client.listenForJobs();
 			}
@@ -57,5 +67,11 @@ public class MultiServer {
 		}
 		return null;
 	}
-
+	
+	private void handleNewClient(Client client) {
+		String json = client.getConnection().read();
+		ConfigJob job = (ConfigJob) JobFactory.createJob(new JsonObject(json));
+		
+		
+	}
 }

@@ -36,7 +36,9 @@ public class TriangleServerManager extends StorageServerManager {
 	}
 	
 	@Override
-	public void addServer(Client client) {
+	public void addNewServer(Client client) {
+		// Copy files from existing servers
+		
 		// Find virtual server with least servers
 		int serverNumber = vsWithLeastServers();
 		serverMap.get(serverNumber).add(client);
@@ -66,7 +68,6 @@ public class TriangleServerManager extends StorageServerManager {
 
 	@Override
 	public void deleteServer(Client client) {
-		// Force delete from all lists
 		for (int currentServer : serverMap.keySet()) {
 			serverMap.get(currentServer).remove(client);
 		}
@@ -96,18 +97,13 @@ public class TriangleServerManager extends StorageServerManager {
 	}
 
 	@Override
-	public String getFileBytes(FileBean file, int serverNumber) {
-		List<Client> servers = new ArrayList<>();
-		servers.addAll(serverMap.get(serverNumber));
-		servers.addAll(serverMap.get((serverNumber + 1) % MAX_SERVERS));
-		if (servers.isEmpty()) {
+	public String getFileBytes(FileBean file, int serverId) {
+		Client server = this.getRandomServer(serverId);
+		if (server == null) {
 			return null;
 		}
 		
 		// Get file from a random storage server
-		Random rn = new Random();
-		int randomIndex = rn.nextInt(servers.size());
-		Client server = servers.get(randomIndex);
 		RequestJob requestJob = new RequestJob(file);
 		server.getConnection().write(requestJob.getJson());
 		
@@ -122,10 +118,8 @@ public class TriangleServerManager extends StorageServerManager {
 		return json.getObject(Constants.JSON.BODY).getString(Constants.Body.FILEBYTES);
 	}
 	
-	private boolean sendToAllServers(Job job, int serverNumber) {
-		List<Client> servers = new ArrayList<>();
-		servers.addAll(serverMap.get(serverNumber));
-		servers.addAll(serverMap.get((serverNumber + 1) % MAX_SERVERS));
+	private boolean sendToAllServers(Job job, int serverId) {
+		List<Client> servers = this.getAllServers(serverId);
 		if (servers.isEmpty()) {
 			return false;
 		}
@@ -137,9 +131,21 @@ public class TriangleServerManager extends StorageServerManager {
 		return true;
 	}
 
-	@Override
-	public boolean setLastModifiedTime(FileBean file, int server) {
-		// TODO Auto-generated method stub
-		return false;
+	private Client getRandomServer(int serverId) {
+		List<Client> servers = this.getAllServers(serverId);
+		if (servers.isEmpty()) {
+			return null;
+		}
+		
+		Random rn = new Random();
+		int randomIndex = rn.nextInt(servers.size());
+		return servers.get(randomIndex);
+	}
+	
+	private List<Client> getAllServers(int serverId) {
+		List<Client> servers = new ArrayList<>();
+		servers.addAll(serverMap.get(serverId));
+		servers.addAll(serverMap.get((serverId + 1) % MAX_SERVERS));
+		return servers;
 	}
 }
