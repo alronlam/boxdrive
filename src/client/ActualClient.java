@@ -29,7 +29,10 @@ public class ActualClient extends Client {
 		// fileRecordManager = new ClientFileRecordManager(path.toString(), Constants.FOLDER_RECORD_FILENAME);
 		
 		this.setConnection(attemptConnection(serverAddr));
-		this.sendConfiguration();
+		
+		ConfigJob configuration = ConfigJob.getActual();
+		getConnection().write(configuration.getJson());
+		
 		this.listenForJobs();
 		
 		Path localPath = Paths.get(localFolder);
