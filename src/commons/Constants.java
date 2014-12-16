@@ -13,19 +13,19 @@ public class Constants {
 	 * JSON Fields.
 	 */
 	public class JSON {
-		public final static String TYPE = "type";
-		public final static String BODY = "body";	
+		public static final String TYPE = "type";
+		public static final String BODY = "body";	
 	}
 	
 	/**
 	 * JSON Body keys.
 	 */
 	public class Body {
-		public final static String FILENAME = "filename";
-		public final static String LAST_MODIFIED = "last modified";
-		public final static String CHECKSUM = "checksum";
-		public final static String IS_DIRECTORY = "is directory";
-		public final static String FILEBYTES = "file bytes";
+		public static final String FILENAME = "filename";
+		public static final String LAST_MODIFIED = "last modified";
+		public static final String CHECKSUM = "checksum";
+		public static final String IS_DIRECTORY = "is directory";
+		public static final String FILEBYTES = "file bytes";
 	}
 	
 	/**
@@ -33,18 +33,20 @@ public class Constants {
 	 */
 	// Convert to Enum?
 	public class Type {
-		public final static String CREATE = "create";
-		public final static String DELETE = "delete";
-		public final static String FILE = "file";
-		public final static String LIST = "list";
-		public final static String REQUEST = "request";
-		public final static String CONFIG = "config";
+		public static final String CREATE = "create";
+		public static final String DELETE = "delete";
+		public static final String FILE = "file";
+		public static final String LIST = "list";
+		public static final String REQUEST = "request";
+		public static final String CONFIG = "config";
 	}
 	
 	public class Config {
-		public final static String CLIENT_TYPE = "client type";
-		public final static String ACTUAL = "actual";
+		public static final String CLIENT_TYPE = "client type";
+		public static final String ACTUAL = "actual";
 		
-		public final static String VIRTUAL_SERVER = "virtual server";
+		
+		public static final String SERVER_CONFIGURATION = "server configuration";
+		public static final String SERVER_NUMBER = "server number";
 	}
 }

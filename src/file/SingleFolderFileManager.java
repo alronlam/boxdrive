@@ -81,13 +81,17 @@ public class SingleFolderFileManager implements FileManager {
 	}
 
 	@Override
-	public void createDirectory(FileBean file) {
+	public boolean createDirectory(FileBean file) {
+		boolean success = false;
 		Path localFile = this.getLocalizedFile(file.getFilename());
 		try {
 			Files.createDirectory(localFile);
+			success = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return success;
 	}
 
 	@Override
