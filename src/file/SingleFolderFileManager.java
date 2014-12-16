@@ -67,10 +67,11 @@ public class SingleFolderFileManager implements FileManager {
 			if (difference > 0)
 				return 1;
 
-			if (difference < 0)
+			else if (difference < 0)
 				return -1;
 
-			return 0;
+			else
+				return 0;
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -135,14 +136,12 @@ public class SingleFolderFileManager implements FileManager {
 	}
 
 	@Override
-	public boolean hasSameContents(FileBean file) {
-		Path localFile = this.getLocalizedFile(file.getFilename());
+	public boolean hasSameContents(FileBean other) {
+		Path localFile = this.getLocalizedFile(other.getFilename());
 		
-		boolean hasSame = false;
-		byte[] checksum = file.getChecksum();
-		byte[] otherChecksum = getChecksum(localFile.toString());
-		hasSame = Arrays.equals(checksum, otherChecksum);
-		return hasSame;
+		byte[] checksum = getChecksum(localFile.toString());
+		byte[] otherChecksum = other.getChecksum();
+		return Arrays.equals(checksum, otherChecksum);
 	}
 
 	@Override

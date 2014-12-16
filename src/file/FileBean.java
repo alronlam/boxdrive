@@ -87,6 +87,7 @@ public class FileBean implements Comparable<FileBean> {
 	 * @return 0 if this file is modified at the same time as other, a value less than 0 if this file is older than other, and a value greater than 0 if this file is newer than
 	 *         other.
 	 */
+	@Deprecated
 	int compareLastModifiedTime(Path other) {
 		int comparison = -1;
 		try {
@@ -108,8 +109,8 @@ public class FileBean implements Comparable<FileBean> {
 			e.printStackTrace();
 		}
 		return comparison;
-	}
-
+	}	
+	
 	@Override
 	public int hashCode(){
 		return filename.hashCode();
@@ -119,7 +120,7 @@ public class FileBean implements Comparable<FileBean> {
 	public boolean equals(Object o) {
 		return compareTo((FileBean) o) == 0;
 	}
-
+	
 	@Override
 	public int compareTo(FileBean o) {
 		int comparison = 0;

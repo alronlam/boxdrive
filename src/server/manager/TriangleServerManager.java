@@ -73,7 +73,7 @@ public class TriangleServerManager extends StorageServerManager {
 	}
 
 	@Override
-	public int getNewVirtualServer() {
+	public int getNewServerNumber() {
 		return (currentServer++ % MAX_SERVERS);
 	}
 
@@ -135,5 +135,11 @@ public class TriangleServerManager extends StorageServerManager {
 		}
 		
 		return true;
+	}
+
+	@Override
+	public boolean setLastModifiedTime(FileBean file, int server) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
