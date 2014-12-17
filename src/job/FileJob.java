@@ -51,16 +51,22 @@ public class FileJob extends BasicJob {
 		Path localFile = file.getLocalizedFile();
 
 		byte[] fileBytes = Base64.decode(fileByteString);
-		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes);
-				FileOutputStream outputStream = new FileOutputStream(localFile.toFile())) {
+		ByteArrayInputStream inputStream = null;
+		FileOutputStream outputStream = null;
+		try {
+			inputStream = new ByteArrayInputStream(fileBytes);
+			outputStream = new FileOutputStream(localFile.toFile());
 			int read = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
 			while ((read = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, read);
 				System.out.println("wrting: " + buffer);
 			}
+			
+			inputStream.close();
+			outputStream.close();
 			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
-
+			
 			// Connection is null because this job is just created to be able to
 			// construct its JSON. It won't reall be processed.
 			CreateJob createJobForBroadcasting = new CreateJob(localFile, null);
@@ -71,6 +77,12 @@ public class FileJob extends BasicJob {
 			try {
 				Files.delete(localFile);
 				System.err.println("Error. Deleting: " + localFile.toString());
+				
+				if (inputStream != null)
+					inputStream.close();
+				if (outputStream != null)
+					outputStream.close();
+				
 			} catch (IOException ex1) {
 				// something went terribly, horribly wrong
 				ex1.printStackTrace();
