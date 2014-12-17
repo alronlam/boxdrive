@@ -36,7 +36,7 @@ public class TriangleServerManager extends StorageServerManager {
 	}
 	
 	@Override
-	public void addNewServer(Client client) {
+	public synchronized void addNewServer(Client client) {
 		// Find virtual server with least servers
 		int serverNumber = vsWithLeastServers();
 		serverMap.get(serverNumber).add(client);
@@ -61,43 +61,43 @@ public class TriangleServerManager extends StorageServerManager {
 	}
 	
 	@Override
-	public void addServer(Client client, int server) {
+	public synchronized void addServer(Client client, int server) {
 		List<Client> serverList = serverMap.get(server);
 		serverList.add(client);
 	}
 
 	@Override
-	public void deleteServer(Client client) {
+	public synchronized void deleteServer(Client client) {
 		for (int currentServer : serverMap.keySet()) {
 			serverMap.get(currentServer).remove(client);
 		}
 	}
 
 	@Override
-	public int getNewServerNumber() {
+	public synchronized int getNewServerNumber() {
 		return (currentServer++ % MAX_SERVERS);
 	}
 
 	@Override
-	public boolean createFile(FileBean file, String fileBytes, int serverNumber) {
+	public synchronized boolean createFile(FileBean file, String fileBytes, int serverNumber) {
 		FileJob job = new FileJob(file, fileBytes);
 		return this.sendToAllServers(job, serverNumber);
 	}
 
 	@Override
-	public boolean createDirectory(FileBean file, int serverNumber) {
+	public synchronized boolean createDirectory(FileBean file, int serverNumber) {
 		CreateJob job = new CreateJob(file);
 		return this.sendToAllServers(job, serverNumber);
 	}
 
 	@Override
-	public boolean delete(FileBean file, int serverNumber) {
+	public synchronized boolean delete(FileBean file, int serverNumber) {
 		DeleteJob job = new DeleteJob(file, file.getLastModified());
 		return this.sendToAllServers(job, serverNumber);
 	}
 
 	@Override
-	public String getFileBytes(FileBean file, int serverId) {
+	public synchronized String getFileBytes(FileBean file, int serverId) {
 		Client server = this.getRandomServer(serverId);
 		if (server == null) {
 			return null;
@@ -118,7 +118,7 @@ public class TriangleServerManager extends StorageServerManager {
 		return json.getObject(Constants.JSON.BODY).getString(Constants.Body.FILEBYTES);
 	}
 	
-	private boolean sendToAllServers(Job job, int serverId) {
+	private synchronized boolean sendToAllServers(Job job, int serverId) {
 		List<Client> servers = this.getAllServers(serverId);
 		if (servers.isEmpty()) {
 			return false;
@@ -131,7 +131,7 @@ public class TriangleServerManager extends StorageServerManager {
 		return true;
 	}
 
-	private Client getRandomServer(int serverId) {
+	private synchronized Client getRandomServer(int serverId) {
 		List<Client> servers = this.getAllServers(serverId);
 		if (servers.isEmpty()) {
 			return null;
@@ -142,7 +142,7 @@ public class TriangleServerManager extends StorageServerManager {
 		return servers.get(randomIndex);
 	}
 	
-	private List<Client> getAllServers(int serverId) {
+	private synchronized List<Client> getAllServers(int serverId) {
 		List<Client> servers = new ArrayList<>();
 		servers.addAll(serverMap.get(serverId));
 		servers.addAll(serverMap.get((serverId + 1) % MAX_SERVERS));

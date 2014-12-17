@@ -17,6 +17,7 @@ import job.Job;
 import job.JobFactory;
 import job.manager.ClientJobManager;
 import job.manager.JobManager;
+import job.manager.StorageServerJobManager;
 import file.SingleFolderFileManager;
 
 public class StorageServer extends Client {
@@ -26,12 +27,11 @@ public class StorageServer extends Client {
 	public StorageServer(String serverAddr, String localFolder) {
 		System.out.println("storage server initialized");
 		this.fileManager = new SingleFolderFileManager(localFolder);
-		this.setJobManager(new ClientJobManager(fileManager));
-		
 		this.configManager = new ConfigManager(this);
+		this.setJobManager(new StorageServerJobManager(fileManager, configManager));
+		
 		this.setConnection( this.attemptConnection(serverAddr));
 		this.listenForJobs();
-		
 		this.configManager.sendConfig();
 	}
 	

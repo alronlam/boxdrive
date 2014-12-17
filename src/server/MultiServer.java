@@ -67,7 +67,11 @@ public class MultiServer {
 	}
 	
 	private void handleNewClient(Client client) {
-		String json = client.getConnection().read();
+		String json = null;
+		while (json == null) {
+			json = client.getConnection().read();
+		}
+		
 		ConfigJob job = (ConfigJob) JobFactory.createJob(new JsonObject(json));
 		String clientType = job.getClientType(); 
 		if (clientType.equals( Constants.Config.ACTUAL)) {
