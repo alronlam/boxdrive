@@ -28,8 +28,11 @@ public class JobFactory {
 		} else if (type.equals(Constants.Type.REQUEST)) {
 			toGet = new RequestJob(json);
 		
+		} else if (type.equals(Constants.Type.CONFIG)) {
+			toGet = new ConfigJob(json);
+		
 		} else {
-			// Empty Job
+			// Unknown Job.
 		}
 		
 		toGet.setForReceiving();

@@ -28,7 +28,7 @@ public class ActualClient extends Client {
 		
 		// fileRecordManager = new ClientFileRecordManager(path.toString(), Constants.FOLDER_RECORD_FILENAME);
 		
-		this.setConnection(attemptConnection(serverAddr));
+		this.setConnection( this.attemptConnection(serverAddr));
 		
 		ConfigJob configuration = ConfigJob.getActual();
 		getConnection().write(configuration.getJson());

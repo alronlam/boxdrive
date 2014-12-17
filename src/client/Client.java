@@ -38,7 +38,7 @@ public class Client {
 		return connection;
 	}
 	
-	void setConnection(Connection connection) {
+	protected void setConnection(Connection connection) {
 		this.connection = connection;
 	}
 	

@@ -32,17 +32,33 @@ public class ConfigJob extends Job {
 		ConfigJob job = new ConfigJob();
 		job.clientType = Constants.Config.STORAGE_SERVER;
 		job.serverConfiguration = configuration;
-		job.serverNumber = number;
+		job.serverId = number;
 		return job;
 	}
 	
 	
 	private String clientType;
 	private String serverConfiguration = ""; 
-	private int serverNumber = -1;
+	private int serverId = -1;
 	
 	
 	private ConfigJob() {}
+	
+	public String getClientType() {
+		return clientType;
+	}
+	
+	public boolean isNew() {
+		return serverConfiguration.equals("") && serverId == -1;
+	}
+	
+	public String getConfiguration() {
+		return serverConfiguration;
+	}
+	
+	public int getServerId() {
+		return  serverId;
+	}
 	
 	ConfigJob(JsonObject json) {
 		JsonObject body = json.getObject(Constants.JSON.BODY);
@@ -65,7 +81,7 @@ public class ConfigJob extends Job {
 		JsonObject body = new JsonObject();
 		body.putString(Constants.Config.CLIENT_TYPE, clientType);
 		body.putString(Constants.Config.SERVER_CONFIGURATION, serverConfiguration);
-		body.putNumber(Constants.Config.SERVER_NUMBER, serverNumber);
+		body.putNumber(Constants.Config.SERVER_NUMBER, serverId);
 		json.putObject(Constants.JSON.BODY, body);
 		return json.encode();
 	}

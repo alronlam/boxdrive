@@ -36,68 +36,68 @@ public class TriangleServerManager extends StorageServerManager {
 	}
 	
 	@Override
-	public void addNewServer(Client client) {
-		// Copy files from existing servers
-		
+	public synchronized void addNewServer(Client client) {
 		// Find virtual server with least servers
 		int serverNumber = vsWithLeastServers();
 		serverMap.get(serverNumber).add(client);
-		serverMap.get((serverNumber + 1) % MAX_SERVERS).add(client); // Add to succeeding  
 		ConfigJob config = ConfigJob.getStorageServer(CONFIGURATION, serverNumber);
 		client.getConnection().write(config.getJson());
+
+		// Copy files from existing servers
 	}
 	
-	private int vsWithLeastServers() {
-		int maxSize = -1;
-		int server = 0;
-		for (int currentServer : serverMap.keySet()) {
-			int currentSize = serverMap.get(currentServer).size();
-			if (currentSize > maxSize) {
-				server = currentServer; 
+	private synchronized int vsWithLeastServers() {
+		int minSize = Integer.MAX_VALUE;
+		int serverId = 0;
+		for (int currentServerId : serverMap.keySet()) {
+			int currentSize = serverMap.get(currentServerId).size();
+			if (currentSize < minSize) {
+				minSize = currentSize;
+				serverId = currentServerId; 
 			}
 		}
-		
-		return server;
+		System.out.println("Returning server# " + serverId + " with " + minSize + " servers.");
+		return serverId;
 	}
 	
 	@Override
-	public void addServer(Client client, int server) {
+	public synchronized void addServer(Client client, int server) {
 		List<Client> serverList = serverMap.get(server);
 		serverList.add(client);
 	}
 
 	@Override
-	public void deleteServer(Client client) {
+	public synchronized void deleteServer(Client client) {
 		for (int currentServer : serverMap.keySet()) {
 			serverMap.get(currentServer).remove(client);
 		}
 	}
 
 	@Override
-	public int getNewServerNumber() {
+	public synchronized int getNewServerNumber() {
 		return (currentServer++ % MAX_SERVERS);
 	}
 
 	@Override
-	public boolean createFile(FileBean file, String fileBytes, int serverNumber) {
+	public synchronized boolean createFile(FileBean file, String fileBytes, int serverNumber) {
 		FileJob job = new FileJob(file, fileBytes);
 		return this.sendToAllServers(job, serverNumber);
 	}
 
 	@Override
-	public boolean createDirectory(FileBean file, int serverNumber) {
+	public synchronized boolean createDirectory(FileBean file, int serverNumber) {
 		CreateJob job = new CreateJob(file);
 		return this.sendToAllServers(job, serverNumber);
 	}
 
 	@Override
-	public boolean delete(FileBean file, int serverNumber) {
+	public synchronized boolean delete(FileBean file, int serverNumber) {
 		DeleteJob job = new DeleteJob(file, file.getLastModified());
 		return this.sendToAllServers(job, serverNumber);
 	}
 
 	@Override
-	public String getFileBytes(FileBean file, int serverId) {
+	public synchronized String getFileBytes(FileBean file, int serverId) {
 		Client server = this.getRandomServer(serverId);
 		if (server == null) {
 			return null;
@@ -118,7 +118,7 @@ public class TriangleServerManager extends StorageServerManager {
 		return json.getObject(Constants.JSON.BODY).getString(Constants.Body.FILEBYTES);
 	}
 	
-	private boolean sendToAllServers(Job job, int serverId) {
+	private synchronized boolean sendToAllServers(Job job, int serverId) {
 		List<Client> servers = this.getAllServers(serverId);
 		if (servers.isEmpty()) {
 			return false;
@@ -131,7 +131,7 @@ public class TriangleServerManager extends StorageServerManager {
 		return true;
 	}
 
-	private Client getRandomServer(int serverId) {
+	private synchronized Client getRandomServer(int serverId) {
 		List<Client> servers = this.getAllServers(serverId);
 		if (servers.isEmpty()) {
 			return null;
@@ -142,7 +142,11 @@ public class TriangleServerManager extends StorageServerManager {
 		return servers.get(randomIndex);
 	}
 	
-	private List<Client> getAllServers(int serverId) {
+	/**
+	 * @param serverId
+	 * @return All servers with serverId and (serverId + 1) % MAX_SERVERS.
+	 */
+	private synchronized List<Client> getAllServers(int serverId) {
 		List<Client> servers = new ArrayList<>();
 		servers.addAll(serverMap.get(serverId));
 		servers.addAll(serverMap.get((serverId + 1) % MAX_SERVERS));
