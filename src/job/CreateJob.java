@@ -1,13 +1,7 @@
 package job;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-
 import org.vertx.java.core.json.JsonObject;
 
-import client.Connection;
 import commons.Constants;
 import file.FileBean;
 import file.FileManager;

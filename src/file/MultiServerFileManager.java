@@ -54,7 +54,13 @@ public class MultiServerFileManager implements FileManager {
 	
 	@Override
 	public boolean createFile(FileBean file, String fileByteString) {
-		int serverNumber = serverManager.getNewServerNumber();
+		int serverNumber;
+		if (this.exists(file)) {
+			serverNumber = this.getServerNumber(file);
+		} else {
+			serverNumber = serverManager.getNewServerNumber();
+		}
+		
 		boolean success = serverManager.createFile(file, fileByteString, serverNumber);
 		if (success) {
 			FileBeanServer fbs = new FileBeanServer(file, serverNumber);

@@ -118,7 +118,8 @@ public class DirectoryListener {
 	 * Register the given directory with the WatchService
 	 */
 	private void register(Path dir) throws IOException {
-		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+		// WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+		WatchKey key = dir.register(watcher, ENTRY_DELETE, ENTRY_MODIFY);
 		if (trace) {
 			Path prev = keys.get(key);
 			if (prev == null) {
