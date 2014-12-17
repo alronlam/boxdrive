@@ -27,7 +27,7 @@ public class StorageServer extends Client {
 	public StorageServer(String serverAddr, String localFolder) {
 		System.out.println("storage server initialized");
 		this.fileManager = new SingleFolderFileManager(localFolder);
-		this.configManager = new ConfigManager(this);
+		this.configManager = new ConfigManager(this, localFolder);
 		this.setJobManager(new StorageServerJobManager(fileManager, configManager));
 		
 		this.setConnection( this.attemptConnection(serverAddr));

@@ -1,5 +1,6 @@
 package job.manager;
 
+import server.ConfigManager;
 import client.Client;
 import file.FileManager;
 import job.BroadcastJob;
@@ -7,9 +8,11 @@ import job.ConfigJob;
 import job.Job;
 
 public class StorageServerJobManager extends JobManager {
+	private ConfigManager configManager;
 	
-	public StorageServerJobManager(FileManager fileManager) {
+	public StorageServerJobManager(FileManager fileManager, ConfigManager configManager) {
 		super(fileManager);
+		this.configManager = configManager;
 	}
 	
 	@Override
@@ -18,7 +21,7 @@ public class StorageServerJobManager extends JobManager {
 			client.getConnection().write(job.getJson());
 		} else {
 			if (job instanceof ConfigJob) {
-				
+				configManager.handleReceiveConfig((ConfigJob) job);
 				return;
 			}
 			
