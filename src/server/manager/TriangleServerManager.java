@@ -37,14 +37,14 @@ public class TriangleServerManager extends StorageServerManager {
 	
 	@Override
 	public void addNewServer(Client client) {
-		// Copy files from existing servers
-		
 		// Find virtual server with least servers
 		int serverNumber = vsWithLeastServers();
 		serverMap.get(serverNumber).add(client);
-		serverMap.get((serverNumber + 1) % MAX_SERVERS).add(client); // Add to succeeding  
+		serverMap.get((serverNumber + 1) % MAX_SERVERS).add(client); // Add to succeeding
 		ConfigJob config = ConfigJob.getStorageServer(CONFIGURATION, serverNumber);
 		client.getConnection().write(config.getJson());
+
+		// Copy files from existing servers
 	}
 	
 	private int vsWithLeastServers() {

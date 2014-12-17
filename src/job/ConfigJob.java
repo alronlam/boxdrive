@@ -52,6 +52,10 @@ public class ConfigJob extends Job {
 		return serverConfiguration.equals("") && serverId == -1;
 	}
 	
+	public String getConfiguration() {
+		return serverConfiguration;
+	}
+	
 	public int getServerId() {
 		return  serverId;
 	}

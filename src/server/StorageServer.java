@@ -21,30 +21,24 @@ import file.SingleFolderFileManager;
 
 public class StorageServer extends Client {
 	private SingleFolderFileManager fileManager;
+	private ConfigManager configManager;
 	
 	public StorageServer(String serverAddr, String localFolder) {
-		System.out.println("client initialized");
-		fileManager = new SingleFolderFileManager(localFolder);
+		System.out.println("storage server initialized");
+		this.fileManager = new SingleFolderFileManager(localFolder);
 		this.setJobManager(new ClientJobManager(fileManager));
 		
-		
+		this.configManager = new ConfigManager(this);
 		this.setConnection( this.attemptConnection(serverAddr));
-		
-		// TODO Load Storage
-		
-		ConfigJob configuration = ConfigJob.getStorageServer();
-		getConnection().write(configuration.getJson());
-		
 		this.listenForJobs();
 		
-		Path localPath = Paths.get(localFolder);
-		
+		this.configManager.sendConfig();
 	}
-
+	
 	private Connection attemptConnection(String serverAddr) {
 		Socket socket = null;
 		do {
-			System.out.println("Client trying to connect;");
+			System.out.println("Storage server trying to connect;");
 			try {
 				socket = new Socket(serverAddr, Constants.PORT);
 			} catch (IOException e) {
