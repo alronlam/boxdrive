@@ -49,10 +49,8 @@ public class MultiServer {
 			if (newSocket != null) {
 				Connection connection = new Connection(newSocket);
 				Client client = new Client(connection, jobManager);
-				clientManager.add(client);
-				client.listenForJobs();
+				this.handleNewClient(client);
 			}
-				
 			System.out.println(newSocket.getRemoteSocketAddress() + " has connected.");
 		}
 	}
@@ -71,7 +69,17 @@ public class MultiServer {
 	private void handleNewClient(Client client) {
 		String json = client.getConnection().read();
 		ConfigJob job = (ConfigJob) JobFactory.createJob(new JsonObject(json));
-		
-		
+		String clientType = job.getClientType(); 
+		if (clientType.equals( Constants.Config.ACTUAL)) {
+			clientManager.add(client);
+			client.listenForJobs();
+			
+		} else if (clientType.equals( Constants.Config.STORAGE_SERVER )) {
+			if (job.isNew()) {
+				storageServerManager.addNewServer(client);
+			} else {
+				storageServerManager.addServer(client, job.getServerId());
+			}
+		}
 	}
 }
