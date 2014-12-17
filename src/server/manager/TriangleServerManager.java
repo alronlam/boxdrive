@@ -40,24 +40,24 @@ public class TriangleServerManager extends StorageServerManager {
 		// Find virtual server with least servers
 		int serverNumber = vsWithLeastServers();
 		serverMap.get(serverNumber).add(client);
-		serverMap.get((serverNumber + 1) % MAX_SERVERS).add(client); // Add to succeeding
 		ConfigJob config = ConfigJob.getStorageServer(CONFIGURATION, serverNumber);
 		client.getConnection().write(config.getJson());
 
 		// Copy files from existing servers
 	}
 	
-	private int vsWithLeastServers() {
-		int maxSize = -1;
-		int server = 0;
-		for (int currentServer : serverMap.keySet()) {
-			int currentSize = serverMap.get(currentServer).size();
-			if (currentSize > maxSize) {
-				server = currentServer; 
+	private synchronized int vsWithLeastServers() {
+		int minSize = Integer.MAX_VALUE;
+		int serverId = 0;
+		for (int currentServerId : serverMap.keySet()) {
+			int currentSize = serverMap.get(currentServerId).size();
+			if (currentSize < minSize) {
+				minSize = currentSize;
+				serverId = currentServerId; 
 			}
 		}
-		
-		return server;
+		System.out.println("Returning server# " + serverId + " with " + minSize + " servers.");
+		return serverId;
 	}
 	
 	@Override
@@ -142,6 +142,10 @@ public class TriangleServerManager extends StorageServerManager {
 		return servers.get(randomIndex);
 	}
 	
+	/**
+	 * @param serverId
+	 * @return All servers with serverId and (serverId + 1) % MAX_SERVERS.
+	 */
 	private synchronized List<Client> getAllServers(int serverId) {
 		List<Client> servers = new ArrayList<>();
 		servers.addAll(serverMap.get(serverId));

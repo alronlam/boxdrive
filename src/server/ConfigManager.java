@@ -31,7 +31,7 @@ public class ConfigManager {
 	         out.writeObject(config);
 	         out.close();
 	         fileOut.close();
-	         System.out.printf("Serialized data is saved in " + this.getLocalFilename());
+	         System.out.println("Serialized data is saved in " + this.getLocalFilename());
 	      } catch(IOException ex) {
 	          ex.printStackTrace();
 	      }
