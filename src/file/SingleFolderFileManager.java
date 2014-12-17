@@ -107,6 +107,8 @@ public class SingleFolderFileManager implements FileManager {
 			while ((read = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, read);
 			}
+			inputStream.close();
+			outputStream.close();
 			Files.setLastModifiedTime(localFile, FileTime.fromMillis(file.getLastModified()));
 			success = true;
 		} catch (IOException ex) {
