@@ -35,14 +35,4 @@ public class JobFactory {
 		toGet.setForReceiving();
 		return toGet;
 	}
-	
-	public static Job getConfig(Client client) {
-		ConfigJob toGet = null;
-		if (client instanceof ActualClient) {
-			toGet = new ConfigJob();
-			toGet.setAsActual();
-		}
-		
-		return toGet;
-	}
 }

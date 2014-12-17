@@ -46,15 +46,6 @@ public class Client {
 		new JSONJobHandlingThread().start();
 	}
 	
-	/**
-	 * Sends a configuration file to the Server. To be used
-	 * by extended Clients.
-	 */
-	protected void sendConfiguration() {
-		Job configJob = JobFactory.getConfig(this);
-		getConnection().write(configJob.getJson());				
-	}
-	
 	@Override
 	public int hashCode() {
 		return this.connection.getSocket().hashCode();
