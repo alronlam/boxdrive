@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
@@ -284,6 +285,7 @@ public class SingleFolderFileManager implements FileManager {
 
 	@Override
 	public List<FileBean> getSerializedFiles() {
+		List<FileBean>files = new ArrayList<>(); 
 		try (InputStream file = new FileInputStream( this.getLocalizedFile(RECORD_FILENAME).toString() );
 				InputStream buffer = new BufferedInputStream(file);
 				ObjectInput input = new ObjectInputStream(buffer);) {
@@ -291,16 +293,23 @@ public class SingleFolderFileManager implements FileManager {
 			FolderRecord folderRecord = (FolderRecord) input.readObject();
 			this.lastModifiedTime = folderRecord.getTimeLastModified();
 			
-			Files.delete(this.getLocalizedFile(RECORD_FILENAME));
-			return folderRecord.getList();
+			files.addAll(folderRecord.getList());
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		} catch (FileNotFoundException ex) { // No serialized file yet.	
 		} catch (IOException ex) {
 			ex.printStackTrace();
+		} 
+		
+		
+		try {
+			Files.delete(this.getLocalizedFile(RECORD_FILENAME));
+		} catch (NoSuchFileException ex) {
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 
-		return new ArrayList<>();
+		return files;
 	}
 
 	@Override

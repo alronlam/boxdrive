@@ -30,8 +30,6 @@ public class ConfigManager {
 	         out.writeObject(config);
 	         out.close();
 	         fileOut.close();
-	         System.out.println("Config: " + config.getConfiguration() + ":" + config.getServerId() 
-	        		 + "is saved in " + this.getLocalFilename());
 	      } catch(IOException ex) {
 	          ex.printStackTrace();
 	      }
