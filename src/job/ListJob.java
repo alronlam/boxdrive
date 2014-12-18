@@ -2,29 +2,31 @@ package job;
 
 import java.util.List;
 
+import job.manager.JobManager;
+
 import org.vertx.java.core.json.JsonObject;
 
-import client.Connection;
+import commons.Constants;
 import file.FileBean;
 import file.FileManager;
+import file.filerecords.FileRecord;
 
 public class ListJob extends Job {
-	
-	ListJob(JsonObject json) {
-		super();
+
+	public ListJob() {
 	}
 
-	private List<FileBean> files;
-	
 	@Override
 	public Job execute(FileManager filemanager) {
-		return null;
+		List<FileBean> files = filemanager.getAllFiles();
+		Job listResultJobForSending = new ListResultJob(files);
+		return listResultJobForSending;	
 	}
 
 	@Override
 	public String getJson() {
-		// TODO Auto-generated method stub
-		return null;
+		JsonObject json = new JsonObject();
+		json.putString(Constants.JSON.TYPE, Constants.Type.LIST);
+		return json.toString();
 	}
-
 }

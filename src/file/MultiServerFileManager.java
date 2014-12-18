@@ -134,4 +134,9 @@ public class MultiServerFileManager implements FileManager {
 	public List<FileBean> getSerializedFiles() {
 		return new ArrayList<>();
 	}
+
+	@Override @Deprecated
+	public long getLastModifiedTime() {
+		return 0;
+	}
 }

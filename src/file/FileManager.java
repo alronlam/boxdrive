@@ -16,4 +16,5 @@ public interface FileManager {
 	public abstract List<FileBean> getAllFiles();
 	public abstract void serializeFiles();
 	public abstract List<FileBean> getSerializedFiles();
+	public abstract long getLastModifiedTime();
 }

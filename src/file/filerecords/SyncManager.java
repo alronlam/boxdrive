@@ -6,6 +6,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import file.FileBean;
+
 public class SyncManager {
 
 	private static SyncManager instance;
@@ -16,7 +18,7 @@ public class SyncManager {
 		return instance;
 	}
 
-	private ArrayList<FileRecord> fileRecords;
+	private ArrayList<FileBean> fileRecords;
 	private Lock lock = new ReentrantLock();
 	private Condition isFileRecordsInitialized = lock.newCondition();
 
@@ -26,18 +28,17 @@ public class SyncManager {
 		lock.unlock();
 	}
 
-	public void initFileRecords(List<FileRecord> fileRecords) {
+	public void initFileRecords(List<FileBean> fileRecords) {
 		lock.lock();
 		System.out.println("Records have been initialized!");
-		this.fileRecords = new ArrayList<FileRecord>(fileRecords);
+		this.fileRecords = new ArrayList<FileBean>(fileRecords);
 		isFileRecordsInitialized.signal();
 		lock.unlock();
 	}
 
-	@SuppressWarnings("unchecked")
-	public ArrayList<FileRecord> getFileRecords() {
+	public ArrayList<FileBean> getFileRecords() {
 		lock.lock();
-		ArrayList<FileRecord> clone = (ArrayList<FileRecord>) fileRecords.clone();
+		ArrayList<FileBean> clone = new ArrayList<>(fileRecords);
 		lock.unlock();
 		return clone;
 	}

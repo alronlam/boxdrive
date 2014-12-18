@@ -35,6 +35,7 @@ public class SingleFolderFileManager implements FileManager {
 	private final String RECORD_FILENAME = "record.ser";
 	private String localFolder;
 	private int localPathNests;
+	private long lastModifiedTime;
 	
 	
 	
@@ -288,7 +289,7 @@ public class SingleFolderFileManager implements FileManager {
 				ObjectInput input = new ObjectInputStream(buffer);) {
 			
 			FolderRecord folderRecord = (FolderRecord) input.readObject();
-
+			this.lastModifiedTime = folderRecord.getTimeLastModified();
 			return folderRecord.getList();
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
@@ -297,6 +298,11 @@ public class SingleFolderFileManager implements FileManager {
 		}
 
 		return null;
+	}
+
+	@Override
+	public long getLastModifiedTime() {
+		return this.lastModifiedTime;
 	}
 	
 }

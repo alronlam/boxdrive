@@ -23,8 +23,11 @@ public class JobFactory {
 			toGet = new FileJob(json);
 		
 		} else if (type.equals(Constants.Type.LIST)) {
-			toGet = new ListJob(json);
+			toGet = new ListJob();
 		
+		} else if (type.equals(Constants.Type.LIST_RESULT)) {
+			toGet = new ListResultJob(json);
+			
 		} else if (type.equals(Constants.Type.REQUEST)) {
 			toGet = new RequestJob(json);
 		

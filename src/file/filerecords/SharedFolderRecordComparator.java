@@ -12,22 +12,21 @@ public class SharedFolderRecordComparator {
 
 	public List<Job> compareAndGenerateJobs(List<FileBean> newFileRecords,
 			List<FileBean> currFileRecords, List<FileBean> oldFileRecords,
-			long lastTimeOldRecordsModified, String sharedFolderName) {
+			long lastTimeOldRecordsModified) {
 
 		System.out.println("\n Comparator: old = " + oldFileRecords.toString() + " curr = " + currFileRecords
 				+ " new = " + newFileRecords.toString());
 
 		ArrayList<Job> jobs = new ArrayList<Job>();
-		jobs.addAll(this.generateCreateJobs(newFileRecords, currFileRecords, oldFileRecords,
-				sharedFolderName));
-		jobs.addAll(this.generateModifyJobs(newFileRecords, currFileRecords, sharedFolderName));
+		jobs.addAll(this.generateCreateJobs(newFileRecords, currFileRecords, oldFileRecords));
+		jobs.addAll(this.generateModifyJobs(newFileRecords, currFileRecords));
 		jobs.addAll(this.generateDeleteJobs(newFileRecords, currFileRecords, oldFileRecords,
-				sharedFolderName, lastTimeOldRecordsModified));
+				lastTimeOldRecordsModified));
 		return jobs;
 	}
 
 	private List<Job> generateCreateJobs(List<FileBean> serverFileRecords,
-			List<FileBean> currFileRecords, List<FileBean> oldFileRecords, String sharedFolderName) {
+			List<FileBean> currFileRecords, List<FileBean> oldFileRecords) {
 		ArrayList<Job> createJobs = new ArrayList<Job>();
 
 		// case where you created the file locally. so it should be in curr, but
@@ -53,7 +52,7 @@ public class SharedFolderRecordComparator {
 	}
 
 	private List<Job> generateModifyJobs(List<FileBean> newFileRecords,
-			List<FileBean> currFileRecords, String sharedFolderName) {
+			List<FileBean> currFileRecords) {
 		ArrayList<Job> modifyJobs = new ArrayList<Job>();
 
 		for (FileBean newFileRecord : newFileRecords) {
@@ -79,7 +78,7 @@ public class SharedFolderRecordComparator {
 
 	private ArrayList<Job> generateDeleteJobs(List<FileBean> serverFileRecords,
 			List<FileBean> currFileRecords, List<FileBean> oldFileRecords, 
-			String sharedFolderName, long lastTimeOldRecordsModified) {
+			long lastTimeOldRecordsModified) {
 		ArrayList<Job> deleteJobs = new ArrayList<Job>();
 
 		// case where you deleted it locally. so it should be in old and in
