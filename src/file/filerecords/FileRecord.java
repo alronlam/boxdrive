@@ -1,4 +1,4 @@
-package actualclient.filerecords;
+package file.filerecords;
 
 import java.io.Serializable;
 import java.util.Date;
