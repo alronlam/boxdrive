@@ -1,10 +1,8 @@
-package actualclient;
+package client;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-import client.Client;
-import client.Connection;
 import file.FileManager;
 import job.manager.JobManager;
 

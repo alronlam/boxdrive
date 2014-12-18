@@ -2,8 +2,8 @@ package job;
 
 import org.vertx.java.core.json.JsonObject;
 
-import client.Connection;
 import commons.Constants;
+
 import file.FileBean;
 import file.FileManager;
 

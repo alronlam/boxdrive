@@ -2,9 +2,6 @@ package job;
 
 import org.vertx.java.core.json.JsonObject;
 
-import client.ActualClient;
-import client.Client;
-import client.Connection;
 import commons.Constants;
 
 public class JobFactory {

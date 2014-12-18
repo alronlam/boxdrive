@@ -14,6 +14,8 @@ import java.util.Date;
  */
 public class FileRecord implements Comparable<FileRecord>, Serializable {
 
+	/**/
+	private static final long serialVersionUID = 4545973161930002796L;
 	private String fileName;
 	private long dateTimeModified;
 

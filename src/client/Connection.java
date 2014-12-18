@@ -10,8 +10,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
-import job.manager.JobManager;
-
 public class Connection {
 	// Socket-related variables
 	private Client client;

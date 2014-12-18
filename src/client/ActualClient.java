@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import actualclient.DirectoryListenerThread;
 import commons.Constants;
 import job.ConfigJob;
 import job.Job;

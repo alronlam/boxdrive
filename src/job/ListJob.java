@@ -2,14 +2,12 @@ package job;
 
 import java.util.List;
 
-import job.manager.JobManager;
-
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
+
 import file.FileBean;
 import file.FileManager;
-import file.filerecords.FileRecord;
 
 public class ListJob extends Job {
 

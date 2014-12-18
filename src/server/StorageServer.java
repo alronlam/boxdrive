@@ -2,10 +2,13 @@ package server;
 
 import java.io.IOException;
 import java.net.Socket;
+
+import job.manager.StorageServerJobManager;
 import client.Client;
 import client.Connection;
+
 import commons.Constants;
-import job.manager.StorageServerJobManager;
+
 import file.SingleFolderFileManager;
 
 public class StorageServer extends Client {
