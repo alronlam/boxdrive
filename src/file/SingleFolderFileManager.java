@@ -293,11 +293,12 @@ public class SingleFolderFileManager implements FileManager {
 			return folderRecord.getList();
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
+		} catch (FileNotFoundException ex) { // No serialized file yet.	
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override

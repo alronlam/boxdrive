@@ -26,8 +26,6 @@ public class ActualClient extends Client {
 		fileManager = new SingleFolderFileManager(localFolder);
 		this.setJobManager(new ClientJobManager(fileManager));
 		
-		// fileRecordManager = new ClientFileRecordManager(path.toString(), Constants.FOLDER_RECORD_FILENAME);
-		
 		this.setConnection( this.attemptConnection(serverAddr));
 		
 		ConfigJob configuration = ConfigJob.getActual();
@@ -54,7 +52,7 @@ public class ActualClient extends Client {
 		frame.setSize(400, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
-		// frame.setVisible(true);
+		frame.setVisible(true);
 	}
 
 	/***
