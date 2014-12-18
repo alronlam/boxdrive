@@ -30,7 +30,6 @@ public class ConfigManager {
 	         out.writeObject(config);
 	         out.close();
 	         fileOut.close();
-	         System.out.println("Serialized data is saved in " + this.getLocalFilename());
 	      } catch(IOException ex) {
 	          ex.printStackTrace();
 	      }
@@ -54,7 +53,7 @@ public class ConfigManager {
 			job = ConfigJob.getStorageServer(config.getConfiguration(), config.getServerId());
 		
 		} else {
-			job = ConfigJob.getStorageServer();
+			job = ConfigJob.getNewStorageServer();
 		}
 		
 		server.getConnection().write(job.getJson());

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class Connection {
+	private final boolean DEBUG = false;
+	
 	// Socket-related variables
 	private Client client;
 	private Socket socket;
@@ -55,7 +57,8 @@ public class Connection {
 			ObjectOutputStream os = new ObjectOutputStream(out);
 			os.writeObject(msg);
 			this.write(out.toByteArray());
-			System.out.println("w: " + msg);
+			if (DEBUG)
+				System.out.println("w: " + msg);
 		} catch (IOException e) {
 			System.err.println("Failed to set up streams for writing String to socket's stream.");
 		}
@@ -90,7 +93,8 @@ public class Connection {
 		} catch (InterruptedException e) {
 			System.err.println("Failed to resolve concurrency for message queue.");
 		}
-		System.out.println("r: " + str);
+		if (DEBUG)
+			System.out.println("r: " + str);
 		return str;
 	}
 

@@ -21,7 +21,7 @@ public class ConfigJob extends Job {
 	 * 
 	 * @return A configuration for new storage servers.
 	 */
-	public static ConfigJob getStorageServer() {
+	public static ConfigJob getNewStorageServer() {
 		ConfigJob job = new ConfigJob();
 		job.clientType = Constants.Config.STORAGE_SERVER;
 		return job;
@@ -63,7 +63,8 @@ public class ConfigJob extends Job {
 	ConfigJob(JsonObject json) {
 		JsonObject body = json.getObject(Constants.JSON.BODY);
 		clientType = body.getString(Constants.Config.CLIENT_TYPE);
-		
+		serverConfiguration = body.getString(Constants.Config.SERVER_CONFIGURATION);
+		serverId = (int) body.getNumber(Constants.Config.SERVER_NUMBER);
 	}
 	
 	/**
