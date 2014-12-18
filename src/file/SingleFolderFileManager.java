@@ -290,6 +290,8 @@ public class SingleFolderFileManager implements FileManager {
 			
 			FolderRecord folderRecord = (FolderRecord) input.readObject();
 			this.lastModifiedTime = folderRecord.getTimeLastModified();
+			
+			Files.delete(this.getLocalizedFile(RECORD_FILENAME));
 			return folderRecord.getList();
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
