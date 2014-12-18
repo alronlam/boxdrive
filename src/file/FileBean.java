@@ -1,16 +1,16 @@
 package file;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
 
-public class FileBean implements Comparable<FileBean> {
+public class FileBean implements Comparable<FileBean>, Serializable {
+	/**/
+	private static final long serialVersionUID = -1180279113570936160L;
 	private String filename;
 	private long lastModified;
 	private byte[] checksum;

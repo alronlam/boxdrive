@@ -126,4 +126,12 @@ public class MultiServerFileManager implements FileManager {
 		
 		return files;
 	}
+	
+	@Override @Deprecated
+	public void serializeFiles() {}
+
+	@Override @Deprecated
+	public List<FileBean> getSerializedFiles() {
+		return new ArrayList<>();
+	}
 }

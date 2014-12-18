@@ -8,14 +8,11 @@ import java.nio.file.Paths;
 import javax.swing.JFrame;
 
 import actualclient.DirectoryListenerThread;
-import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
 import job.ConfigJob;
-import job.Job;
-import job.JobFactory;
 import job.manager.ClientJobManager;
-import job.manager.JobManager;
 import file.SingleFolderFileManager;
+import file.filerecords.ClientFileRecordManager;
 
 public class ActualClient extends Client {
 	private ClientFileRecordManager fileRecordManager;

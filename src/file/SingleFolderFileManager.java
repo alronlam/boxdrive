@@ -1,5 +1,7 @@
 package file;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +9,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,12 +28,14 @@ import java.util.List;
 
 import org.vertx.java.core.json.impl.Base64;
 
-import file.filerecords.FileRecord;
+import file.filerecords.FolderRecord;
 
 public class SingleFolderFileManager implements FileManager {
-	private String localFolder;
 	private final int BUFFER_SIZE = 8096;
+	private final String RECORD_FILENAME = "record.ser";
+	private String localFolder;
 	private int localPathNests;
+	
 	
 	
 	public SingleFolderFileManager(String localFolder) {
@@ -252,6 +261,42 @@ public class SingleFolderFileManager implements FileManager {
 		}
 
 		return files;
+	}
+
+	@Override
+	public void serializeFiles() {
+		FolderRecord folderRecord = new FolderRecord();
+		folderRecord.setList(this.getAllFiles());
+		folderRecord.setTimeLastModified(System.currentTimeMillis());
+		
+		try (OutputStream file = new FileOutputStream( this.getLocalizedFile(RECORD_FILENAME).toString() );
+				OutputStream buffer = new BufferedOutputStream(file);
+				ObjectOutput output = new ObjectOutputStream(buffer);) {
+			output.writeObject(folderRecord);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		System.out.println("\nCurrent record is now\n " + this.toString() + "\n");
+		
+	}
+
+	@Override
+	public List<FileBean> getSerializedFiles() {
+		try (InputStream file = new FileInputStream( this.getLocalizedFile(RECORD_FILENAME).toString() );
+				InputStream buffer = new BufferedInputStream(file);
+				ObjectInput input = new ObjectInputStream(buffer);) {
+			
+			FolderRecord folderRecord = (FolderRecord) input.readObject();
+
+			return folderRecord.getList();
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return null;
 	}
 	
 }

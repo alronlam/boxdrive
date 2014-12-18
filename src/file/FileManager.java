@@ -14,4 +14,6 @@ public interface FileManager {
 	public abstract String getFileBytes(FileBean file);
 	public abstract FileBean getFileBean(String filename);
 	public abstract List<FileBean> getAllFiles();
+	public abstract void serializeFiles();
+	public abstract List<FileBean> getSerializedFiles();
 }

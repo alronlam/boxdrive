@@ -17,6 +17,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import file.FileBean;
 
 public class ClientFileRecordManager {
 
@@ -124,7 +127,7 @@ public class ClientFileRecordManager {
 
 	private FolderRecord folderRecord;
 
-	public ArrayList<FileRecord> getList() {
+	public List<FileBean> getList() {
 		return folderRecord.getList();
 	}
 
