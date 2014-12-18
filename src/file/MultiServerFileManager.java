@@ -1,7 +1,10 @@
 package file;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import server.manager.StorageServerManager;
@@ -111,5 +114,16 @@ public class MultiServerFileManager implements FileManager {
 			this.file = file;
 			this.serverNumber = serverNumber;
 		}
+	}
+
+	@Override
+	public List<FileBean> getAllFiles() {
+		ArrayList<FileBean> files = new ArrayList<>();
+		for (FileBeanServer fbs : fileBeanMap.values()) {
+			files.add(fbs.file);
+		}
+		Collections.sort(files);
+		
+		return files;
 	}
 }

@@ -7,15 +7,21 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.vertx.java.core.json.impl.Base64;
+
+import file.filerecords.FileRecord;
 
 public class SingleFolderFileManager implements FileManager {
 	private String localFolder;
@@ -182,6 +188,10 @@ public class SingleFolderFileManager implements FileManager {
 	@Override
 	public FileBean getFileBean(String filename) {
 		Path localFile = this.getLocalizedFile(filename);
+		return this.getFileBeanFromLocalized(localFile);
+	}
+	
+	private FileBean getFileBeanFromLocalized(Path localFile) {
 		long lastModified = 0;
 		boolean isDirectory = Files.isDirectory(localFile);
 		byte[] checksum = null;
@@ -224,6 +234,24 @@ public class SingleFolderFileManager implements FileManager {
 	
 	private Path delocalize(Path localFile) {
 		return localFile.subpath(1 + localPathNests, localFile.getNameCount());
+	}
+
+	@Override
+	public List<FileBean> getAllFiles() {
+		List<FileBean> files = new ArrayList<>();
+		
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(this.getLocalizedFile(""))) {
+			for (Path path : directoryStream) {
+				FileBean file = this.getFileBeanFromLocalized(path);
+				
+				files.add(file);
+			}
+			Collections.sort(files);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return files;
 	}
 	
 }

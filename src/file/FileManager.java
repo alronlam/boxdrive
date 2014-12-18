@@ -1,5 +1,7 @@
 package file;
 
+import java.util.List;
+
 
 public interface FileManager {
 	public abstract void setLastModifiedTime(FileBean file);
@@ -11,4 +13,5 @@ public interface FileManager {
 	public abstract void delete(FileBean file);
 	public abstract String getFileBytes(FileBean file);
 	public abstract FileBean getFileBean(String filename);
+	public abstract List<FileBean> getAllFiles();
 }
