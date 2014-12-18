@@ -4,21 +4,21 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import javax.swing.JFrame;
 
-import actualclient.DirectoryListenerThread;
-import actualclient.filerecords.ClientFileRecordManager;
 import commons.Constants;
 import job.ConfigJob;
 import job.Job;
-import job.JobFactory;
+import job.ListJob;
 import job.manager.ClientJobManager;
-import job.manager.JobManager;
+import file.FileBean;
 import file.SingleFolderFileManager;
+import file.filerecords.SharedFolderRecordComparator;
+import file.filerecords.SyncManager;
 
 public class ActualClient extends Client {
-	private ClientFileRecordManager fileRecordManager;
 	private SingleFolderFileManager fileManager;
 	
 	public ActualClient(String serverAddr, String localFolder) {
@@ -47,6 +47,7 @@ public class ActualClient extends Client {
 			}
 		});
 
+		this.syncWithCoordinator();
 		
 		JFrame frame = new JFrame();
 		frame.setTitle("BoxDrive Client");
@@ -60,7 +61,7 @@ public class ActualClient extends Client {
 	 * Only call this method when exiting the app
 	 */
 	private void shutDown() {
-		fileRecordManager.serializeList();
+		fileManager.serializeFiles();
 	}
 
 	private Connection attemptConnection(String serverAddr) {
@@ -80,4 +81,32 @@ public class ActualClient extends Client {
 		} while (socket == null);
 		return null;
 	}
+	
+    private void syncWithCoordinator() {
+        SyncManager.getInstance().clearFileRecords();
+
+        Job listJob = new ListJob();
+        this.getJobManager().handleNewJob(listJob, this);
+        
+        // wait in this monitor until the result has returned
+        SyncManager.getInstance().waitForFileRecords();
+
+        // Compare with last record and generate appropriate jobs
+        SharedFolderRecordComparator comparator = new SharedFolderRecordComparator();
+        List<FileBean> newFileRecords = SyncManager.getInstance().getFileRecords();
+        List<FileBean> currFileRecords = fileManager.getAllFiles();
+        List<FileBean> oldFileRecords = fileManager.getSerializedFiles();
+        long lastTimeOldRecordsModified = fileManager.getLastModifiedTime();
+
+        List<Job> newJobs = comparator.compareAndGenerateJobs(newFileRecords, currFileRecords, oldFileRecords,
+                lastTimeOldRecordsModified);
+
+        System.out.println("\nSYNC RESULTS:");
+        for (Job newJob : newJobs) {
+            System.out.println(newJob.getJson());
+            getJobManager().handleNewJob(newJob, this);
+        }
+
+        System.out.println("SYNC DONE:\n");
+    }
 }

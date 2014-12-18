@@ -1,9 +1,5 @@
 package job;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import client.Client;
 import file.FileManager;
 
 public class BroadcastJob extends Job {

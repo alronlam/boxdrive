@@ -4,19 +4,21 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import job.ConfigJob;
+import job.JobFactory;
+import job.manager.ServerJobManager;
+
 import org.vertx.java.core.json.JsonObject;
 
 import server.manager.StorageServerManager;
 import server.manager.TriangleServerManager;
-import job.ConfigJob;
-import job.JobFactory;
-import job.manager.ServerJobManager;
 import client.Client;
 import client.Connection;
+
 import commons.Constants;
+
 import file.FileManager;
 import file.MultiServerFileManager;
-import file.SingleFolderFileManager;
 
 public class MultiServer {
 	private ServerSocket serverSocket;

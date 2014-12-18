@@ -1,5 +1,7 @@
 package file;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,20 +9,34 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.vertx.java.core.json.impl.Base64;
 
+import file.filerecords.FolderRecord;
+
 public class SingleFolderFileManager implements FileManager {
-	private String localFolder;
 	private final int BUFFER_SIZE = 8096;
+	private final String RECORD_FILENAME = "record.ser";
+	private String localFolder;
 	private int localPathNests;
+	private long lastModifiedTime;
+	
 	
 	
 	public SingleFolderFileManager(String localFolder) {
@@ -182,6 +198,10 @@ public class SingleFolderFileManager implements FileManager {
 	@Override
 	public FileBean getFileBean(String filename) {
 		Path localFile = this.getLocalizedFile(filename);
+		return this.getFileBeanFromLocalized(localFile);
+	}
+	
+	private FileBean getFileBeanFromLocalized(Path localFile) {
 		long lastModified = 0;
 		boolean isDirectory = Files.isDirectory(localFile);
 		byte[] checksum = null;
@@ -224,6 +244,65 @@ public class SingleFolderFileManager implements FileManager {
 	
 	private Path delocalize(Path localFile) {
 		return localFile.subpath(1 + localPathNests, localFile.getNameCount());
+	}
+
+	@Override
+	public List<FileBean> getAllFiles() {
+		List<FileBean> files = new ArrayList<>();
+		
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(this.getLocalizedFile(""))) {
+			for (Path path : directoryStream) {
+				FileBean file = this.getFileBeanFromLocalized(path);
+				
+				files.add(file);
+			}
+			Collections.sort(files);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return files;
+	}
+
+	@Override
+	public void serializeFiles() {
+		FolderRecord folderRecord = new FolderRecord();
+		folderRecord.setList(this.getAllFiles());
+		folderRecord.setTimeLastModified(System.currentTimeMillis());
+		
+		try (OutputStream file = new FileOutputStream( this.getLocalizedFile(RECORD_FILENAME).toString() );
+				OutputStream buffer = new BufferedOutputStream(file);
+				ObjectOutput output = new ObjectOutputStream(buffer);) {
+			output.writeObject(folderRecord);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		System.out.println("\nCurrent record is now\n " + this.toString() + "\n");
+		
+	}
+
+	@Override
+	public List<FileBean> getSerializedFiles() {
+		try (InputStream file = new FileInputStream( this.getLocalizedFile(RECORD_FILENAME).toString() );
+				InputStream buffer = new BufferedInputStream(file);
+				ObjectInput input = new ObjectInputStream(buffer);) {
+			
+			FolderRecord folderRecord = (FolderRecord) input.readObject();
+			this.lastModifiedTime = folderRecord.getTimeLastModified();
+			return folderRecord.getList();
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public long getLastModifiedTime() {
+		return this.lastModifiedTime;
 	}
 	
 }

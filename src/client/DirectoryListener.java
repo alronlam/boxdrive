@@ -1,4 +1,4 @@
-package actualclient;
+package client;
 
 /*
  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.
@@ -51,7 +51,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
-import client.Client;
 import job.CreateJob;
 import job.DeleteJob;
 import job.Job;

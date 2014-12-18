@@ -37,6 +37,7 @@ public class Constants {
 		public static final String DELETE = "delete";
 		public static final String FILE = "file";
 		public static final String LIST = "list";
+		public static final String LIST_RESULT = "list result";
 		public static final String REQUEST = "request";
 		public static final String CONFIG = "config";
 	}

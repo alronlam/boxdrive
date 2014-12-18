@@ -1,7 +1,5 @@
 package client;
 
-import job.Job;
-import job.JobFactory;
 import job.manager.JobManager;
 import client.Connection;
 

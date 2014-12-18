@@ -1,10 +1,9 @@
 package job;
 
-import java.nio.file.Path;
-
 import org.vertx.java.core.json.JsonObject;
 
 import commons.Constants;
+
 import file.FileBean;
 
 public abstract class BasicJob extends Job {

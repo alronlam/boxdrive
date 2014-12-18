@@ -2,9 +2,6 @@ package job;
 
 import org.vertx.java.core.json.JsonObject;
 
-import client.ActualClient;
-import client.Client;
-import client.Connection;
 import commons.Constants;
 
 public class JobFactory {
@@ -23,8 +20,11 @@ public class JobFactory {
 			toGet = new FileJob(json);
 		
 		} else if (type.equals(Constants.Type.LIST)) {
-			toGet = new ListJob(json);
+			toGet = new ListJob();
 		
+		} else if (type.equals(Constants.Type.LIST_RESULT)) {
+			toGet = new ListResultJob(json);
+			
 		} else if (type.equals(Constants.Type.REQUEST)) {
 			toGet = new RequestJob(json);
 		
